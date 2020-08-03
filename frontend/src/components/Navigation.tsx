@@ -65,11 +65,16 @@ export const Navigation: React.FC = () => {
     justifySelf: 'flex-start',
     marginRight: 'auto',
     marginLeft: '10%',
+    '&:hover': {
+      background: theme.colors.navbar,
+      color: theme.colors.footer,
+      textDecoration: 'none',
+    }
   };
 
   return (
     <div sx={style}>
-      <NavItem route='/' text='filler' extraStyling={logoStyle}/>
+      <NavItem route='/' text='logo here' extraStyling={logoStyle}/>
       {getNavItems()}
     </div>
   );
