@@ -17,7 +17,7 @@ export const theme = {
       light: '#FFFFFF',
       dark: '#495E57',
       overlay: '#2993CCBE',
-      accent: '#DE7F68'
+      accent: '#C7DE7F68'
     },
     primary: '#68DEB5',
     secondary: '#93CCBE',

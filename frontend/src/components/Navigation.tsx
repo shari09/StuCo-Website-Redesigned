@@ -24,7 +24,7 @@ const NavItem: React.FC<LinkProps> = ({route, text, extraStyling}) => {
     px: 20,
     py: 3,
   };
-  console.log(extraStyling);
+  
   return (
     <Link to={route} sx={{...style, ...extraStyling}}>
       {text}

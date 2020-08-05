@@ -1,0 +1,15 @@
+{
+  "name": "stucoxsheets",
+  "description": "lksdfj",
+  "dependencies": {
+    "googleapis": "^58.0.0"
+  },
+  "scripts": {
+    "start": "tsc -p . && node dist/test.js",
+    "watch": "tsc -w",
+    "test": "cd dist/ && functions-framework --target=run"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^1.6.0"
+  }
+}
