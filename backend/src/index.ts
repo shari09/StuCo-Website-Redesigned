@@ -179,6 +179,24 @@ exports.run = async (req, res) => {
   res.status(200).end(data);
 };
 
+//@ts-ignore
+exports.getGallery = async(req, res) => {
+  if (req.method !== 'GET') {
+    res.status(405).send({error: 'something blew up D;'});
+  }
+  res.set('Access-Control-Allow-Methods', 'GET');
+  res.set('Access-Control-Allow-Headers', 'Authorization');
+  res.set('Access-Control-Max-Age', '3600');
+  // res.set('Access-Control-Allow-Origin', 'https://rhhsstuco.ca');
+  res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.set('Access-Control-Allow-Credentials', 'true');
+
+  await auth();
+
+
+
+};
+
 // run().then(res => {
 //   console.log(res);
 // }).catch(console.log);

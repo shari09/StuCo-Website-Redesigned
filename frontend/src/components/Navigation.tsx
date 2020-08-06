@@ -53,6 +53,7 @@ export const Navigation: React.FC = () => {
     background: theme.colors.navbar,
     alignItems: 'center',
     position: 'fixed',
+    zIndex: 3,
   };
 
   const getNavItems = () => {
