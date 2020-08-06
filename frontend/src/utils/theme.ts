@@ -1,12 +1,5 @@
 export const theme = {
   colors: {
-    // text: '#000000',
-    // background: '#FFFFFF',
-    // primary: '#68DEB5',
-    // secondary: '#67F59B',
-    // accent: '#FFFFFF',
-    // highlight: '#68DEB5',
-    // muted: '#5B7F76',
     text: {
       light: '#FFFFFF',
       darkSlate: '#2F4F4F',
@@ -16,8 +9,8 @@ export const theme = {
     background: {
       light: '#FFFFFF',
       dark: '#495E57',
-      overlay: '#2993CCBE',
-      accent: '#C7DE7F68'
+      overlay: '#93CCBE29',
+      accent: '#DE7F68C7'
     },
     primary: '#68DEB5',
     secondary: '#93CCBE',
@@ -33,7 +26,13 @@ export const theme = {
     body: 'Open Sans',
     time: 'Architects Daughter'
   },
-  fontSizes: [12, 14, 16, 20, 24, 32, 48, 64],
+  fontSizes: {
+    heading: {
+      primary: 40,
+    },
+    body: [12, 14, 16, 20, 24, 32, 48, 64],
+    footer: [11, 12, 14, 16],
+  },
   links: {
     nav: {
       px: 2,

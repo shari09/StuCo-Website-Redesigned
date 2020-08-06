@@ -24,7 +24,7 @@ const NavItem: React.FC<LinkProps> = ({route, text, extraStyling}) => {
     px: 20,
     py: 3,
   };
-  
+
   return (
     <Link to={route} sx={{...style, ...extraStyling}}>
       {text}
@@ -41,6 +41,7 @@ export const Navigation: React.FC = () => {
     background: theme.colors.navbar,
     alignItems: 'center',
     position: 'fixed',
+    zIndex: 3,
   };
 
   const routes = {
@@ -50,13 +51,13 @@ export const Navigation: React.FC = () => {
     calendar: 'CALENDAR',
     map: 'MAP',
     gallery: 'GALLERY',
-    faq: "FAQ",
+    faq: 'FAQ',
     about: 'ABOUT US',
   };
 
   const getNavItems = () => {
-    return Object.keys(routes).map(route => {
-      return <NavItem route={route} text={routes[route]}/>
+    return Object.keys(routes).map((route) => {
+      return <NavItem route={route} text={routes[route]} />;
     });
   };
 
@@ -69,12 +70,12 @@ export const Navigation: React.FC = () => {
       background: theme.colors.navbar,
       color: theme.colors.footer,
       textDecoration: 'none',
-    }
+    },
   };
 
   return (
     <div sx={style}>
-      <NavItem route='/' text='logo here' extraStyling={logoStyle}/>
+      <NavItem route="/" text="logo here" extraStyling={logoStyle} />
       {getNavItems()}
     </div>
   );
