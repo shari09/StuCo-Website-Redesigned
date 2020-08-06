@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Navigation} from './components/Navigation';
+import Footer from './components/Footer';
 import {Home} from './pages/Home';
+import {Map} from './pages/Map';
 import {IInfoContext, InfoContext} from './utils/contexts';
 
 const App: React.FC = () => {
@@ -36,31 +38,32 @@ const App: React.FC = () => {
           <Navigation />
 
           <Switch>
+            <Route path="/events">
+              <Home />
+            </Route>
+            <Route path="/clubs">
+              <Home />
+            </Route>
+            <Route path="/calendar">
+              <Home />
+            </Route>
+            <Route path="/map">
+              <Map />
+            </Route>
+            <Route path="/gallery">
+              <Home />
+            </Route>
+            <Route path="/faq">
+              <Home />
+            </Route>
+            <Route path="/about">
+              <Home />
+            </Route>
             <Route path="/">
               <Home />
             </Route>
-            <Route path="events">
-              <Home />
-            </Route>
-            <Route path="clubs">
-              <Home />
-            </Route>
-            <Route path="calendar">
-              <Home />
-            </Route>
-            <Route path="map">
-              <Home />
-            </Route>
-            <Route path="gallery">
-              <Home />
-            </Route>
-            <Route path="faq">
-              <Home />
-            </Route>
-            <Route path="about">
-              <Home />
-            </Route>
           </Switch>
+          <Footer />
         </Router>
       </InfoContext.Provider>
     </div>

@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import React, {useContext} from 'react';
-import Footer from '../components/Footer';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {Link} from 'react-router-dom';
 import {theme} from '../utils/theme';
@@ -9,11 +8,6 @@ import {CountDownTimer} from '../components/CountDownTimer';
 import {Heading} from '../components/Heading';
 
 const Main: React.FC = () => {
-  const info = useContext(InfoContext);
-
-  if (!info) return;
-  console.log(info);
-
   const nextEvent = useContext<IInfoContext>(InfoContext).events[0];
 
   if (!nextEvent) return;
@@ -78,7 +72,6 @@ export const Home: React.FC = () => {
     <div>
       <Main />
       <UpcomingBoard />
-      <Footer />
     </div>
   );
 };

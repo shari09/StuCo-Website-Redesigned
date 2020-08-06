@@ -65,7 +65,7 @@ const SocialMediaItem: React.FC<SocialMediaProps> = ({
     paddingX: '0.5em', // rudimentary spacing between the pictures lol
   };
   return (
-    <a href={link} sx={linkStyle} target="_blank">
+    <a href={link} sx={linkStyle}>
       <img sx={imageStyle} src={pictureLink} alt={name} />
     </a>
   );
@@ -81,6 +81,7 @@ const getSocialMedia = (
         name={sitename}
         link={socialMediaList[sitename][0]}
         pictureLink={socialMediaList[sitename][1]}
+        key={sitename}
       />
     );
   });
@@ -156,7 +157,7 @@ const Footer: React.FC = () => {
   const getRouteItems = (routes: string[][]): ReactElement[] => {
     return routes.map((route) => {
       return (
-        <li>
+        <li key={route[1]}>
           <NavItem
             route={route[0]}
             text={route[1]}
@@ -198,10 +199,10 @@ const Footer: React.FC = () => {
               <a
                 href="https://github.com/shari09/StuCo-Website-Redesigned"
                 sx={{linkStyle}} //TODO: this doesn't seem to be working
-                target="_blank"
               >
                 <img
                   src="./assets/icons/Github-Mark-Light-20px.png"
+                  alt=""
                   sx={{mr: '0.5em', mb: '0.25em'}}
                 />
                 Source
