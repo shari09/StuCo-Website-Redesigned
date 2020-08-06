@@ -1,6 +1,6 @@
 import {google, sheets_v4} from 'googleapis';
 const sheets = google.sheets('v4');
-import * as rhhs from '../../common/interfaces';
+import * as rhhs from './interfaces';
 
 type SheetName =
   | 'Events'
@@ -10,7 +10,6 @@ type SheetName =
   | 'Upcoming mini events'
   | 'Clubs'
   | 'FAQ';
-
 
 const auth = async () => {
   const auth = new google.auth.GoogleAuth({

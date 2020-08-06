@@ -48,5 +48,5 @@
     // "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
     // "allowUmdGlobalAccess": true,          /* Allow accessing UMD globals from modules. */
   },
-  "include": ["src/*", "../common/interfaces.ts"]
+  "include": ["src/*", "src/interfaces.ts"]
 }

@@ -1,1 +1,8 @@
+# ndoe modules
 node_modules/
+
+# vscode configeration
+.vscode/
+
+# bad bad authentication
+service-key.json

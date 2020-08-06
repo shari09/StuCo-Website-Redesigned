@@ -10,7 +10,7 @@ interface LinkProps {
   extraStyling?: SxStyleProp;
 }
 
-const NavItem: React.FC<LinkProps> = ({route, text, extraStyling}) => {
+export const NavItem: React.FC<LinkProps> = ({route, text, extraStyling}) => {
   const style: SxStyleProp = {
     color: theme.colors.text.light,
     fontFamily: theme.fonts.body,
@@ -24,12 +24,24 @@ const NavItem: React.FC<LinkProps> = ({route, text, extraStyling}) => {
     px: 20,
     py: 3,
   };
-  
+
   return (
     <Link to={route} sx={{...style, ...extraStyling}}>
       {text}
     </Link>
   );
+};
+
+// Moving routes out of Navigation so Footer can access them
+export const routes = {
+  //key is the route name, value is displayed text
+  events: 'Events',
+  clubs: 'Clubs',
+  calendar: 'Calendar',
+  map: 'Map',
+  gallery: 'Gallery',
+  faq: 'FAQ',
+  about: 'About Us',
 };
 
 export const Navigation: React.FC = () => {
@@ -43,20 +55,9 @@ export const Navigation: React.FC = () => {
     position: 'fixed',
   };
 
-  const routes = {
-    //key is the route name, value is displayed text
-    events: 'EVENTS',
-    clubs: 'CLUBS',
-    calendar: 'CALENDAR',
-    map: 'MAP',
-    gallery: 'GALLERY',
-    faq: "FAQ",
-    about: 'ABOUT US',
-  };
-
   const getNavItems = () => {
-    return Object.keys(routes).map(route => {
-      return <NavItem route={route} text={routes[route]}/>
+    return Object.keys(routes).map((route) => {
+      return <NavItem route={route} text={routes[route].toUpperCase()} />;
     });
   };
 
@@ -69,12 +70,12 @@ export const Navigation: React.FC = () => {
       background: theme.colors.navbar,
       color: theme.colors.footer,
       textDecoration: 'none',
-    }
+    },
   };
 
   return (
     <div sx={style}>
-      <NavItem route='/' text='logo here' extraStyling={logoStyle}/>
+      <NavItem route="/" text="logo here" extraStyling={logoStyle} />
       {getNavItems()}
     </div>
   );

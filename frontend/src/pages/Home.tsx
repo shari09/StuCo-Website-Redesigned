@@ -1,15 +1,14 @@
 /** @jsx jsx */
 import React, {useContext} from 'react';
+import Footer from '../components/Footer';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {Link} from 'react-router-dom';
 import {theme} from '../utils/theme';
 import {InfoContext} from '../utils/contexts';
 
-
 const Main: React.FC = () => {
-
   const info = useContext(InfoContext);
-  
+
   if (!info) return;
   console.log(info);
 
@@ -17,23 +16,17 @@ const Main: React.FC = () => {
     width: '100%',
     height: '100vh',
     backgroundSize: 'cover',
-    backgroundImage: 'url("./assets/home-background.png")'
+    backgroundImage: 'url("./assets/home-background.png")',
   };
 
-
-  return (
-    <div sx={style}>
-
-    </div>
-  )
+  return <div sx={style}></div>;
 };
-
-
 
 export const Home: React.FC = () => {
   return (
     <div>
-      <Main/>
+      <Main />
+      <Footer />
     </div>
   );
 };

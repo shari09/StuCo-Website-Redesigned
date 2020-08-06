@@ -6,7 +6,7 @@ import {
   UpcomingMiniEvents,
   Club,
   FAQ,
-} from '../../../common/interfaces';
+} from './interfaces';
 
 export interface IInfoContext {
   events: Event[];
