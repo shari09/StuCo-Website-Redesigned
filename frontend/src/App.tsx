@@ -4,6 +4,7 @@ import {Navigation} from './components/Navigation';
 import Footer from './components/Footer';
 import {Home} from './pages/Home';
 import {Map} from './pages/Map';
+import {FAQ} from './pages/FAQ';
 import {IInfoContext, InfoContext} from './utils/contexts';
 
 const App: React.FC = () => {
@@ -54,7 +55,7 @@ const App: React.FC = () => {
               <Home />
             </Route>
             <Route path="/faq">
-              <Home />
+              <FAQ />
             </Route>
             <Route path="/about">
               <Home />

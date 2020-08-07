@@ -95,6 +95,8 @@ const Footer: React.FC = () => {
     color: theme.colors.text.light,
     backgroundColor: theme.colors.footer,
     pt: '2em',
+    // a lazy fix to a lazy problem please shoot me
+    mt: '14em',
     position: 'relative',
     bottom: 0,
     width: '100%',

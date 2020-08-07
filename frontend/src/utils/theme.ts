@@ -10,6 +10,7 @@ export const theme = {
       light: '#FFFFFF',
       dark: '#495E57',
       overlay: '#93CCBE29',
+      overlayNoalpha: '#93CCBE29',
       accent: '#DE7F68C7',
     },
     primary: '#68DEB5',
@@ -27,7 +28,7 @@ export const theme = {
   },
   fontSizes: {
     heading: {
-      primary: 40,
+      primary: [30, 40],
     },
     body: [12, 14, 16, 20, 24, 32, 48, 64],
     footer: [11, 12, 14, 16],
