@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Navigation} from './components/Navigation';
+import {Footer} from './components/Footer';
 import {Home} from './pages/Home';
 import {IInfoContext, InfoContext} from './utils/contexts';
 
@@ -25,45 +26,39 @@ const App: React.FC = () => {
   }
 
   return (
-    <div
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <InfoContext.Provider value={info}>
-        <Router>
-          <Navigation />
+    <InfoContext.Provider value={info}>
+      <Router>
+        <Navigation />
 
-          <Switch>
-            <Route path="/">
-              <Home />
-            </Route>
-            <Route path="events">
-              <Home />
-            </Route>
-            <Route path="clubs">
-              <Home />
-            </Route>
-            <Route path="calendar">
-              <Home />
-            </Route>
-            <Route path="map">
-              <Home />
-            </Route>
-            <Route path="gallery">
-              <Home />
-            </Route>
-            <Route path="faq">
-              <Home />
-            </Route>
-            <Route path="about">
-              <Home />
-            </Route>
-          </Switch>
-        </Router>
-      </InfoContext.Provider>
-    </div>
+        <Switch>
+          <Route path="/">
+            <Home />
+          </Route>
+          <Route path="events">
+            <Home />
+          </Route>
+          <Route path="clubs">
+            <Home />
+          </Route>
+          <Route path="calendar">
+            <Home />
+          </Route>
+          <Route path="map">
+            <Home />
+          </Route>
+          <Route path="gallery">
+            <Home />
+          </Route>
+          <Route path="faq">
+            <Home />
+          </Route>
+          <Route path="about">
+            <Home />
+          </Route>
+        </Switch>
+        <Footer/>
+      </Router>
+    </InfoContext.Provider>
   );
 };
 

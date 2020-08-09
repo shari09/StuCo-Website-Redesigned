@@ -6,6 +6,7 @@ import {
   UpcomingMiniEvents,
   Club,
   FAQ,
+  Photo
 } from './interfaces';
 
 export interface IInfoContext {
@@ -15,6 +16,7 @@ export interface IInfoContext {
   upcomingMiniEvents: UpcomingMiniEvents[];
   clubs: Club[];
   faq: FAQ[];
+  gallery: Photo[];
 }
 
 export const InfoContext = createContext<IInfoContext>({
@@ -24,4 +26,5 @@ export const InfoContext = createContext<IInfoContext>({
   upcomingMiniEvents: [],
   clubs: [],
   faq: [],
+  gallery: [],
 });

@@ -42,3 +42,8 @@ export interface FAQ {
   question: string;
   answer: string;
 }
+
+export interface Photo {
+  name: string;
+  id: string;
+}

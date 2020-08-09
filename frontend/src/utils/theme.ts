@@ -15,6 +15,7 @@ export const theme = {
     primary: '#68DEB5',
     secondary: '#93CCBE',
     footer: '#39504A',
+    yellow: '#FFF08E',
 
     modes: {
       dark: {},
@@ -31,6 +32,10 @@ export const theme = {
     },
     body: [12, 14, 16, 20, 24, 32, 48, 64],
     footer: [11, 12, 14, 16],
+  },
+  bodyPadding: {
+    py: 100,
+    px: '10%'
   },
   links: {
     nav: {

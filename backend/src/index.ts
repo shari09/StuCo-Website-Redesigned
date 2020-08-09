@@ -1,5 +1,6 @@
 import {google, sheets_v4} from 'googleapis';
 const sheets = google.sheets('v4');
+
 import * as rhhs from './interfaces';
 
 type SheetName =
@@ -9,16 +10,17 @@ type SheetName =
   | 'Recent'
   | 'Upcoming mini events'
   | 'Clubs'
-  | 'FAQ';
+  | 'FAQ'
+  | 'Gallery';
 
 const auth = async () => {
   const auth = new google.auth.GoogleAuth({
     keyFile: '../service-key.json',
     scopes: [
-      'https://www.googleapis.com/auth/drive',
-      'https://www.googleapis.com/auth/drive.file',
-      'https://www.googleapis.com/auth/drive.readonly',
-      'https://www.googleapis.com/auth/spreadsheets',
+    //   'https://www.googleapis.com/auth/drive',
+    //   'https://www.googleapis.com/auth/drive.file',
+    //   'https://www.googleapis.com/auth/drive.readonly',
+    //   'https://www.googleapis.com/auth/spreadsheets',
       'https://www.googleapis.com/auth/spreadsheets.readonly',
     ],
   });
@@ -35,6 +37,7 @@ const sheetNames = [
   'Upcoming mini events',
   'Clubs',
   'FAQ',
+  'Gallery',
 ];
 
 let rawSheetValues: sheets_v4.Schema$ValueRange[] = [];
@@ -153,6 +156,18 @@ const getFAQ = (): rhhs.FAQ[] => {
   return formattedFaq;
 };
 
+
+const getGallery = (): rhhs.Photo[] => {
+  const photos = getRawValue('Gallery');
+  const formattedPhotos: rhhs.Photo[] = photos.map(photo => {
+    return {
+      name: photo[0],
+      id: photo[1],
+    };
+  });
+  return formattedPhotos;
+};
+
 //@ts-ignore
 exports.run = async (req, res) => {
   if (req.method !== 'GET') {
@@ -174,27 +189,10 @@ exports.run = async (req, res) => {
     upcomingMiniEvents: getUpcomingMiniEvents(),
     clubs: getClubs(),
     faq: getFAQ(),
+    gallery: getGallery(),
   });
 
   res.status(200).end(data);
-};
-
-//@ts-ignore
-exports.getGallery = async(req, res) => {
-  if (req.method !== 'GET') {
-    res.status(405).send({error: 'something blew up D;'});
-  }
-  res.set('Access-Control-Allow-Methods', 'GET');
-  res.set('Access-Control-Allow-Headers', 'Authorization');
-  res.set('Access-Control-Max-Age', '3600');
-  // res.set('Access-Control-Allow-Origin', 'https://rhhsstuco.ca');
-  res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.set('Access-Control-Allow-Credentials', 'true');
-
-  await auth();
-
-
-
 };
 
 // run().then(res => {

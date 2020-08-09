@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 

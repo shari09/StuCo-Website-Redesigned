@@ -3,6 +3,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
+import logo from '../logo.svg';
 
 interface LinkProps {
   route: string;
@@ -10,7 +11,7 @@ interface LinkProps {
   extraStyling?: SxStyleProp;
 }
 
-export const NavItem: React.FC<LinkProps> = ({route, text, extraStyling}) => {
+export const NavItem: React.FC<LinkProps> = ({route, text, extraStyling, children}) => {
   const style: SxStyleProp = {
     color: theme.colors.text.light,
     fontFamily: theme.fonts.body,
@@ -28,6 +29,7 @@ export const NavItem: React.FC<LinkProps> = ({route, text, extraStyling}) => {
   return (
     <Link to={route} sx={{...style, ...extraStyling}}>
       {text}
+      {children}
     </Link>
   );
 };
@@ -53,7 +55,7 @@ export const Navigation: React.FC = () => {
     background: theme.colors.navbar,
     alignItems: 'center',
     position: 'fixed',
-    zIndex: 3,
+    zIndex: 10,
   };
 
   const getNavItems = () => {
@@ -69,14 +71,16 @@ export const Navigation: React.FC = () => {
     marginLeft: '10%',
     '&:hover': {
       background: theme.colors.navbar,
-      color: theme.colors.footer,
-      textDecoration: 'none',
+      cursor: 'pointer'
     },
+    height: '3.5rem'
   };
 
   return (
     <div sx={style}>
-      <NavItem route="/" text="logo here" extraStyling={logoStyle} />
+      <Link to='/' sx={logoStyle}>
+        <img src={logo} sx={logoStyle}/>
+      </Link>
       {getNavItems()}
     </div>
   );

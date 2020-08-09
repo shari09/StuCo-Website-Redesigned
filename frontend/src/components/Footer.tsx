@@ -88,7 +88,7 @@ const getSocialMedia = (
 // ------------------------------
 
 // The actual footer code and stuff
-const Footer: React.FC = () => {
+export const Footer: React.FC = () => {
   // styling stuff
   const footerStyle: SxStyleProp = {
     color: theme.colors.text.light,
@@ -106,9 +106,7 @@ const Footer: React.FC = () => {
   };
 
   const linkStyle: SxStyleProp = {
-    '&:link': {
-      color: theme.colors.text.light,
-    },
+    color: theme.colors.text.light,
     '&:hover': {
       color: theme.colors.primary,
       textDecoration: 'none',
@@ -197,7 +195,7 @@ const Footer: React.FC = () => {
               &nbsp;|&nbsp;
               <a
                 href="https://github.com/shari09/StuCo-Website-Redesigned"
-                sx={{linkStyle}} //TODO: this doesn't seem to be working
+                sx={linkStyle}
                 target="_blank"
               >
                 <img

@@ -36,3 +36,5 @@ export const Heading: React.FC<Props> = ({text, alignment}) => {
     </div>
   )
 };
+
+export default Heading;
