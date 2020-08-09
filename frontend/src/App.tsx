@@ -3,7 +3,9 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Navigation} from './components/Navigation';
 import {Footer} from './components/Footer';
 import {Home} from './pages/Home';
+import {Clubs} from './pages/Clubs';
 import {Map} from './pages/Map';
+import {Gallery} from './pages/Gallery';
 import {FAQ} from './pages/FAQ';
 import {IInfoContext, InfoContext} from './utils/contexts';
 
@@ -33,32 +35,32 @@ const App: React.FC = () => {
         <Navigation />
 
         <Switch>
+          <Route path="/events">
+            <Home />
+          </Route>
+          <Route path="/clubs">
+            <Clubs />
+          </Route>
+          <Route path="/calendar">
+            <Home />
+          </Route>
+          <Route path="/map">
+            <Map />
+          </Route>
+          <Route path="/gallery">
+            <Gallery />
+          </Route>
+          <Route path="/faq">
+            <FAQ />
+          </Route>
+          <Route path="/about">
+            <Home />
+          </Route>
           <Route path="/">
             <Home />
           </Route>
-          <Route path="events">
-            <Home />
-          </Route>
-          <Route path="clubs">
-            <Home />
-          </Route>
-          <Route path="calendar">
-            <Home />
-          </Route>
-          <Route path="map">
-            <Home />
-          </Route>
-          <Route path="gallery">
-            <Home />
-          </Route>
-          <Route path="faq">
-            <Home />
-          </Route>
-          <Route path="about">
-            <Home />
-          </Route>
         </Switch>
-        <Footer/>
+        <Footer />
       </Router>
     </InfoContext.Provider>
   );

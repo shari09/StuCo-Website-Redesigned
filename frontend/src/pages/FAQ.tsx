@@ -30,7 +30,7 @@ export interface ResponseProp {
 // it's pretty big though...
 export const FAQ: React.FC = (): ReactElement => {
   // Grab the questions
-  const FAQQuestions: FAQInterface[] = useContext<IInfoContext>(InfoContext)
+  const faqQuestions: FAQInterface[] = useContext<IInfoContext>(InfoContext)
     .faq;
 
   // Custom styles!!!!
@@ -78,11 +78,11 @@ export const FAQ: React.FC = (): ReactElement => {
   };
 
   // For retrieving all the seperate question answers
-  const getFAQItems = (FAQQuestions: FAQInterface[]) => {
-    const FAQItems: ReactElement[] = [];
+  const getFaqItems = (faqQuestions: FAQInterface[]) => {
+    const faqItems: ReactElement[] = [];
     // yes shari, a for loop
     // i want the index >:(
-    for (let i = 0; i < FAQQuestions.length; ++i) {
+    for (let i = 0; i < faqQuestions.length; ++i) {
       let styling: SxStyleProp;
       let imageStyling: SxStyleProp | undefined;
 
@@ -119,7 +119,7 @@ export const FAQ: React.FC = (): ReactElement => {
               backgroundColor: theme.colors.background.overlayNoalpha + '00',
             };
 
-      FAQItems.push(
+      faqItems.push(
         // To squeeze the next list items into the previous ones
         <li key={i} sx={{mb: '-2em'}}>
           <div
@@ -129,7 +129,7 @@ export const FAQ: React.FC = (): ReactElement => {
             }}
           >
             <QuestionItem
-              question={FAQQuestions[i].question}
+              question={faqQuestions[i].question}
               extraStyling={{
                 ...styling,
                 // Get some smaller spacing for the speech div
@@ -138,7 +138,7 @@ export const FAQ: React.FC = (): ReactElement => {
               imageExtraStyling={imageStyling}
             />
             <ResponseItem
-              response={FAQQuestions[i].answer}
+              response={faqQuestions[i].answer}
               textExtraStyling={styling}
               rectExtraStyling={rectStyling}
             />
@@ -147,7 +147,7 @@ export const FAQ: React.FC = (): ReactElement => {
       );
     }
 
-    return FAQItems;
+    return faqItems;
   };
 
   // To hold the speech bubble and question
@@ -249,7 +249,7 @@ export const FAQ: React.FC = (): ReactElement => {
         >
           <ul sx={{listStyleType: 'none', px: 0, py: 0, mx: 0, my: 0}}>
             {/* // Getting the list of question-response stuff */}
-            {getFAQItems(FAQQuestions)}
+            {getFaqItems(faqQuestions)}
           </ul>
         </div>
       </div>
