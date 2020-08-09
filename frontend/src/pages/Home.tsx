@@ -128,8 +128,8 @@ const UpcomingBoard: React.FC = () => {
 
 
   const style: SxStyleProp = {
-    py: 100,
-    px: '10%',
+    py: theme.bodyPadding.py,
+    px: theme.bodyPadding.px,
   };
 
   const getEvents = () => {

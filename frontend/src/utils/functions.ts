@@ -31,4 +31,6 @@ export const hexToRgba = (hex: string, alpha: number): rgbItem => {
   };
 };
 
-export const filler = () => {};
+export const getImageUrl = (imageId: string, width: number, height: number) => {
+  return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${width}-h${height}`;
+};
