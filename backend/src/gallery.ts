@@ -16,13 +16,10 @@ const auth = async () => {
   google.options({auth: authClient});
 };
 
-
-const getImages = async() => {
+const getImages = async () => {
   const galleryFolderId = '1xD8Wgi68bCZQFGY8tPU6EzKzRutCoLtx';
   const folderRes = await drive.files.list({
-    q:
-      `'${galleryFolderId}' in parents` +
-      " and mimeType contains 'image/'",
+    q: `'${galleryFolderId}' in parents` + " and mimeType contains 'image/'",
   });
   if (!folderRes.data.files) {
     console.log('no files found');
@@ -41,7 +38,7 @@ const getImages = async() => {
 };
 
 //writes to spreadsheet range
-const writeToSheet = async(images: sheets_v4.Schema$RowData[]) => {
+const writeToSheet = async (images: sheets_v4.Schema$RowData[]) => {
   //I hope no one switches up the order on the spreadsheet
   const gallerySheetId = 1825812022;
   const request: sheets_v4.Schema$UpdateCellsRequest = {
@@ -54,14 +51,15 @@ const writeToSheet = async(images: sheets_v4.Schema$RowData[]) => {
     fields: '*',
   };
 
-
   await sheets.spreadsheets.batchUpdate({
     spreadsheetId: '1ahJQZoWroWl0eWKdRguVBGF7qxA0GZAzPncHSrCTzvA',
-      requestBody: {
-        requests: [{
-          updateCells: request
-        }],
-      }
+    requestBody: {
+      requests: [
+        {
+          updateCells: request,
+        },
+      ],
+    },
   });
 };
 
@@ -69,7 +67,6 @@ const run = async () => {
   await auth();
   const images = await getImages();
   await writeToSheet(images);
-
 };
 
 run().catch(console.log);

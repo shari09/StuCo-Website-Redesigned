@@ -95,8 +95,6 @@ export const Footer: React.FC = () => {
     color: theme.colors.text.light,
     backgroundColor: theme.colors.footer,
     pt: '2em',
-    // a lazy fix to a lazy problem please shoot me
-    mt: '14em',
     position: 'relative',
     bottom: 0,
     width: '100%',
@@ -181,33 +179,35 @@ export const Footer: React.FC = () => {
     // ok shari i know you hate bootstrap but im just using these
     // names to name the divs. Kapeesh? Kapeesh.
     <div className="footer" sx={footerStyle}>
-      {/* top half of the footer */}
-      {getAllFooterRoutes(routes)}
+      <div className="container">
+        {/* top half of the footer */}
+        {getAllFooterRoutes(routes)}
 
-      {/* bottom half of the footer */}
-      <div className="row">
-        <div className="col" sx={{width: '50%'}}>
-          {getSocialMedia(socialMediaList)}
-        </div>
+        {/* bottom half of the footer */}
+        <div className="row">
+          <div className="col" sx={{width: '50%'}}>
+            {getSocialMedia(socialMediaList)}
+          </div>
 
-        {/* {//TODO: this doesn't scale that well down :/// */}
-        <div className="col" sx={{textAlign: 'right', width: '50%'}}>
-          <p sx={textStyle}>
-            &copy; RHHS Student Council {new Date().getFullYear()}
-            &nbsp;|&nbsp;
-            <a
-              href="https://github.com/shari09/StuCo-Website-Redesigned"
-              sx={linkStyle}
-              target="_blank"
-            >
-              <img
-                src="./assets/icons/Github-Mark-Light-20px.png"
-                alt=""
-                sx={{mr: '0.5em', mb: '0.25em'}}
-              />
-              Source
-            </a>
-          </p>
+          {/* {//TODO: this doesn't scale that well down :/// */}
+          <div className="col" sx={{textAlign: 'right', width: '50%'}}>
+            <p sx={textStyle}>
+              &copy; RHHS Student Council {new Date().getFullYear()}
+              &nbsp;|&nbsp;
+              <a
+                href="https://github.com/shari09/StuCo-Website-Redesigned"
+                sx={linkStyle}
+                target="_blank"
+              >
+                <img
+                  src="./assets/icons/Github-Mark-Light-20px.png"
+                  alt=""
+                  sx={{mr: '0.5em', mb: '0.25em'}}
+                />
+                Source
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

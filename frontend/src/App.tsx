@@ -6,6 +6,7 @@ import {Home} from './pages/Home';
 import {Map} from './pages/Map';
 import {FAQ} from './pages/FAQ';
 import {IInfoContext, InfoContext} from './utils/contexts';
+import {ScrollToTop} from './components/ScrollToTop';
 
 const App: React.FC = () => {
   const [info, setInfo] = useState<IInfoContext | undefined>();
@@ -30,34 +31,35 @@ const App: React.FC = () => {
   return (
     <InfoContext.Provider value={info}>
       <Router>
+        <ScrollToTop/>
         <Navigation />
-
         <Switch>
+          <Route path="/events">
+            <Home />
+          </Route>
+          <Route path="/clubs">
+            <Home />
+          </Route>
+          <Route path="/calendar">
+            <Home />
+          </Route>
+          <Route path="/map">
+            <Map />
+          </Route>
+          <Route path="/gallery">
+            <Home />
+          </Route>
+          <Route path="/faq">
+            <FAQ />
+          </Route>
+          <Route path="/about">
+            <Home />
+          </Route>
           <Route path="/">
             <Home />
           </Route>
-          <Route path="events">
-            <Home />
-          </Route>
-          <Route path="clubs">
-            <Home />
-          </Route>
-          <Route path="calendar">
-            <Home />
-          </Route>
-          <Route path="map">
-            <Home />
-          </Route>
-          <Route path="gallery">
-            <Home />
-          </Route>
-          <Route path="faq">
-            <Home />
-          </Route>
-          <Route path="about">
-            <Home />
-          </Route>
         </Switch>
+
         <Footer/>
       </Router>
     </InfoContext.Provider>

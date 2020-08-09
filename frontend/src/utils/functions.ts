@@ -31,6 +31,7 @@ export const hexToRgba = (hex: string, alpha: number): rgbItem => {
   };
 };
 
+//width and height must be of type int
 export const getImageUrl = (imageId: string, width: number, height: number) => {
   return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${width}-h${height}`;
 };

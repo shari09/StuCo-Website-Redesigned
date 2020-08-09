@@ -67,7 +67,6 @@ const ListItem: React.FC<Item> = ({text, collapsed, children, topLevel, itemExtr
   const textClicked = () => {
     if (!children) return;
     setChildrenCollapsed(!childrenCollapsed);
-    // onClicked();
   };
 
   useEffect(() => {

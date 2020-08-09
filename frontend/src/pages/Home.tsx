@@ -8,6 +8,8 @@ import {CountDownTimer} from '../components/CountDownTimer';
 import {Heading} from '../components/Heading';
 import {RandomDot} from '../components/RandomDot';
 import {CollapsableList, Item} from '../components/CollapsableList';
+import {PhotoSlideDeck, Photo} from '../components/PhotoSlideDeck';
+import { getImageUrl } from '../utils/functions';
 
 const Main: React.FC = () => {
   const nextEvent = useContext<IInfoContext>(InfoContext).events[0];
@@ -21,7 +23,6 @@ const Main: React.FC = () => {
     height: '100vh',
     backgroundSize: 'cover',
     backgroundImage: 'url("./assets/home-background.png")',
-    // backgroundImage: 'url("https://lh4.googleusercontent.com/For7QmUQBHNMYKeRRKJBMx70NVB5WtwPZMPY588vBfxUS06RM6QSUsk0xH1xVqikUX3mRw7HvGgwt_p2xj2c=w1011-h977-rw")',
   };
 
   const buttonStyle: SxStyleProp = {
@@ -53,7 +54,7 @@ const Main: React.FC = () => {
   );
 };
 
-///////////////////////////////////////////////
+//=============================================================
 
 const BackgroundWithDots: React.FC<{eventListHeight: number}> = (props) => {
   const [height, setHeight] = useState<number>(props.eventListHeight);
@@ -62,12 +63,12 @@ const BackgroundWithDots: React.FC<{eventListHeight: number}> = (props) => {
   const component = useRef<HTMLDivElement>(null);
 
   const style: SxStyleProp = {
-    width: '100%',
-    height: height,
     backgroundColor: theme.colors.secondary,
     borderRadius: 30,
     mt: 30,
     position: 'relative',
+    pb: 60,
+    pt: 20,
   };
 
   useEffect(() => {
@@ -112,7 +113,7 @@ const BackgroundWithDots: React.FC<{eventListHeight: number}> = (props) => {
   );
 };
 
-//////////////////////////////////
+//=============================================================
 //TODO: add animation or smth to hide the delay
 
 const UpcomingBoard: React.FC = () => {
@@ -128,7 +129,8 @@ const UpcomingBoard: React.FC = () => {
 
 
   const style: SxStyleProp = {
-    py: theme.bodyPadding.py,
+    pt: theme.bodyPadding.pt,
+    pb: theme.bodyPadding.pb,
     px: theme.bodyPadding.px,
   };
 
@@ -181,31 +183,64 @@ const UpcomingBoard: React.FC = () => {
   );
 };
 
-///////////////////////////////////////////////////
+
+
+//=============================================================
 const Recent: React.FC = () => {
-  const {gallery} = useContext<IInfoContext>(InfoContext);
-  if (!gallery) {
+  const {recents} = useContext<IInfoContext>(InfoContext);
+  const [width, setWidth] = useState<number>(0);
+  const thisComponentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setWidth(thisComponentRef.current.getBoundingClientRect().width)
+  }, []);
+
+  if (!recents) {
     return <div></div>;
   }
-
-  console.log(gallery);
 
   const style: SxStyleProp = {
     backgroundColor: theme.colors.background.overlay,
     px: theme.bodyPadding.px,
-    py: theme.bodyPadding.py,
+    pt: theme.bodyPadding.pt,
+    pb: theme.bodyPadding.pb,
 
   };
 
+  const scale = 2.8;
+
+  const photos: Photo[] = recents.map(event => {
+    return {
+      url: getImageUrl(event.photoUrl, Math.round(width/scale), 1000),
+      description: event.description,
+    };
+  });
+
+  const photoDimension = {
+    width: width/scale,
+    height: width/scale/1.5
+  };
+
+  const line: SxStyleProp = {
+    backgroundColor: theme.colors.primary,
+    height: '0.2em',
+    width: '20%',
+    borderRadius: 3,
+    mt: '2%',
+    mx: 'auto',
+  };
+
   return (
-    <div sx={style}>
+    <div sx={style} ref={thisComponentRef}>
       <Heading text='Recents' alignment='center'/>
+      <PhotoSlideDeck photos={photos} photoDimension={photoDimension}/>
+      <div sx={line} />
     </div>
   )
 };
 
 
-//////////////////////////////////////////////////
+//=============================================================
 
 export const Home: React.FC = () => {
   return (

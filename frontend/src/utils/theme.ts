@@ -17,7 +17,8 @@ export const theme = {
     secondary: '#93CCBE',
     footer: '#39504A',
     yellow: '#FFF08E',
-
+    imageOverlayForText: '#FFFFFFD9',
+    imageGrayOverlay: '#8B8B8BA6',
     modes: {
       dark: {},
     },
@@ -35,7 +36,8 @@ export const theme = {
     footer: [11, 12, 14, 16],
   },
   bodyPadding: {
-    py: 100,
+    pt: '7%',
+    pb: '10%',
     px: '10%'
   },
   links: {
