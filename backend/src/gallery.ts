@@ -28,7 +28,7 @@ const getImages = async() => {
     console.log('no files found');
     return [];
   }
-  const files = folderRes.data.files.map((file, index) => {
+  const files = folderRes.data.files.map((file) => {
     const data: sheets_v4.Schema$RowData = {
       values: [
         {userEnteredValue: {stringValue: file.name}},
