@@ -3,7 +3,9 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Navigation} from './components/Navigation';
 import {Footer} from './components/Footer';
 import {Home} from './pages/Home';
+import {Clubs} from './pages/Clubs';
 import {Map} from './pages/Map';
+import {Gallery} from './pages/Gallery';
 import {FAQ} from './pages/FAQ';
 import {IInfoContext, InfoContext} from './utils/contexts';
 import {ScrollToTop} from './components/ScrollToTop';
@@ -38,7 +40,7 @@ const App: React.FC = () => {
             <Home />
           </Route>
           <Route path="/clubs">
-            <Home />
+            <Clubs />
           </Route>
           <Route path="/calendar">
             <Home />
@@ -47,7 +49,7 @@ const App: React.FC = () => {
             <Map />
           </Route>
           <Route path="/gallery">
-            <Home />
+            <Gallery />
           </Route>
           <Route path="/faq">
             <FAQ />
@@ -59,8 +61,7 @@ const App: React.FC = () => {
             <Home />
           </Route>
         </Switch>
-
-        <Footer/>
+        <Footer />
       </Router>
     </InfoContext.Provider>
   );
