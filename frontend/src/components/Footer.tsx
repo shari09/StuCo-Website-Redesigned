@@ -65,7 +65,7 @@ const SocialMediaItem: React.FC<SocialMediaProps> = ({
     paddingX: '0.5em', // rudimentary spacing between the pictures lol
   };
   return (
-    <a href={link} sx={linkStyle} target="_blank">
+    <a href={link} sx={linkStyle}>
       <img sx={imageStyle} src={pictureLink} alt={name} />
     </a>
   );
@@ -81,6 +81,7 @@ const getSocialMedia = (
         name={sitename}
         link={socialMediaList[sitename][0]}
         pictureLink={socialMediaList[sitename][1]}
+        key={sitename}
       />
     );
   });
@@ -94,6 +95,8 @@ export const Footer: React.FC = () => {
     color: theme.colors.text.light,
     backgroundColor: theme.colors.footer,
     pt: '2em',
+    // a lazy fix to a lazy problem please shoot me
+    mt: '14em',
     position: 'relative',
     bottom: 0,
     width: '100%',
@@ -154,7 +157,7 @@ export const Footer: React.FC = () => {
   const getRouteItems = (routes: string[][]): ReactElement[] => {
     return routes.map((route) => {
       return (
-        <li>
+        <li key={route[1]}>
           <NavItem
             route={route[0]}
             text={route[1]}
@@ -200,6 +203,7 @@ export const Footer: React.FC = () => {
               >
                 <img
                   src="./assets/icons/Github-Mark-Light-20px.png"
+                  alt=""
                   sx={{mr: '0.5em', mb: '0.25em'}}
                 />
                 Source

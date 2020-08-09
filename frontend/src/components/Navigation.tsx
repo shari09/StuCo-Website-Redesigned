@@ -60,7 +60,13 @@ export const Navigation: React.FC = () => {
 
   const getNavItems = () => {
     return Object.keys(routes).map((route) => {
-      return <NavItem route={route} text={routes[route].toUpperCase()} />;
+      return (
+        <NavItem
+          route={route}
+          text={routes[route].toUpperCase()}
+          key={routes[route]}
+        />
+      );
     });
   };
 

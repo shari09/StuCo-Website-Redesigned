@@ -9,7 +9,6 @@ interface Props {
 }
 
 export const Heading: React.FC<Props> = ({text, alignment}) => {
-  
   const wrapperStyle: SxStyleProp = {
     textAlign: alignment,
   };
@@ -28,11 +27,11 @@ export const Heading: React.FC<Props> = ({text, alignment}) => {
     width: 400,
     margin: alignment === 'left' ? undefined : 'auto',
   };
-  
+
   return (
     <div sx={wrapperStyle}>
       <div sx={textStyle}>{text}</div>
-      <div sx={lineStyle}/>
+      <div sx={lineStyle} />
     </div>
   )
 };

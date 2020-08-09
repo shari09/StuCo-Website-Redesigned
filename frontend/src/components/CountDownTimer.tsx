@@ -32,7 +32,7 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
     window.setTimeout(() => {
       setTimer(timer - 1000);
     }, 1000);
-  }, [timer]);
+  }, [timer, date]);
 
   const getFormattedTime = (timeInMilli: number) => {
     const days = Math.floor(timeInMilli / (24 * 60 * 60 * 1000));
@@ -73,7 +73,7 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
   };
 
   const TimeUnit: React.FC<TimeUnitI> = ({number, text}) => {
-    const seconds = 'sec'
+    const seconds = 'sec';
     const numDigit = number < 100 ? 2 : 3;
     const textSize = text === seconds ? 15 : 20;
     const numSize = text === seconds ? 50 : 80;

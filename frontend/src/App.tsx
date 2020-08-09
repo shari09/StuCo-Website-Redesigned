@@ -3,6 +3,8 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Navigation} from './components/Navigation';
 import {Footer} from './components/Footer';
 import {Home} from './pages/Home';
+import {Map} from './pages/Map';
+import {FAQ} from './pages/FAQ';
 import {IInfoContext, InfoContext} from './utils/contexts';
 
 const App: React.FC = () => {
