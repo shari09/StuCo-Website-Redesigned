@@ -1,7 +1,8 @@
 /** @jsx jsx */
-import React, {useContext, useState, useRef, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
+import {slideUp, slideBackDown, fadeIn} from '../utils/animation';
 
 export interface Photo {
   url: string;
@@ -23,6 +24,8 @@ interface CenterPhotoProps {
     width: number;
     height: number;
   };
+  lockImage: () => void;
+  unlockImage: () => void;
 }
 
 interface GrayImageProps {
@@ -46,7 +49,6 @@ const GrayImage: React.FC<GrayImageProps> = ({
     width: photoDimension.width * scale,
     height: photoDimension.height * scale,
     objectFit: 'cover',
-    
   };
 
   const overlay: SxStyleProp = {
@@ -69,9 +71,9 @@ const GrayImage: React.FC<GrayImageProps> = ({
   };
 
   return (
-    <div sx={wrapperStyle} onClick={onClick} >
+    <div sx={wrapperStyle} onClick={onClick}>
       <img sx={style} src={url} />
-      <div sx={overlay}/>
+      <div sx={overlay} />
     </div>
   );
 };
@@ -82,43 +84,59 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
   url,
   description,
   photoDimension,
+  lockImage,
+  unlockImage,
 }) => {
-  const [show, setShow] = useState<boolean>(false);
-
+  const popupScale = 1.3;
   const wrapperStyle: SxStyleProp = {
+    boxShadow: '1vw 1vh .7em gray',
     display: 'inline-block',
     position: 'relative',
     mx: 'auto',
     zIndex: 2,
+    overflow: 'hidden',
+    '&:hover div': {
+      animation: 'slideUp .5s ease-out',
+      transform: 'translateY(0)',
+    },
+    '&:hover img': {
+      width: photoDimension.width * popupScale,
+      height: photoDimension.height * popupScale,
+      transitionDuration: '.3s',
+    },
+    '@keyframes fadeIn': fadeIn,
+    '@keyframes slideUp': slideUp,
+    '@keyframes slideBackDown': slideBackDown,
   };
 
   const descriptionStyle: SxStyleProp = {
     backgroundColor: theme.colors.imageOverlayForText,
     padding: 20,
+    py: '10%',
     fontSize: theme.fontSizes.body[2],
     fontFamily: theme.fonts.body,
-    display: show ? 'block' : 'none',
     position: 'absolute',
     bottom: 0,
     width: '100%',
     textAlign: 'start',
-    transition: 'all 2s linear',
+    transform: 'translateY(100%)',
+    animation: 'slideBackDown .3s ease-out',
   };
 
   const imageStyle: SxStyleProp = {
     objectFit: 'cover',
     width: photoDimension.width,
     height: photoDimension.height,
+    animationFillMode: 'forwards',
+    animationName: 'fadeIn',
+    animationDuration: '1s',
+    animationTimingFunction: 'linear',
+    transitionDuration: '.3s',
   };
 
   return (
-    <div sx={wrapperStyle}>
-      <img
-        src={url}
-        onMouseOver={() => setShow(true)}
-        onMouseLeave={() => setShow(false)}
-        sx={imageStyle}
-      />
+    <div sx={wrapperStyle} onMouseEnter={lockImage} onMouseLeave={unlockImage}>
+      <img src={url} sx={imageStyle} key={url} />
       <div sx={descriptionStyle}>{description}</div>
     </div>
   );
@@ -129,12 +147,13 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
 //photos are 1.5:1 aspect ratio
 export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
   const [curPhoto, setCurPhoto] = useState<number>(0);
+  const [timerId, setTimerId] = useState<number>();
 
+  const interval = 3000;
+  const intervalAfterLock = interval/3;
   useEffect(() => {
-    const id = window.setInterval(() => {
-      setCurPhoto(getNextIdx);
-    }, 3000);
-    return () => clearInterval(id);
+    startRotation();
+    return () => window.clearInterval(timerId);
   }, []);
 
   const getPrevIdx = (curIdx: number) => {
@@ -149,6 +168,35 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
     return newIdx;
   };
 
+  const lockImage = () => {
+    window.clearInterval(timerId);
+  };
+
+  const startRotation = () => {
+    const id = window.setInterval(() => {
+      setCurPhoto(getNextIdx);
+    }, interval);
+    setTimerId(oldId => {
+      window.clearInterval(oldId);
+      return id;
+    });
+  };
+
+  const unlockImage = () => {
+    window.setTimeout(() => {
+      setCurPhoto(getNextIdx);
+      startRotation();
+    }, intervalAfterLock);
+  };
+
+  const resetTimer = () => {
+    window.clearInterval(timerId);
+    const id = window.setInterval(() => {
+      setCurPhoto(getNextIdx);
+    }, interval);
+    setTimerId(id);
+  };
+
   const style: SxStyleProp = {
     textAlign: 'center',
     mt: '5%',
@@ -161,18 +209,26 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
       <GrayImage
         url={photos[getPrevIdx(curPhoto)].url}
         photoDimension={photoDimension}
-        onClick={() => setCurPhoto(getPrevIdx)}
+        onClick={() => {
+          setCurPhoto(getPrevIdx);
+          resetTimer();
+        }}
         extraStyling={{left: 0}}
       />
       <CenterImage
         url={photos[curPhoto].url}
         description={photos[curPhoto].description}
         photoDimension={photoDimension}
+        lockImage={lockImage}
+        unlockImage={unlockImage}
       />
       <GrayImage
         url={photos[getNextIdx(curPhoto)].url}
         photoDimension={photoDimension}
-        onClick={() => setCurPhoto(getNextIdx)}
+        onClick={() => {
+          setCurPhoto(getNextIdx);
+          resetTimer();
+        }}
         extraStyling={{right: 0}}
       />
     </div>

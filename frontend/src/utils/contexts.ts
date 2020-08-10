@@ -6,11 +6,13 @@ import {
   UpcomingMiniEvents,
   Club,
   FAQ,
-  Photo
+  Photo,
+  CountDown
 } from './interfaces';
 
 export interface IInfoContext {
   events: Event[];
+  countdown: CountDown[];
   members: Member[];
   recents: Recent[];
   upcomingMiniEvents: UpcomingMiniEvents[];
@@ -21,6 +23,7 @@ export interface IInfoContext {
 
 export const InfoContext = createContext<IInfoContext>({
   events: [],
+  countdown: [],
   members: [],
   recents: [],
   upcomingMiniEvents: [],

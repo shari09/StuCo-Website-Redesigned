@@ -56,20 +56,8 @@ const getSheet = async (ranges: DataBlock[]) => {
 };
 
 
-//@ts-ignore
-exports.run = async (req, res) => {
-  if (req.method !== 'GET') {
-    res.status(405).send({error: 'something blew up D;'});
-  }
-  res.set('Access-Control-Allow-Methods', 'GET');
-  res.set('Access-Control-Allow-Headers', 'Authorization');
-  res.set('Access-Control-Max-Age', '3600');
-  // res.set('Access-Control-Allow-Origin', 'https://rhhsstuco.ca');
-  res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.set('Access-Control-Allow-Credentials', 'true');
-
+const run = async () => {
   await auth();
-
   const metaData = await getMetaData();
   const rawData = await getSheet(metaData);
 
@@ -93,6 +81,11 @@ exports.run = async (req, res) => {
     }
 
   });
-
-  res.status(200).end(JSON.stringify(data));
+  return data;
 };
+// const startTime = new Date();
+
+run().then((res) => {
+  console.log(res);
+  // console.log(new Date() - startTime);
+}).catch(console.log);

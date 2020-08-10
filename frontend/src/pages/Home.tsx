@@ -12,9 +12,9 @@ import {PhotoSlideDeck, Photo} from '../components/PhotoSlideDeck';
 import { getImageUrl } from '../utils/functions';
 
 const Main: React.FC = () => {
-  const nextEvent = useContext<IInfoContext>(InfoContext).events[0];
+  const countdownEvent = useContext<IInfoContext>(InfoContext).countdown[0];
 
-  if (!nextEvent) {
+  if (!countdownEvent) {
     return <div />;
   }
 
@@ -46,9 +46,9 @@ const Main: React.FC = () => {
 
   return (
     <div sx={style}>
-      <CountDownTimer date={new Date(nextEvent.date)} />
+      <CountDownTimer date={new Date(countdownEvent.date)} />
       <Link to="events" sx={buttonStyle}>
-        <div sx={{my: 2}}>{nextEvent.name.toUpperCase()}</div>
+        <div sx={{my: 2}}>{countdownEvent.eventName.toUpperCase()}</div>
       </Link>
     </div>
   );
@@ -138,7 +138,7 @@ const UpcomingBoard: React.FC = () => {
     return upcomingMiniEvents.map((event) => {
       return {
         text: event.name,
-        children: [
+        nestedItems: [
           {
             text: event.description,
           },
@@ -192,8 +192,9 @@ const Recent: React.FC = () => {
   const thisComponentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!thisComponentRef.current) return;
     setWidth(thisComponentRef.current.getBoundingClientRect().width)
-  }, []);
+  }, [thisComponentRef.current]);
 
   if (!recents) {
     return <div></div>;
@@ -211,7 +212,7 @@ const Recent: React.FC = () => {
 
   const photos: Photo[] = recents.map(event => {
     return {
-      url: getImageUrl(event.photoUrl, Math.round(width/scale), 1000),
+      url: getImageUrl(event.photoId, Math.round(width/scale), 1000),
       description: event.description,
     };
   });

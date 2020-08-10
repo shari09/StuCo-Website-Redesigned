@@ -1,8 +1,14 @@
 # ndoe modules
 node_modules/
 
+package-lock.json
+react-app-env.d.ts
+.prettierrc.js
+
+
 # vscode configeration
 .vscode/
 
 # bad bad authentication
 service-key.json
+

@@ -7,7 +7,7 @@ import {theme} from '../utils/theme';
 export interface Item {
   text: string;
   collapsed: boolean;
-  children?: Item[];
+  nestedItems?: Item[];
   topLevel: boolean;
   itemExtraStyling?: SxStyleProp;
   childrenExtraStyling?: SxStyleProp;
@@ -23,7 +23,15 @@ interface ListProps {
 
 //TODO: make this more scalable, just really not feel like doing it rn,
 //very sketchy code pls don't judge 🤪
-const ListItem: React.FC<Item> = ({text, collapsed, children, topLevel, itemExtraStyling, childrenExtraStyling, onClicked}) => {
+const ListItem: React.FC<Item> = ({
+  text,
+  collapsed,
+  nestedItems,
+  topLevel,
+  itemExtraStyling,
+  childrenExtraStyling,
+  onClicked,
+}) => {
   const [childrenCollapsed, setChildrenCollapsed] = useState<boolean>(true);
 
   const itemStyle: SxStyleProp = {
@@ -36,28 +44,29 @@ const ListItem: React.FC<Item> = ({text, collapsed, children, topLevel, itemExtr
     borderTop: 0,
     borderColor: theme.colors.text.light,
     borderStyle: 'solid',
-    display: collapsed ? 'none' : 'block',
     textAlign: 'right',
     width: topLevel ? '40%' : '30%',
     pt: '1.7em',
     ml: topLevel ? '20%' : '40%',
     '&:hover': {
-      cursor: children ? 'pointer' : 'default',
-
+      cursor: nestedItems ? 'pointer' : 'default',
     },
+    // display: collapsed ? 'none' : 'block',
+    transform: collapsed ? 'translateY(-100%)' : 'translateY(0)',
+    transitionDuration: `.5s`,
   };
 
   Object.assign(itemStyle, topLevel ? itemExtraStyling : childrenExtraStyling);
 
   const getChildren = () => {
-    if (!children) return;
-    return children.map((child) => {
+    if (!nestedItems) return;
+    return nestedItems.map((child) => {
       if (!child.text) return;
       return (
         <ListItem
           text={child.text}
           collapsed={childrenCollapsed}
-          children={child.children}
+          nestedItems={child.nestedItems}
           topLevel={false}
         />
       );
@@ -65,7 +74,7 @@ const ListItem: React.FC<Item> = ({text, collapsed, children, topLevel, itemExtr
   };
 
   const textClicked = () => {
-    if (!children) return;
+    if (!nestedItems) return;
     setChildrenCollapsed(!childrenCollapsed);
   };
 
@@ -76,8 +85,10 @@ const ListItem: React.FC<Item> = ({text, collapsed, children, topLevel, itemExtr
   }, [childrenCollapsed]);
 
   return (
-    <div>
-      <div sx={itemStyle} onClick={textClicked}>{text}</div>
+    <div sx={{overflow: 'hidden', height: collapsed ? 0 : undefined}}>
+      <div sx={itemStyle} onClick={textClicked}>
+        {text}
+      </div>
       {getChildren()}
     </div>
   );
@@ -91,7 +102,7 @@ export const CollapsableList = React.forwardRef<HTMLDivElement, ListProps>(
           <ListItem
             text={item.text}
             collapsed={false}
-            children={item.children}
+            nestedItems={item.nestedItems}
             topLevel={true}
             itemExtraStyling={itemExtraStyling}
             childrenExtraStyling={childrenExtraStyling}
