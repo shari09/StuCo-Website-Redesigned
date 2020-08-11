@@ -1,6 +1,9 @@
 import {google, sheets_v4} from 'googleapis';
 const sheets = google.sheets('v4');
 
+const spreadsheetId = '1oF4Abo1kJmjGhtFhJy_DbR44XfEVsCLqcc53jeTDy8U';
+
+
 const auth = async () => {
   const auth = new google.auth.GoogleAuth({
     keyFile: '../service-key.json',
@@ -11,6 +14,8 @@ const auth = async () => {
   google.options({auth: authClient});
 };
 
+//=====================================================================
+
 class DataBlock {
   [key: string]: string;
   constructor(properties: string[], values: string[]) {
@@ -20,7 +25,7 @@ class DataBlock {
   }
 }
 
-const spreadsheetId = '1oF4Abo1kJmjGhtFhJy_DbR44XfEVsCLqcc53jeTDy8U';
+//=====================================================================
 
 const getMetaData = async() => {
   //getting meta data — the ranges of the sheets
@@ -45,7 +50,7 @@ const getMetaData = async() => {
   return ranges;
 };
 
-
+//=====================================================================
 
 const getSheet = async (ranges: DataBlock[]) => {  
   const sheet = await sheets.spreadsheets.values.batchGet({
@@ -55,6 +60,7 @@ const getSheet = async (ranges: DataBlock[]) => {
   return sheet.data.valueRanges || [];
 };
 
+//=====================================================================
 
 //@ts-ignore
 exports.run = async (req, res) => {
