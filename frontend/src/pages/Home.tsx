@@ -2,14 +2,16 @@
 import React, {useContext, useState, useRef, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {Link} from 'react-router-dom';
+import {MdControlPoint} from 'react-icons/md';
+import ResizeObserver from 'resize-observer-polyfill';
 import {theme} from '../utils/theme';
 import {InfoContext, IInfoContext} from '../utils/contexts';
 import {CountDownTimer} from '../components/CountDownTimer';
 import {Heading} from '../components/Heading';
 import {RandomDot} from '../components/RandomDot';
-import {CollapsableList, Item} from '../components/CollapsableList';
+import {Collapsable} from '../components/Collapsable';
 import {PhotoSlideDeck, Photo} from '../components/PhotoSlideDeck';
-import { getImageUrl } from '../utils/functions';
+import {getImageUrl} from '../utils/functions';
 
 const Main: React.FC = () => {
   const countdownEvent = useContext<IInfoContext>(InfoContext).countdown[0];
@@ -56,9 +58,9 @@ const Main: React.FC = () => {
 
 //=============================================================
 
-const BackgroundWithDots: React.FC<{eventListHeight: number}> = (props) => {
-  const [height, setHeight] = useState<number>(props.eventListHeight);
-  const [width, setWidth] = useState<number>(0);
+const BackgroundWithDots: React.FC = (props) => {
+  const [rendered, setRendered] = useState<boolean>(false);
+  const [updated,  setUpdated] = useState<boolean>(false);
   //for getting the width
   const component = useRef<HTMLDivElement>(null);
 
@@ -71,14 +73,27 @@ const BackgroundWithDots: React.FC<{eventListHeight: number}> = (props) => {
     pt: 20,
   };
 
+
   useEffect(() => {
-    if (!component.current) return;
-    setHeight(props.eventListHeight+60);
-    setWidth(component.current.getBoundingClientRect().width);
-  });
+    setRendered(true);
+    const ro = new ResizeObserver(entries => {
+      entries.forEach(entry => {
+        setUpdated(updated => !updated);
+      });
+    });
+    ro.observe(component.current);
+    return () => ro.disconnect();
+  }, []);
+
 
   const getRandomDots = () => {
-    const numDots = height/40;
+    if (!rendered) return;
+    //to trigger the update on resize
+    if (updated || !updated) {}
+    const height = component.current.getBoundingClientRect().height;
+    const width = component.current.getBoundingClientRect().width;
+    
+    const numDots = height / 40;
     const dots = [];
     for (let i = 0; i < numDots; i++) {
       dots.push(
@@ -101,10 +116,6 @@ const BackgroundWithDots: React.FC<{eventListHeight: number}> = (props) => {
     return dots;
   };
 
-  if (!height) {
-    return <div></div>;
-  }
-
   return (
     <div sx={style} ref={component}>
       {getRandomDots()}
@@ -118,15 +129,6 @@ const BackgroundWithDots: React.FC<{eventListHeight: number}> = (props) => {
 
 const UpcomingBoard: React.FC = () => {
   const {upcomingMiniEvents} = useContext<IInfoContext>(InfoContext);
-  const eventListRef = useRef<HTMLDivElement>(null);
-  const [eventListHeight, setEventListHeight] = useState<number>(1000);
-
-
-  useEffect(() => {
-    if (!eventListRef.current) return;
-    setEventListHeight(eventListRef.current.getBoundingClientRect().height);
-  }, [eventListRef.current]);
-
 
   const style: SxStyleProp = {
     pt: theme.bodyPadding.pt,
@@ -134,16 +136,33 @@ const UpcomingBoard: React.FC = () => {
     px: theme.bodyPadding.px,
   };
 
-  const getEvents = () => {
+  const getEventsList = () => {
+    const style: SxStyleProp = {
+      fontSize: theme.fontSizes.body[5],
+      fontFamily: theme.fonts.body,
+    };
+
+    const descriptionStyle: SxStyleProp = {
+      textAlign: 'left',
+      pl: '5em',
+      fontSize: theme.fontSizes.body[3],
+      py: '0.5em',
+    };
+
     return upcomingMiniEvents.map((event) => {
-      return {
-        text: event.name,
-        nestedItems: [
-          {
-            text: event.description,
-          },
-        ],
-      } as Item;
+      const title = (
+        <React.Fragment>
+          <MdControlPoint/> {event.name}
+        </React.Fragment>
+      );
+
+      if (!event.description)
+        return <Collapsable title={title} extraStyling={style} />;
+      return (
+        <Collapsable title={title} extraStyling={style}>
+          <div sx={descriptionStyle}>{event.description}</div>
+        </Collapsable>
+      );
     });
   };
 
@@ -153,37 +172,31 @@ const UpcomingBoard: React.FC = () => {
       textAlign: 'center',
       color: theme.colors.text.light,
       py: 5,
-      
     };
 
     return <div sx={style}>Nothing Yet!</div>;
+  };
+
+  const eventListWrapper: SxStyleProp = {
+    ml: '30%',
   };
 
   if (!upcomingMiniEvents) {
     return <div />;
   }
 
-  
-  const events = getEvents();
-  const getHeight = () => {
-    setEventListHeight(eventListRef.current.getBoundingClientRect().height);
-  };
-
   return (
-    <div sx={style}>
+    <div sx={style} >
       <Heading alignment="center" text="Upcoming" />
-      <BackgroundWithDots eventListHeight={eventListHeight}>
-        {events.length > 0 ? (
-          <CollapsableList items={events} ref={eventListRef} onClicked={getHeight}/>
-        ) : (
+      <BackgroundWithDots>
+        {upcomingMiniEvents.length > 0 ?
+          <div sx={eventListWrapper}>{getEventsList()}</div> :
           getPlaceHolder()
-        )}
+        }
       </BackgroundWithDots>
     </div>
   );
 };
-
-
 
 //=============================================================
 const Recent: React.FC = () => {
@@ -193,8 +206,8 @@ const Recent: React.FC = () => {
 
   useEffect(() => {
     if (!thisComponentRef.current) return;
-    setWidth(thisComponentRef.current.getBoundingClientRect().width)
-  }, [thisComponentRef.current]);
+    setWidth(thisComponentRef.current.getBoundingClientRect().width);
+  }, []);
 
   if (!recents) {
     return <div></div>;
@@ -205,21 +218,20 @@ const Recent: React.FC = () => {
     px: theme.bodyPadding.px,
     pt: theme.bodyPadding.pt,
     pb: theme.bodyPadding.pb,
-
   };
 
   const scale = 2.8;
 
-  const photos: Photo[] = recents.map(event => {
+  const photos: Photo[] = recents.map((event) => {
     return {
-      url: getImageUrl(event.photoId, Math.round(width/scale), 1000),
+      url: getImageUrl(event.photoId, Math.round(width / scale), 1000),
       description: event.description,
     };
   });
 
   const photoDimension = {
-    width: width/scale,
-    height: width/scale/1.5
+    width: width / scale,
+    height: width / scale / 1.5,
   };
 
   const line: SxStyleProp = {
@@ -233,13 +245,12 @@ const Recent: React.FC = () => {
 
   return (
     <div sx={style} ref={thisComponentRef}>
-      <Heading text='Recents' alignment='center'/>
-      <PhotoSlideDeck photos={photos} photoDimension={photoDimension}/>
+      <Heading text="Recents" alignment="center" />
+      <PhotoSlideDeck photos={photos} photoDimension={photoDimension} />
       <div sx={line} />
     </div>
-  )
+  );
 };
-
 
 //=============================================================
 

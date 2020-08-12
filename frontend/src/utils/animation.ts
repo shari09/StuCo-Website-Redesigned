@@ -24,6 +24,17 @@ export const slideBackDown: SxStyleProp = {
   },
 };
 
+export const slideDown: SxStyleProp = {
+  '0%': {
+    opacity: 0,
+    transform: 'translateY(-100%)',
+  },
+  '100%': {
+    opacity: 1,
+    transform: 'translateY(0)',
+  },
+};
+
 export const fadeIn: SxStyleProp = {
   '0%': {
     opacity: 0,

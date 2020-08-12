@@ -32,6 +32,8 @@ export const hexToRgba = (hex: string, alpha: number): rgbItem => {
 };
 
 //width and height must be of type int
+//it keeps original aspect ratio so it'll match the min width/height specified,
+// whichever one matches first
 export const getImageUrl = (imageId: string, width: number, height: number) => {
-  return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${width}-h${height}`;
+  return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${Math.round(width)}-h${Math.round(height)}`;
 };
