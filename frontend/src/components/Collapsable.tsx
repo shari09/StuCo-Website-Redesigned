@@ -4,7 +4,6 @@ import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 import ResizeObserver from 'resize-observer-polyfill';
 
-
 interface Props {
   title: string | React.ReactElement;
   extraStyling?: SxStyleProp;
@@ -26,9 +25,9 @@ export const Collapsable: React.FC<Props> = ({
     if (!childrenRef.current) return;
 
     //if the children has children and they resize, normally it won't re-render
-    //which is why the oberserver is added 
-    const ro = new ResizeObserver(entries => {
-      entries.forEach(entry => {
+    //which is why the oberserver is added
+    const ro = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
         prevHeight.current = childrenHeight;
         const {height} = entry.contentRect;
         setChildrenHeight(height);
@@ -51,12 +50,12 @@ export const Collapsable: React.FC<Props> = ({
   };
 
   const getHeightDiff = () => {
-    const diff = Math.abs(childrenHeight-prevHeight.current);
+    const diff = Math.abs(childrenHeight - prevHeight.current);
     if (diff === 0) return childrenHeight;
     return diff;
   };
 
-  const transitionTime = `${getHeightDiff()*0.01}s`;
+  const transitionTime = `${getHeightDiff() * 0.01}s`;
 
   const childrenWrapperStyle: SxStyleProp = {
     ml: '20%',
@@ -74,7 +73,7 @@ export const Collapsable: React.FC<Props> = ({
     transitionDuration: transitionTime,
     borderBottomColor: theme.colors.text.light,
     borderBottomStyle: 'dashed',
-    
+
     '&:hover': {
       cursor: React.Children.count(children) > 0 ? 'pointer' : 'default',
     },
@@ -86,7 +85,7 @@ export const Collapsable: React.FC<Props> = ({
         sx={{...titleStyle, ...extraStyling}}
         onClick={() => {
           if (React.Children.count(children) === 0) return;
-          setChildrenCollapsed((childrenCollapsed) => !childrenCollapsed)
+          setChildrenCollapsed((childrenCollapsed) => !childrenCollapsed);
         }}
       >
         {title}

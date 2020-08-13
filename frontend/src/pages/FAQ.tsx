@@ -7,7 +7,7 @@ import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
 import {FAQ as FAQInterface} from '../utils/interfaces';
 
-// fun fun interfaces
+// Interfaces --
 export interface FAQProp {
   question: string;
   answer: string;
@@ -25,6 +25,9 @@ export interface ResponseProp {
   textExtraStyling?: SxStyleProp;
   rectExtraStyling?: SxStyleProp;
 }
+
+//TODO: yes shari i will add padding later
+//TODO: please for the love of god clean this file up
 
 // The function that returns a FAQ object
 // it's pretty big though...
@@ -53,33 +56,39 @@ export const FAQ: React.FC = (): ReactElement => {
   };
   const wrapperStyle: SxStyleProp = {
     // the main page div
+
     width: '100%',
     minHeight: '100vh',
     backgroundColor: theme.colors.background.light,
-    // border: '5px solid', //todo
-    // borderColor: 'green',
   };
   const innerWrapperStyle: SxStyleProp = {
     // the div that contains everything
+
     top: '20vh',
     position: 'relative',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    // border: '5px solid', //todo
-    // borderColor: 'red',
+    mb: '14em', // pushing away the footer
   };
   const headingWrapperStyle: SxStyleProp = {
     // the header div
+
     left: '5%',
     maxWidth: '90%', // to make sure the page doesn't scroll to the right
     position: 'relative',
-    // border: '5px solid', //todo
-    // borderColor: 'pink',
   };
 
-  // For retrieving all the seperate question answers
+  /**
+   * Retrieves and formats all the seperate question answers
+   * @param faqQuestions - all questions in the faq.
+   * @returns a list of ReactElements with the questions.
+   */
   const getFaqItems = (faqQuestions: FAQInterface[]) => {
+    if (!faqQuestions) {
+      return <div></div>;
+    }
+
     const faqItems: ReactElement[] = [];
     // yes shari, a for loop
     // i want the index >:(
@@ -161,30 +170,27 @@ export const FAQ: React.FC = (): ReactElement => {
     const outerWrapperDiv: SxStyleProp = {
       ...extraStyling,
       width: '100%',
-      // border: '5px solid',
     };
     const innerWrapperDiv: SxStyleProp = {
+      // positioning
       top: '3.5em',
       maxWidth: '95vw', // to make sure the page doesn't scroll to the right
       position: 'relative',
       display: 'inline-block',
       textAlign: 'center',
-      // border: '5px solid',
-      // borderColor: 'yellow',
+
       ...extraStyling,
     };
     const textWrapperDiv: SxStyleProp = {
+      // positioning
       display: 'flex',
       position: 'absolute',
-      // top: '12%',
       width: '100%',
       height: '100%',
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      // border: '5px solid',
-      // borderColor: 'pink',
     };
 
     return (
@@ -207,7 +213,7 @@ export const FAQ: React.FC = (): ReactElement => {
     );
   };
 
-  // To hold the response div and rect
+  // ResponseItem holds the response div and rect
   const ResponseItem: React.FC<ResponseProp> = ({
     response,
     textExtraStyling,
@@ -218,12 +224,11 @@ export const FAQ: React.FC = (): ReactElement => {
       width: '90%',
       maxWidth: '100vw',
       display: 'inline-block',
-      // border: '5px solid', //todo: yeet
-      // borderColor: 'magenta',
     };
+
     return (
-      // yes i know the rectangles aren't EXACTLY the way it is on the
-      // planning xd but this is good enoughhh. it serves its purpose
+      // yes shari i know the rectangles aren't EXACTLY the way it is on
+      // the planning xd but this is good enoughhh. it serves its purpose
       // and i can reuse it!!
       <TranslucentRectangle
         lengthX="60em"
@@ -231,7 +236,6 @@ export const FAQ: React.FC = (): ReactElement => {
         extraStyling={{
           ...textExtraStyling,
           ...rectExtraStyling,
-          // border: '5px solid'
         }}
       >
         <div sx={textWrapperDiv}>
@@ -250,8 +254,6 @@ export const FAQ: React.FC = (): ReactElement => {
         <div
           sx={{
             flex: 'initial',
-            // border: '1px solid', //todo
-            // borderColor: 'blue',
           }}
         >
           <ul sx={{listStyleType: 'none', px: 0, py: 0, mx: 0, my: 0}}>
