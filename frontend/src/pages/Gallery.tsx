@@ -4,14 +4,17 @@ import React, {
   useRef,
   useEffect,
   useState,
+  useCallback,
   ReactElement,
 } from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {Heading} from '../components/Heading';
+import PhotoViewer, {Photo} from '../components/PhotoViewer';
+import CircleSpinner from '../components/CircleSpinner';
 import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
 import {Photo as PhotoInfo} from '../utils/interfaces';
-import PhotoViewer, {Photo} from '../components/PhotoViewer';
+
 import {getImageUrl, splitArray} from '../utils/functions';
 
 // note: all the images are in their widthScale:heightScale ratio
@@ -33,6 +36,8 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
   initializeDisplay,
   extraPhotoStyle,
 }): ReactElement => {
+  const [loading, setLoading] = useState<boolean>(true);
+
   const photoStyle: SxStyleProp = {
     // positioning
     maxWidth: '100%',
@@ -41,26 +46,51 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
     width: photo.photoDimensions.width,
     height: photo.photoDimensions.height,
 
-    // fade and move animations
-    transition: 'transform .2s, .5s ease',
+    display: loading ? 'none' : 'block',
+
     '&:hover': {
-      transform: 'scale(1.02)',
-      opacity: 0.6,
       cursor: 'pointer',
     },
   };
 
-  const displayViewer = () => {
+  /**
+   * Does the cleanup once the image is loaded.
+   */
+  const finishLoading = useCallback(() => {
+    setLoading(false);
+  }, []);
+
+  /**
+   * Initializes the photo viewer.
+   */
+  const displayViewer = (): void => {
     initializeDisplay(photo.photoNum);
   };
 
+  /**
+   * Returns a formatted loading spinner
+   */
+  const displayLoadSpinner = (): ReactElement => {
+    if (loading) {
+      return (
+        <div sx={{display: 'inline-block', my: '50%'}}>
+          <CircleSpinner />
+        </div>
+      );
+    }
+  };
+
   return (
-    <img
-      src={photo.photoUrl}
-      alt=""
-      onClick={displayViewer}
-      sx={{...photoStyle, ...extraPhotoStyle}}
-    />
+    <div>
+      {displayLoadSpinner()}
+      <img
+        src={photo.photoUrl}
+        alt=""
+        onClick={displayViewer}
+        onLoad={finishLoading}
+        sx={{...photoStyle, ...extraPhotoStyle}}
+      />
+    </div>
   );
 };
 
@@ -129,9 +159,7 @@ export const Gallery: React.FC = (): ReactElement => {
   });
 
   // Styles related to the photos and the galleries --
-  const extraPhotoStyle: SxStyleProp = {
-    border: '2px solid',
-  };
+  const extraPhotoStyle: SxStyleProp = {};
   const allGalleryStyle: SxStyleProp = {
     textAlign: 'center',
     maxWidth: '32%',
@@ -169,15 +197,26 @@ export const Gallery: React.FC = (): ReactElement => {
     photoColumn: Photo[],
     extraPhotoStyle: SxStyleProp,
   ): ReactElement[] => {
-    if (!photoColumn) return [<div></div>];
+    if (!photoColumn) return [<div key="0"></div>];
 
     const photoContainerStyle: SxStyleProp = {
-      py: '1%',
+      my: '1%',
+      width: '100%',
+      // border for image / loading circle
+      border: '2px solid black',
+
+      // fade and move animations here so both border and image have it
+      transition: 'transform .2s, .5s ease',
+      '&:hover': {
+        transform: 'scale(1.02)',
+        opacity: 0.6,
+        cursor: 'pointer',
+      },
     };
 
     return photoColumn.map((photo) => {
       return (
-        <div sx={photoContainerStyle}>
+        <div sx={photoContainerStyle} key={photo.photoNum}>
           <GalleryPhoto
             photo={photo}
             extraPhotoStyle={extraPhotoStyle}

@@ -1,9 +1,16 @@
 /** @jsx jsx */
-import React, {useState, useEffect, useRef, ReactElement} from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  ReactElement,
+  useCallback,
+} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 import {Photo as PhotoInfo} from '../utils/interfaces';
 import {getImageUrl} from '../utils/functions';
+import CircleSpinner from './CircleSpinner';
 
 // Interfaces --
 export interface Photo {
@@ -122,8 +129,8 @@ const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
    */
   const fetchMainImageUrl = (photoId: string): string => {
     return orientation === 'landscape'
-      ? getImageUrl(photoId, 10_000, mainImageLimit)
-      : getImageUrl(photoId, mainImageLimit, 10_000);
+      ? getImageUrl(photoId, 5000, mainImageLimit)
+      : getImageUrl(photoId, mainImageLimit, 5000);
   };
 
   /**
@@ -150,6 +157,7 @@ const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
    * this image loading.
    */
   const performLoadActivities = (): void => {
+    console.log('finished loading main image');
     determineOrientation();
     loadHandler();
   };
@@ -167,6 +175,10 @@ const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
           sx={mainImageStyle}
           ref={mainImageRef}
           onLoad={performLoadActivities}
+          onError={() => {
+            console.log('failed to load main image');
+            loadHandler();
+          }}
         />
       </a>
     </div>
@@ -251,6 +263,22 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   const [overlayWidth, setOverlayWidth] = useState<number>(0);
   const overlayReferenceDiv = useRef<HTMLDivElement>(null);
 
+  // A memoized callback function to interact with keyboard
+  // functionality -- only needs to be created once.
+  const reactToKeystrokes = useCallback((event: KeyboardEvent) => {
+    switch (event.keyCode) {
+      case 27: // esc key
+        closeHandler();
+        break;
+      case 39: // right arrow key
+        incrementIdx();
+        break;
+      case 37: // left arrow key
+        decrementIdx();
+        break;
+    }
+  }, []);
+
   // Setting up overlay width for proper background image sizing
   useEffect(() => {
     if (!overlayReferenceDiv.current) return;
@@ -262,6 +290,14 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     );
   }, [overlayReferenceDiv]);
 
+  // Setting up keyboard functionality
+  useEffect(() => {
+    document.addEventListener('keydown', reactToKeystrokes, false);
+
+    return () => {
+      document.removeEventListener('keydown', reactToKeystrokes, false);
+    };
+  }, []);
   /**
    * Generates a larger version of the specified image, usable as a full
    * page background.
@@ -269,7 +305,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
    * @returns a url to the enlarged photo.
    */
   const fetchOverlayImageUrl = (photoId: string): string => {
-    return getImageUrl(photoId, overlayWidth, 10_000);
+    return getImageUrl(photoId, overlayWidth, 5000);
   };
 
   /**
@@ -301,6 +337,15 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   };
 
   /**
+   * Logs out that the overlay loaded successfully and handles it.
+   * this is a debug function lmao
+   */
+  const handleOverlayLoadingState = (): void => {
+    console.log('finished loading overlay');
+    handleLoadingState();
+  };
+
+  /**
    * Checks a provided html div's img children and sees if they loaded
    * in or not.
    * @param refDiv - the html div that contains all the imgs
@@ -308,7 +353,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
    */
   const checkIfImagesLoaded = (refDiv: HTMLDivElement): boolean => {
     const imgElements = refDiv.querySelectorAll('img');
-    console.log(imgElements.length);
+
     for (const img of imgElements) {
       if (!img.complete) {
         return false;
@@ -316,6 +361,32 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     }
 
     return true;
+  };
+
+  /**
+   * Renders a spinner if the images are currently loading in.
+   * @returns a circle spinner if images are loading, nothing otherwise.
+   */
+  const renderSpinner = (): ReactElement | void => {
+    if (loading) {
+      return (
+        <div
+          sx={{
+            position: 'relative',
+            height: '100vh',
+            width: '100vw',
+            display: 'flex',
+            textAlign: 'center',
+            alignItems: 'center',
+            zIndex: 20, // big big index to overlay over everything
+          }}
+        >
+          <div sx={{display: 'inline-block', mx: 'auto'}}>
+            <CircleSpinner />
+          </div>
+        </div>
+      );
+    }
   };
 
   // styles for the components
@@ -327,6 +398,8 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     opacity: '0.9',
     height: '100%',
     width: '100%',
+
+    display: loading ? 'none' : 'block',
 
     // blur the image (note: edge and ie will die, but who cares lmao)
     filter: 'blur(8px) brightness(0.5)',
@@ -378,9 +451,15 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
         <img
           src={fetchOverlayImageUrl(photos[index].photoId)}
           sx={overlayStyle}
-          onLoad={handleLoadingState}
+          onLoad={handleOverlayLoadingState}
+          onError={() => {
+            console.log('failed to load overlay');
+            handleLoadingState();
+          }}
         />
       </div>
+      {/* drawing the spinner if images don't load */}
+      {renderSpinner()}
       {/* the content wrapper */}
       <div sx={contentWrapperStyle}>
         {/* left button */}
