@@ -7,10 +7,10 @@ import React, {
   useCallback,
 } from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
+import CircleSpinner from './CircleSpinner';
 import {theme} from '../utils/theme';
 import {Photo as PhotoInfo} from '../utils/interfaces';
 import {getImageUrl} from '../utils/functions';
-import CircleSpinner from './CircleSpinner';
 
 // Interfaces --
 export interface Photo {
@@ -364,6 +364,25 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   };
 
   /**
+   * Renders an X button intended for exiting the viewer.
+   * @returns an X button which exits the viewer upon click.
+   */
+  const renderExitButton = (): ReactElement => {
+    return (
+      <ViewerButton
+        imageSrc="./assets/icons/x-button.png"
+        actionHandler={closeHandler}
+        extraButtonStyling={{
+          position: 'absolute',
+          top: '5%',
+          right: '5%',
+          mx: '0%',
+        }}
+      />
+    );
+  };
+
+  /**
    * Renders a spinner if the images are currently loading in.
    * @returns a circle spinner if images are loading, nothing otherwise.
    */
@@ -384,6 +403,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
           <div sx={{display: 'inline-block', mx: 'auto'}}>
             <CircleSpinner />
           </div>
+          {renderExitButton()}
         </div>
       );
     }
@@ -477,6 +497,8 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
           imageSrc="./assets/icons/double-arrow-right.png"
           actionHandler={incrementIdx}
         />
+        {/* x button */}
+        {renderExitButton()}
       </div>
     </div>
   );
