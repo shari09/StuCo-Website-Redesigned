@@ -13,6 +13,10 @@ import {Collapsable} from '../components/Collapsable';
 import {PhotoSlideDeck, Photo} from '../components/PhotoSlideDeck';
 import {getImageUrl} from '../utils/functions';
 
+
+/**
+ * The home screen, big parallax background plus the timer
+ */
 const Main: React.FC = () => {
   const countdownEvent = useContext<IInfoContext>(InfoContext).countdown[0];
 
@@ -58,11 +62,15 @@ const Main: React.FC = () => {
 
 //=============================================================
 
+/**
+ * The green board that has dots in the background 
+ */
 const BackgroundWithDots: React.FC = (props) => {
   const [rendered, setRendered] = useState<boolean>(false);
   const [updated,  setUpdated] = useState<boolean>(false);
+  
   //for getting the width
-  const component = useRef<HTMLDivElement>(null);
+  const componentRef = useRef<HTMLDivElement>(null);
 
   const style: SxStyleProp = {
     backgroundColor: theme.colors.secondary,
@@ -76,22 +84,28 @@ const BackgroundWithDots: React.FC = (props) => {
 
   useEffect(() => {
     setRendered(true);
+
+    //used to re-render the dots upon resizing, because it may be a long list
     const ro = new ResizeObserver(entries => {
       entries.forEach(entry => {
         setUpdated(updated => !updated);
       });
     });
-    ro.observe(component.current);
+    ro.observe(componentRef.current);
     return () => ro.disconnect();
   }, []);
 
 
+  /**
+   * Gets random dots for the background at  
+   * *x ∈ [0, 1/3(width)] ∪ [2/3(width), width], y ∈ [0, height]*
+   */
   const getRandomDots = () => {
     if (!rendered) return;
     //to trigger the update on resize
     if (updated || !updated) {}
-    const height = component.current.getBoundingClientRect().height;
-    const width = component.current.getBoundingClientRect().width;
+    const height = componentRef.current.getBoundingClientRect().height;
+    const width = componentRef.current.getBoundingClientRect().width;
     
     const numDots = height / 40;
     const dots = [];
@@ -117,7 +131,7 @@ const BackgroundWithDots: React.FC = (props) => {
   };
 
   return (
-    <div sx={style} ref={component}>
+    <div sx={style} ref={componentRef}>
       {getRandomDots()}
       {props.children}
     </div>
@@ -125,7 +139,7 @@ const BackgroundWithDots: React.FC = (props) => {
 };
 
 //=============================================================
-//TODO: add animation or smth to hide the delay
+
 
 const UpcomingBoard: React.FC = () => {
   const {upcomingMiniEvents} = useContext<IInfoContext>(InfoContext);
@@ -136,6 +150,9 @@ const UpcomingBoard: React.FC = () => {
     px: theme.bodyPadding.px,
   };
 
+  /**
+   * Gets the collapsable list for all upcoming events
+   */
   const getEventsList = () => {
     const style: SxStyleProp = {
       fontSize: theme.fontSizes.body[5],
@@ -166,6 +183,9 @@ const UpcomingBoard: React.FC = () => {
     });
   };
 
+  /**
+   * The placeholder value for if there are no upcoming events
+   */
   const getPlaceHolder = () => {
     const style: SxStyleProp = {
       fontSize: theme.fontSizes.body[5],
@@ -199,6 +219,10 @@ const UpcomingBoard: React.FC = () => {
 };
 
 //=============================================================
+
+/**
+ * The recents gallery
+ */
 const Recent: React.FC = () => {
   const {recents} = useContext<IInfoContext>(InfoContext);
   const [width, setWidth] = useState<number>(0);
@@ -220,7 +244,8 @@ const Recent: React.FC = () => {
     pb: theme.bodyPadding.pb,
   };
 
-  const scale = 2.8;
+  //scale in relation to viewport width
+  const scale = 2.6;
 
   const photos: Photo[] = recents.map((event) => {
     return {
@@ -229,6 +254,8 @@ const Recent: React.FC = () => {
     };
   });
 
+  //target photo dimension
+  //photos are 1.5:1 aspect ratio
   const photoDimension = {
     width: width / scale,
     height: width / scale / 1.5,
@@ -242,7 +269,6 @@ const Recent: React.FC = () => {
     mt: '2%',
     mx: 'auto',
   };
-
   return (
     <div sx={style} ref={thisComponentRef}>
       <Heading text="Recents" alignment="center" />

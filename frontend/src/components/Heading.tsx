@@ -8,6 +8,9 @@ interface Props {
   alignment: 'left' | 'center';
 }
 
+/**
+ * A styled heading
+ */
 export const Heading: React.FC<Props> = ({text, alignment}) => {
   const wrapperStyle: SxStyleProp = {
     textAlign: alignment,

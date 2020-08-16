@@ -33,6 +33,8 @@ function autoRange() {
   }
 }
 
+//actually, GAS functions cannot read global functions, so you gotta 
+//put this inside whatever function you wanna use this in
 function setRange(sheetName) {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const metaDataSheet = spreadsheet.getSheetByName('metaData');

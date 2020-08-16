@@ -19,6 +19,7 @@ export const theme = {
     yellow: '#FFF08E',
     imageOverlayForText: '#FFFFFFD9',
     imageGrayOverlay: '#8B8B8BA6',
+    imageDarkGrayOverlay: '#4D4D4DA6',
     modes: {
       dark: {},
     },
@@ -38,7 +39,7 @@ export const theme = {
   bodyPadding: {
     pt: '7%',
     pb: '10%',
-    px: '10%'
+    px: '7%'
   },
   links: {
     nav: {

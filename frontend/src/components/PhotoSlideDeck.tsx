@@ -38,12 +38,16 @@ interface GrayImageProps {
   extraStyling?: SxStyleProp;
 }
 
+/**
+ * The grayed out photos behind the main photo.
+ */
 const GrayImage: React.FC<GrayImageProps> = ({
   url,
   photoDimension,
   onClick,
   extraStyling,
 }) => {
+  //scaled in relation to the main photo in the middle
   const scale = 0.8;
   const style: SxStyleProp = {
     width: photoDimension.width * scale,
@@ -80,6 +84,9 @@ const GrayImage: React.FC<GrayImageProps> = ({
 
 //=====================================================
 
+/**
+ * The main photo in the middle
+ */
 const CenterImage: React.FC<CenterPhotoProps> = ({
   url,
   description,
@@ -144,13 +151,35 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
 
 //=====================================================
 
-//photos are 1.5:1 aspect ratio
+/**
+ * In case someone wants to reuse this
+ *
+ * @description
+ * A basic photo slide deck that includes one main photo,
+ *  and two grayed out photos at the sides.
+ * You can hover over the main photo, it locks the image in place from rotation,
+ * and the description of the image pops up
+ *
+ * @example
+ *
+ * const photos = [{
+ *   url: 'https://img.example.com',
+ *   description: 'sample image',
+ * }];
+ *
+ * const photoDimension = {
+ *   width: 100,
+ *   height: 100,
+ * };
+ * <PhotoSlideDeck photos={photos} photoDimension={photoDimension}/>
+ *
+ */
 export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
   const [curPhoto, setCurPhoto] = useState<number>(0);
   const [timerId, setTimerId] = useState<number>();
 
   const interval = 3000;
-  const intervalAfterLock = interval/3;
+  const intervalAfterLock = interval / 3;
   useEffect(() => {
     startRotation();
     return () => window.clearInterval(timerId);
@@ -172,11 +201,14 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
     window.clearInterval(timerId);
   };
 
+  /**
+   * Start the rotation of photos and set the rotating interval
+   */
   const startRotation = () => {
     const id = window.setInterval(() => {
       setCurPhoto(getNextIdx);
     }, interval);
-    setTimerId(oldId => {
+    setTimerId((oldId) => {
       window.clearInterval(oldId);
       return id;
     });
@@ -191,10 +223,11 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
 
   const resetTimer = () => {
     window.clearInterval(timerId);
-    const id = window.setInterval(() => {
-      setCurPhoto(getNextIdx);
-    }, interval);
-    setTimerId(id);
+    // const id = window.setInterval(() => {
+    //   setCurPhoto(getNextIdx);
+    // }, interval);
+    // setTimerId(id);
+    startRotation();
   };
 
   const style: SxStyleProp = {

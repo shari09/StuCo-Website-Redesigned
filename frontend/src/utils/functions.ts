@@ -1,3 +1,4 @@
+
 export interface rgbItem {
   r: number;
   g: number;
@@ -31,9 +32,21 @@ export const hexToRgba = (hex: string, alpha: number): rgbItem => {
   };
 };
 
-//width and height must be of type int
-//it keeps original aspect ratio so it'll match the min width/height specified,
-// whichever one matches first
+
+
+/**
+ * it keeps original aspect ratio so it'll match the min width/height specified,
+ * whichever one matches first
+ * @param imageId google drive file/image ID
+ * @param width max width
+ * @param height max height
+ */
 export const getImageUrl = (imageId: string, width: number, height: number) => {
   return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${Math.round(width)}-h${Math.round(height)}`;
+};
+
+
+
+export const randInt = (min: number, max: number) => {
+  return Math.floor(Math.random()*(max-min)+min);
 };

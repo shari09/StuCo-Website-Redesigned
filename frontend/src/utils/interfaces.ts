@@ -52,3 +52,8 @@ export interface Photo {
   photoName: string;
   photoId: string;
 }
+
+export interface AboutStuco {
+  stucoTagline: string;
+  stucoDescription: string;
+}

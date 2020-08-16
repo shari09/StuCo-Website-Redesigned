@@ -11,6 +11,14 @@ interface Props {
   height: number;
 }
 
+/**
+ * Generate a random dot in between the boundaries
+ * 
+ * @example
+ * //this will generate a dot with absolute position
+ * // x ∈ [100, 300], y ∈ [100, 300]
+ * <RandomDot x={100} y={100} width={200} height={200}/>
+ */
 export const RandomDot: React.FC<Props> = ({x, y, width, height}) => {
   const size = Math.random()*9;
   const dotStyle: SxStyleProp = {

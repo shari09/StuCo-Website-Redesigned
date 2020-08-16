@@ -9,6 +9,7 @@ import {Gallery} from './pages/Gallery';
 import {FAQ} from './pages/FAQ';
 import {IInfoContext, InfoContext} from './utils/contexts';
 import {ScrollToTop} from './components/ScrollToTop';
+import {AboutUs} from './pages/AboutUs';
 
 const App: React.FC = () => {
   const [info, setInfo] = useState<IInfoContext | undefined>();
@@ -25,6 +26,7 @@ const App: React.FC = () => {
   useEffect(() => {
     getData();
   }, []);
+
 
   if (!info) {
     return <div></div>;
@@ -55,7 +57,7 @@ const App: React.FC = () => {
             <FAQ />
           </Route>
           <Route path="/about">
-            <Home />
+            <AboutUs />
           </Route>
           <Route path="/">
             <Home />
