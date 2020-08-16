@@ -9,8 +9,10 @@ export const theme = {
     background: {
       light: '#FFFFFF',
       dark: '#495E57',
+      darkest: '#00000088',
+      black: '#000000',
       overlay: '#93CCBE29',
-      overlayNoalpha: '#93CCBE29',
+      overlayNoalpha: '#93CCBE',
       accent: '#DE7F68C7',
     },
     primary: '#68DEB5',

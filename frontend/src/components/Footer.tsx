@@ -96,16 +96,17 @@ export const Footer: React.FC = () => {
     backgroundColor: theme.colors.footer,
     pt: '2em',
     position: 'relative',
+    zIndex: 1,
+    top: 'auto',
+    mt: 'auto',
     bottom: 0,
     width: '100%',
   };
-
   const textStyle: SxStyleProp = {
     fontFamily: theme.fonts.body,
     fontSize: theme.fontSizes.footer,
     whiteSpace: 'nowrap',
   };
-
   const linkStyle: SxStyleProp = {
     color: theme.colors.text.light,
     '&:hover': {
@@ -176,7 +177,7 @@ export const Footer: React.FC = () => {
 
   // actual footer code
   return (
-    // ok shari i know you hate bootstrap but im just using these
+    // yes shari i know you hate bootstrap but im just using these
     // names to name the divs. Kapeesh? Kapeesh.
     <div className="footer" sx={footerStyle}>
       <div className="container">

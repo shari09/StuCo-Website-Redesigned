@@ -20,6 +20,7 @@ const App: React.FC = () => {
       mode: 'cors',
     });
     const data = await res.json();
+    console.log(data);
     setInfo(data as IInfoContext);
   };
 
@@ -35,7 +36,7 @@ const App: React.FC = () => {
   return (
     <InfoContext.Provider value={info}>
       <Router>
-        <ScrollToTop/>
+        <ScrollToTop />
         <Navigation />
         <Switch>
           <Route path="/events">
