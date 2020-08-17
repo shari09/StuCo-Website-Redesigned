@@ -4,7 +4,6 @@ import {jsx, SxStyleProp} from 'theme-ui';
 import ResizeObserver from 'resize-observer-polyfill';
 import {theme} from '../utils/theme';
 import AboutUsSpeechBubble from '../assets/speech bubble.svg';
-import { randInt } from '../utils/functions';
 import {fadeIn} from '../utils/animation';
 
 interface Props {
@@ -18,7 +17,6 @@ export interface ShownBubbleProps {
   extraStyling?: SxStyleProp;
 }
 
-
 interface GrayBubbleProps {
   imageUrl: string;
   onClick: () => void;
@@ -26,16 +24,15 @@ interface GrayBubbleProps {
 }
 
 const vmax = Math.max(window.innerWidth, window.innerHeight);
-const imgSize = vmax*0.17;
+const imgSize = vmax * 0.17;
 
 const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
-
-  const sizeRef = useRef<number|string>(size);
+  const sizeRef = useRef<number | string>(size);
   const marginRef = useRef({
-    mt: Math.random()*10+1,
-    ml: Math.random()*10+1,
-    mr: Math.random()*10+1,
-    mb: Math.random()*10+1,
+    mt: Math.random() * 10 + 1,
+    ml: Math.random() * 10 + 1,
+    mr: Math.random() * 10 + 1,
+    mb: Math.random() * 10 + 1,
   });
 
   const wrapperStyle: SxStyleProp = {
@@ -67,13 +64,11 @@ const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
 
   return (
     <div sx={wrapperStyle} onClick={onClick}>
-      <img src={imageUrl} sx={imageStyle}/>
+      <img src={imageUrl} sx={imageStyle} />
       <div sx={overlayStyle} />
     </div>
   );
 };
-
-
 
 //=====================================================================
 
@@ -83,7 +78,6 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
   closing,
   extraStyling,
 }) => {
-
   const imageWrapper: SxStyleProp = {
     borderRadius: '50%',
     overflow: 'hidden',
@@ -95,18 +89,18 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     width: imgSize,
     height: imgSize,
     animationName: 'fadeIn',
-    '@keyframes fadeIn': fadeIn, 
+    '@keyframes fadeIn': fadeIn,
     animationDuration: '.5s',
   };
 
   //speech bubble ratio 1.7:1
   const speechBubbleStyle: SxStyleProp = {
-    width: imgSize*2.5,
-    height: imgSize*1.5,
+    width: imgSize * 2.5,
+    height: imgSize * 1.5,
   };
 
   const bubbleAndQuoteWrapperStyle: SxStyleProp = {
-    transform: `translate3d(-${imgSize*2.25}px, -${imgSize*0.45}px, 0)`,
+    transform: `translate3d(-${imgSize * 2.25}px, -${imgSize * 0.45}px, 0)`,
     textAlign: 'center',
     fontFamily: theme.fonts.body,
     fontSize: theme.fontSizes.body[2],
@@ -144,10 +138,10 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
   return (
     <div sx={extraStyling}>
       <div sx={imageWrapper}>
-        <img src={imageUrl} sx={imageStyle} key={imageUrl}/>
+        <img src={imageUrl} sx={imageStyle} key={imageUrl} />
       </div>
       <div sx={bubbleAndQuoteWrapperStyle}>
-        <img sx={speechBubbleStyle} src={AboutUsSpeechBubble}/>
+        <img sx={speechBubbleStyle} src={AboutUsSpeechBubble} />
         <div sx={quoteWrapperStyle}>
           <p sx={quoteStyle}>{quote}</p>
           <p sx={closingStyle}>{closing}</p>
@@ -159,12 +153,16 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
 
 //======================================================================
 
-export const RotatingQuotes: React.FC<Props> = ({quoteSets: originalQuoteSets}) => {
-  const [quoteSets, setQuoteSets] = useState<ShownBubbleProps[]>(originalQuoteSets);
+export const RotatingQuotes: React.FC<Props> = ({
+  quoteSets: originalQuoteSets,
+}) => {
+  const [quoteSets, setQuoteSets] = useState<ShownBubbleProps[]>(
+    originalQuoteSets,
+  );
   const [timerId, setTimerId] = useState<number>();
 
   const interval = 3000;
-  const intervalAfterLock = interval/3;
+  const intervalAfterLock = interval / 3;
 
   useEffect(() => {
     startRotation();
@@ -173,12 +171,12 @@ export const RotatingQuotes: React.FC<Props> = ({quoteSets: originalQuoteSets}) 
 
   const startRotation = () => {
     const id = window.setInterval(() => {
-      setQuoteSets(oldSet => {
+      setQuoteSets((oldSet) => {
         oldSet.unshift(oldSet.pop());
         return [...oldSet];
       });
     }, interval);
-    setTimerId(oldId => {
+    setTimerId((oldId) => {
       window.clearInterval(oldId);
       return id;
     });
@@ -189,7 +187,6 @@ export const RotatingQuotes: React.FC<Props> = ({quoteSets: originalQuoteSets}) 
     startRotation();
   };
 
-
   const getGrayBubbles = () => {
     const grayBubbles = [];
     for (let i = 1; i < quoteSets.length; i++) {
@@ -197,19 +194,17 @@ export const RotatingQuotes: React.FC<Props> = ({quoteSets: originalQuoteSets}) 
         <GrayBubble
           imageUrl={quoteSets[i].imageUrl}
           onClick={() => {
-            setQuoteSets(oldSet => {
+            setQuoteSets((oldSet) => {
               const clone = [...oldSet];
               [clone[i], clone[0]] = [clone[0], clone[i]];
               return [...clone];
             });
             resetTimer();
           }}
-          size={Math.random()*10+7 + 'vmin'}
-
-        />
+          size={Math.random() * 10 + 7 + 'vmin'}
+        />,
       );
     }
-    
 
     return grayBubbles;
   };
@@ -223,13 +218,10 @@ export const RotatingQuotes: React.FC<Props> = ({quoteSets: originalQuoteSets}) 
     mt: '25vh',
   };
 
-  
-
-
   const grayBubbleWrapper: SxStyleProp = {
     position: 'absolute',
     right: 0,
-    width: vmax*0.25, 
+    width: vmax * 0.25,
   };
 
   //index 0 will always be the main photo
@@ -242,9 +234,7 @@ export const RotatingQuotes: React.FC<Props> = ({quoteSets: originalQuoteSets}) 
         quote={quoteSets[0].quote}
         closing={quoteSets[0].closing}
       />
-      <div sx={grayBubbleWrapper}>
-        {getGrayBubbles()}
-      </div>
+      <div sx={grayBubbleWrapper}>{getGrayBubbles()}</div>
     </div>
   );
 };

@@ -3,7 +3,9 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Navigation} from './components/Navigation';
 import {Footer} from './components/Footer';
 import {Home} from './pages/Home';
+import {Events} from './pages/Events';
 import {Clubs} from './pages/Clubs';
+import {Calendar} from './pages/Calendar';
 import {Map} from './pages/Map';
 import {Gallery} from './pages/Gallery';
 import {FAQ} from './pages/FAQ';
@@ -40,13 +42,13 @@ const App: React.FC = () => {
         <Navigation />
         <Switch>
           <Route path="/events">
-            <Home />
+            <Events />
           </Route>
           <Route path="/clubs">
             <Clubs />
           </Route>
           <Route path="/calendar">
-            <Home />
+            <Calendar />
           </Route>
           <Route path="/map">
             <Map />

@@ -7,10 +7,15 @@ import React, {
   useCallback,
 } from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
-import CircleSpinner from './CircleSpinner';
+
+import {ViewerPhoto} from './ViewerPhoto';
+import {ViewerButton} from './ViewerButton';
+import {CircleSpinner} from './CircleSpinner';
+
 import {theme} from '../utils/theme';
-import {Photo as PhotoInfo} from '../utils/interfaces';
 import {getImageUrl} from '../utils/functions';
+// todo: minor, but make naming consistant i guess
+import {Photo as PhotoInfo} from '../utils/interfaces';
 
 // Interfaces --
 export interface Photo {
@@ -28,229 +33,6 @@ export interface PhotoViewerProps {
   closeHandler: () => void;
 }
 
-export interface ViewerPhotoProps {
-  photoId: string;
-  loadHandler: () => void;
-}
-
-export interface ViewerButtonProps {
-  imageSrc: string;
-  actionHandler: () => void;
-  extraButtonStyling?: SxStyleProp;
-}
-
-// ViewerPhoto is for the main big photo in the PhotoViewer.
-const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
-  photoId,
-  loadHandler,
-}): ReactElement => {
-  const [mainImageLimit, setMainImageLimit] = useState<number>(0);
-  const [orientation, setOrientation] = useState<string>(null);
-  const mainImageRefDiv = useRef<HTMLDivElement>(null);
-  const mainImageRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    if (!mainImageRefDiv.current) return;
-
-    // Adjusting the image size when fetched based on orientation of image
-    if (!orientation || orientation === 'portrait') {
-      setMainImageLimit(
-        Math.round(mainImageRefDiv.current.getBoundingClientRect().width),
-      );
-    } else {
-      setMainImageLimit(
-        Math.round(mainImageRefDiv.current.getBoundingClientRect().height),
-      );
-    }
-  }, [mainImageRefDiv]);
-
-  /*
-  i hate this. i hate this so so much. someone please save me.
-  this is such a stupid way to get the orientation of the image.
-  why do i have to load another image element? where does this
-  element go? this probably increases the load time of this element.
-  i yearn for death, and this function is an abomination
-  to mankind itself.
-  */
-  // useEffect(() => {
-  //   function detectOrientation() {
-  //     const h = mainImg.naturalHeight || mainImg.height;
-  //     const w = mainImg.naturalWidth || mainImg.width;
-
-  //     h > w ? setOrientation('portrait') : setOrientation('landscape');
-  //   }
-
-  //   const mainImg: HTMLImageElement = document.createElement('img');
-  //   mainImg.src = fetchMainImageUrl(photoId);
-  //   mainImg.onload = detectOrientation;
-  // }, [photoId]);
-
-  // fun styles
-  const mainImageContainerStyle: SxStyleProp = {
-    // positioning
-    position: 'relative',
-    display: 'inline-flex',
-    alignItems: 'center',
-
-    // adjusting the size
-    width: orientation === 'landscape' ? '80%' : '35%',
-    height: '100%',
-    mx: 'auto',
-    zIndex: 15, // to draw over the overlay
-
-    border: '1px solid',
-    borderColor: 'black',
-  };
-  const mainImageStyle: SxStyleProp = {
-    // positioning
-    objectFit: 'cover',
-    width: '100%',
-    height: '100%',
-
-    // to center the image
-    ml: 'auto',
-    mr: 'auto',
-    mt: 'auto',
-    mb: 'auto',
-
-    // small fade animation while hovering
-    transition: '.5s ease',
-    '&:hover': {
-      opacity: 0.9,
-    },
-  };
-
-  /**
-   * Fetches and returns a url to a specified drive photo with
-   * formatted width and height. The exact dimensions of the photo
-   * fetched are dependant on the orientation of said photo.
-   * @param photoId - the drive id for the photo.
-   * @returns a url to the specified photo.
-   */
-  const fetchMainImageUrl = (photoId: string): string => {
-    return orientation === 'landscape'
-      ? getImageUrl(photoId, 5000, mainImageLimit)
-      : getImageUrl(photoId, mainImageLimit, 5000);
-  };
-
-  /**
-   * Fetches and returns a url to the original specified drive photo.
-   * @param photoId - the drive id for the photo.
-   * @returns a url to the original photo.
-   */
-  const fetchOriginalImageUrl = (photoId: string): string => {
-    return `https://drive.google.com/uc?export=view&id=${photoId}`;
-  };
-
-  /**
-   * Determines the orientation of the current photo.
-   */
-  const determineOrientation = (): void => {
-    const h = mainImageRef.current.naturalHeight || mainImageRef.current.height;
-    const w = mainImageRef.current.naturalWidth || mainImageRef.current.width;
-
-    h > w ? setOrientation('portrait') : setOrientation('landscape');
-  };
-
-  /**
-   * Performs the various loading functions that are related to
-   * this image loading.
-   */
-  const performLoadActivities = (): void => {
-    console.log('finished loading main image');
-    determineOrientation();
-    loadHandler();
-  };
-
-  // TODO: Swithcing photos is pretty choppy ngl
-  return (
-    <div sx={mainImageContainerStyle} ref={mainImageRefDiv}>
-      <a
-        href={fetchOriginalImageUrl(photoId)}
-        sx={{width: '100%', height: '100%'}}
-      >
-        <img
-          src={fetchMainImageUrl(photoId)}
-          alt=""
-          sx={mainImageStyle}
-          ref={mainImageRef}
-          onLoad={performLoadActivities}
-          onError={() => {
-            console.log('failed to load main image');
-            loadHandler();
-          }}
-        />
-      </a>
-    </div>
-  );
-};
-
-// ViewerButton is for the... buttons that are in the viewer. (wow)
-const ViewerButton: React.FC<ViewerButtonProps> = ({
-  imageSrc,
-  actionHandler,
-  extraButtonStyling,
-}): ReactElement => {
-  const buttonContainerStyle: SxStyleProp = {
-    // dimensions and shape
-    position: 'relative',
-    py: '1%',
-    px: '1%',
-    maxWidth: '4%',
-    mx: '5%',
-    borderRadius: '50%',
-    backgroundColor: theme.colors.background.darkest,
-    zIndex: 15, // draw buttons on top of overlay
-    textAlign: 'center',
-
-    // small fade animation while hovering
-    // transition: '.5s ease',
-    transition: 'transform .2s, .5s ease',
-    '&:hover': {
-      transform: 'scale(1.2)',
-      cursor: 'pointer',
-      opacity: 0.8,
-    },
-    // extra styling is applied on the div cause i'd assume that's where
-    // most people actually intend to edit if you even need to...
-    ...extraButtonStyling,
-  };
-  // I chose random images so we can replace them later lol
-  // yes shari i know it doesnt look centered but i swear they are...
-  const buttonStyle: SxStyleProp = {
-    // positioning
-    maxWidth: '100%',
-    maxHeight: '100%',
-    objectFit: 'cover',
-    position: 'relative',
-    zIndex: 16, // draw button image over overlay
-
-    // a seperate zoom for cool interactivity
-    transition: 'transform .2s',
-    '&:hover': {
-      transform: 'scale(1.1)',
-    },
-  };
-  // in case you wanna use css arrows but i dont wanna style this lol
-  const arrow: SxStyleProp = {
-    borderStyle: 'solid',
-    borderColor: 'white',
-    borderWidth: '0 3px 3px 0',
-    width: '100%',
-    height: '100%',
-    display: 'inline-block',
-    padding: '3px',
-    zIndex: 16, // draw button image over overlay
-  };
-
-  return (
-    <div sx={buttonContainerStyle} onClick={actionHandler}>
-      {/* <span sx={{...arrow, transform: 'rotate(135deg)'}}></span> */}
-      <img src={imageSrc} alt="" sx={buttonStyle} />
-    </div>
-  );
-};
-
 // PhotoViewer is a gallery viewer of photos. Resolutions of photos
 // with the same orientation are the same.
 const PhotoViewer: React.FC<PhotoViewerProps> = ({
@@ -263,22 +45,6 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   const [overlayWidth, setOverlayWidth] = useState<number>(0);
   const overlayReferenceDiv = useRef<HTMLDivElement>(null);
 
-  // A memoized callback function to interact with keyboard
-  // functionality -- only needs to be created once.
-  const reactToKeystrokes = useCallback((event: KeyboardEvent) => {
-    switch (event.keyCode) {
-      case 27: // esc key
-        closeHandler();
-        break;
-      case 39: // right arrow key
-        incrementIdx();
-        break;
-      case 37: // left arrow key
-        decrementIdx();
-        break;
-    }
-  }, []);
-
   // Setting up overlay width for proper background image sizing
   useEffect(() => {
     if (!overlayReferenceDiv.current) return;
@@ -289,24 +55,6 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
       ),
     );
   }, [overlayReferenceDiv]);
-
-  // Setting up keyboard functionality
-  useEffect(() => {
-    document.addEventListener('keydown', reactToKeystrokes, false);
-
-    return () => {
-      document.removeEventListener('keydown', reactToKeystrokes, false);
-    };
-  }, []);
-  /**
-   * Generates a larger version of the specified image, usable as a full
-   * page background.
-   * @param photoId - the drive id of the photo.
-   * @returns a url to the enlarged photo.
-   */
-  const fetchOverlayImageUrl = (photoId: string): string => {
-    return getImageUrl(photoId, overlayWidth, 5000);
-  };
 
   /**
    * Increases the current image index.
@@ -324,6 +72,44 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     setIndex(index - 1 < 0 ? photos.length - 1 : index - 1);
 
     setLoading(true);
+  };
+
+  // A memoized callback function to interact with keyboard
+  // functionality -- only needs to be created once.
+  const reactToKeystrokes = useCallback(
+    (event: KeyboardEvent) => {
+      switch (event.keyCode) {
+        case 27: // esc key
+          closeHandler();
+          break;
+        case 39: // right arrow key
+          incrementIdx();
+          break;
+        case 37: // left arrow key
+          decrementIdx();
+          break;
+      }
+    },
+    [closeHandler, incrementIdx, decrementIdx],
+  );
+
+  // Setting up keyboard functionality
+  useEffect(() => {
+    document.addEventListener('keydown', reactToKeystrokes, false);
+
+    return () => {
+      document.removeEventListener('keydown', reactToKeystrokes, false);
+    };
+  }, [reactToKeystrokes]);
+
+  /**
+   * Generates a larger version of the specified image, usable as a full
+   * page background.
+   * @param photoId - the drive id of the photo.
+   * @returns a url to the enlarged photo.
+   */
+  const fetchOverlayImageUrl = (photoId: string): string => {
+    return getImageUrl(photoId, overlayWidth, 5000);
   };
 
   /**

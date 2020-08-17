@@ -4,8 +4,6 @@ import {theme} from '../utils/theme';
 import Loader from 'react-loader-spinner';
 
 // yes shari i decided to import a library just for spinners
-const CircleSpinner: React.FC = () => {
+export const CircleSpinner: React.FC = () => {
   return <Loader type="TailSpin" color={theme.colors.secondary} />;
 };
-
-export default CircleSpinner;

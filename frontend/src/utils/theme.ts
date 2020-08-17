@@ -34,14 +34,16 @@ export const theme = {
   fontSizes: {
     heading: {
       primary: [30, 40],
+      event: [16, 24, 30, 40],
     },
     body: [12, 14, 16, 20, 24, 32, 48, 64],
+    event: [11, 12, 14, 16, 20, 24, 32],
     footer: [11, 12, 14, 16],
   },
   bodyPadding: {
     pt: '7%',
     pb: '10%',
-    px: '7%'
+    px: '7%',
   },
   links: {
     nav: {

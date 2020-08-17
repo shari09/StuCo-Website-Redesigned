@@ -1,10 +1,10 @@
 export interface Event {
-  name: string;
+  eventName: string;
   description: string;
   photoId: string;
-  photoUrl: string;
-  buttonLink: string;
-  buttonText: string;
+  // photoUrl: string;
+  buttonLink?: string;
+  buttonText?: string;
 }
 
 export interface CountDown {
@@ -19,7 +19,6 @@ export interface Member {
   photoId: string;
 }
 
-
 export interface Recent {
   photoId: string;
   description: string;
@@ -29,7 +28,6 @@ export interface UpcomingMiniEvents {
   name: string;
   description: string;
 }
-
 
 export interface Club {
   category: string;

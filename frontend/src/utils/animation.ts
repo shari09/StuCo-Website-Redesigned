@@ -1,6 +1,5 @@
 import {SxStyleProp} from 'theme-ui';
 
-
 export const slideUp: SxStyleProp = {
   '0%': {
     opacity: 0,
@@ -11,7 +10,6 @@ export const slideUp: SxStyleProp = {
     transform: 'translateY(0)',
   },
 };
-
 
 export const slideBackDown: SxStyleProp = {
   '0%': {
