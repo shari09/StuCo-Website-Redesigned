@@ -34,6 +34,7 @@ export const theme = {
   fontSizes: {
     heading: {
       primary: [30, 40],
+      event: [16, 24, 30, 40],
     },
     body: [12, 14, 16, 20, 24, 32],
     bodySmall: [10, 12, 16],
@@ -43,7 +44,7 @@ export const theme = {
   bodyPadding: {
     pt: '7%',
     pb: '10%',
-    px: '7%'
+    px: '7%',
   },
   links: {
     nav: {

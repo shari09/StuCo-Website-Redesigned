@@ -5,8 +5,9 @@ import {theme} from '../utils/theme';
 import {hexToRgba, rgbItem} from '../utils/functions';
 
 export interface TransRectProps {
-  lengthX: string; //string for '2em', etc
-  lengthY: string;
+  lengthX: string | number; //string for '2em', etc
+  lengthY?: string | number;
+  minLengthY?: string | number; // if you need the rect to expand but have a min
   extraStyling?: SxStyleProp;
 }
 
@@ -19,13 +20,14 @@ const backRgba: rgbItem = hexToRgba(
 export const TranslucentRectangle: React.FC<TransRectProps> = ({
   lengthX,
   lengthY,
+  minLengthY,
   extraStyling,
   children,
 }): ReactElement => {
   const rectStyle: SxStyleProp = {
     width: lengthX,
     height: lengthY,
-    // position: 'relative',
+    minHeight: minLengthY,
     // So IE doesnt kill itself when trying to load
     backgroundColor: backRgba.hasOwnProperty('a')
       ? `rgba(${backRgba.r}, ${backRgba.b}, ${backRgba.g}, ${backRgba.a})`

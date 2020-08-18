@@ -8,14 +8,16 @@ import React, {
   ReactElement,
 } from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
+
 import {Heading} from '../components/Heading';
 import PhotoViewer, {Photo} from '../components/PhotoViewer';
-import CircleSpinner from '../components/CircleSpinner';
+import {CircleSpinner} from '../components/CircleSpinner';
+
 import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
-import {Photo as PhotoInfo} from '../utils/interfaces';
-
 import {getImageUrl, splitArray} from '../utils/functions';
+// todo: minor, but make naming consistant i guess
+import {Photo as PhotoInfo} from '../utils/interfaces';
 
 // note: all the images are in their widthScale:heightScale ratio
 const widthScale: number = 1;

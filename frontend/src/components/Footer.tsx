@@ -1,9 +1,6 @@
 /** @jsx jsx */
 import React, {ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
-import {theme} from '../utils/theme';
-// For the links on the footer
-import {routes, NavItem} from './Navigation';
 import {
   // TODO: figure this out later lol
   FaGithub,
@@ -12,8 +9,14 @@ import {
   FaInstagramSquare,
 } from 'react-icons/fa';
 
+// For the links on the footer
+import {routes, NavItem} from './Navigation';
+
+import {theme} from '../utils/theme';
+
 // Do these have to be here? -----
 // if so I could probably move this out to another area lol
+// Interfaces --
 interface socialMediaContainer {
   email: [string, string];
   instagram?: [string, string];
@@ -198,7 +201,6 @@ export const Footer: React.FC = () => {
               <a
                 href="https://github.com/shari09/StuCo-Website-Redesigned"
                 sx={linkStyle}
-                target="_blank"
               >
                 <img
                   src="./assets/icons/Github-Mark-Light-20px.png"
