@@ -120,7 +120,7 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
     backgroundColor: theme.colors.imageOverlayForText,
     padding: 20,
     py: '10%',
-    fontSize: theme.fontSizes.body[2],
+    fontSize: theme.fontSizes.bodySmall,
     fontFamily: theme.fonts.body,
     position: 'absolute',
     bottom: 0,
@@ -192,8 +192,7 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
   };
 
   const getNextIdx = (curIdx: number) => {
-    let newIdx = curIdx + 1;
-    if (newIdx > photos.length - 1) newIdx = 0;
+    let newIdx = (curIdx + 1) % photos.length;
     return newIdx;
   };
 

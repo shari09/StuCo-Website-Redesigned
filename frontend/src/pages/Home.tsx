@@ -36,18 +36,16 @@ const Main: React.FC = () => {
     left: '7%',
     position: 'absolute',
     backgroundColor: theme.colors.background.accent,
-    width: 350,
-    height: 60,
     color: theme.colors.text.light,
     textAlign: 'center',
     fontFamily: theme.fonts.time,
-    fontSize: 30,
+    fontSize: [20, 30],
     '&:hover': {
       textDecoration: 'none',
       color: theme.colors.text.light,
     },
     fontVariantCaps: 'titling-caps',
-    padding: 'auto',
+    px: 4,
   };
 
   return (
@@ -155,14 +153,14 @@ const UpcomingBoard: React.FC = () => {
    */
   const getEventsList = () => {
     const style: SxStyleProp = {
-      fontSize: theme.fontSizes.body[5],
+      fontSize: theme.fontSizes.bodyBig,
       fontFamily: theme.fonts.body,
     };
 
     const descriptionStyle: SxStyleProp = {
       textAlign: 'left',
       pl: '5em',
-      fontSize: theme.fontSizes.body[3],
+      fontSize: theme.fontSizes.body,
       py: '0.5em',
     };
 
@@ -188,7 +186,7 @@ const UpcomingBoard: React.FC = () => {
    */
   const getPlaceHolder = () => {
     const style: SxStyleProp = {
-      fontSize: theme.fontSizes.body[5],
+      fontSize: theme.fontSizes.bodyBig,
       textAlign: 'center',
       color: theme.colors.text.light,
       py: 5,

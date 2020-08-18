@@ -4,7 +4,6 @@ import {jsx, SxStyleProp} from 'theme-ui';
 import ResizeObserver from 'resize-observer-polyfill';
 import {theme} from '../utils/theme';
 import AboutUsSpeechBubble from '../assets/speech bubble.svg';
-import { randInt } from '../utils/functions';
 import {fadeIn} from '../utils/animation';
 
 interface Props {
@@ -109,7 +108,7 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     transform: `translate3d(-${imgSize*2.25}px, -${imgSize*0.45}px, 0)`,
     textAlign: 'center',
     fontFamily: theme.fonts.body,
-    fontSize: theme.fontSizes.body[2],
+    fontSize: theme.fontSizes.bodySmall,
     color: theme.colors.text.darkSlate,
     position: 'relative',
     zIndex: 2,
@@ -217,6 +216,7 @@ export const RotatingQuotes: React.FC<Props> = ({quoteSets: originalQuoteSets}) 
   const wrapperStyle: SxStyleProp = {
     display: 'flex',
     ml: '5%',
+    flex: 2,
   };
 
   const shownBubbleStyle: SxStyleProp = {

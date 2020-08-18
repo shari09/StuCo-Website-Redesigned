@@ -200,13 +200,12 @@ export const Gallery: React.FC = (): ReactElement => {
     if (!photoColumn) return [<div key="0"></div>];
 
     const photoContainerStyle: SxStyleProp = {
-      my: '1%',
+      my: '5%',
       width: '100%',
       // border for image / loading circle
-      border: '2px solid black',
 
       // fade and move animations here so both border and image have it
-      transition: 'transform .2s, .5s ease',
+      transition: 'transform .2s, .2s ease',
       '&:hover': {
         transform: 'scale(1.02)',
         opacity: 0.6,

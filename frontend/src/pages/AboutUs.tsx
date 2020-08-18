@@ -34,7 +34,7 @@ const Paragraph: React.FC = () => {
   const bodyStyle: SxStyleProp = {
     color: theme.colors.text.light,
     fontFamily: theme.fonts.body,
-    fontSize: theme.fontSizes.body[2],
+    fontSize: theme.fontSizes.bodySmall,
     width: '45vw',
     lineHeight: '2.2em',
   };
@@ -98,6 +98,7 @@ export const AboutUs: React.FC = () => {
     pt: '10%',
     display: 'flex',
     flexDirection: 'row',
+    flexWrap: ['wrap', 'nowrap'],
   };
 
   const bottomDecorStyle: SxStyleProp = {
