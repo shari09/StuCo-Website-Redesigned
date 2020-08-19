@@ -2,7 +2,6 @@
 import React from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
-import {Heading} from '../components/Heading';
 
 export const Map: React.FC = () => {
   // styles

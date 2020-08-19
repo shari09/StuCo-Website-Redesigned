@@ -17,7 +17,7 @@ import {Event} from '../utils/interfaces';
 import {getImageUrl} from '../utils/functions';
 
 // Interfaces --
-export interface EventItemProps {
+interface EventItemProps {
   height: string;
   width: string;
   event: Event;
@@ -25,28 +25,28 @@ export interface EventItemProps {
   rectStyling?: SxStyleProp;
 }
 
-export interface EventHeadingProps {
+interface EventHeadingProps {
   text: string;
   textLocation: 'left' | 'right';
   extraHeaderStyling?: SxStyleProp;
   extraTextStyling?: SxStyleProp;
 }
 
-export interface EventPhotoProps {
+interface EventPhotoProps {
   photoID: string;
   width: string;
   height: number;
   photoLocation: string;
 }
 
-export interface EventInfoItemProps {
+interface EventInfoItemProps {
   width: string;
   startHeight: string;
   textLocation: 'left' | 'right';
   eventDetails: EventDetails;
 }
 
-export interface EventButtonProps {
+interface EventButtonProps {
   buttonText: string;
   buttonLink: string;
   extraButtonStyling?: SxStyleProp;
@@ -131,6 +131,7 @@ const EventHeading: React.FC<EventHeadingProps> = ({
 
 // ============================================================
 // EventPhoto -- for the main img that shows up for the event.
+// TODO: consistent resizing?
 const EventPhoto: React.FC<EventPhotoProps> = ({
   photoID,
   width,

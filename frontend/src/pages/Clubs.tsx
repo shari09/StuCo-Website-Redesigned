@@ -1,19 +1,16 @@
 /** @jsx jsx */
-import React, {useContext} from 'react';
+import React from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {Heading} from '../components/Heading';
 import {theme} from '../utils/theme';
 
-export interface ClubsProps {
-  
-}
+export interface ClubsProps {}
 
 export const Clubs: React.FC<ClubsProps> = () => {
   const wrapperStyle: SxStyleProp = {
     minHeight: '100vh',
     backgroundColor: theme.colors.background.light,
     ...theme.bodyPadding,
-
   };
 
   return (

@@ -1,7 +1,6 @@
 /** @jsx jsx */
-import React, {useContext, useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
-import ResizeObserver from 'resize-observer-polyfill';
 import {theme} from '../utils/theme';
 import AboutUsSpeechBubble from '../assets/speech bubble.svg';
 import {fadeIn} from '../utils/animation';
@@ -64,7 +63,7 @@ const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
 
   return (
     <div sx={wrapperStyle} onClick={onClick}>
-      <img src={imageUrl} sx={imageStyle} />
+      <img src={imageUrl} alt="" sx={imageStyle} />
       <div sx={overlayStyle} />
     </div>
   );
@@ -138,10 +137,10 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
   return (
     <div sx={extraStyling}>
       <div sx={imageWrapper}>
-        <img src={imageUrl} sx={imageStyle} key={imageUrl} />
+        <img src={imageUrl} alt="" sx={imageStyle} key={imageUrl} />
       </div>
       <div sx={bubbleAndQuoteWrapperStyle}>
-        <img sx={speechBubbleStyle} src={AboutUsSpeechBubble} />
+        <img sx={speechBubbleStyle} alt="" src={AboutUsSpeechBubble} />
         <div sx={quoteWrapperStyle}>
           <p sx={quoteStyle}>{quote}</p>
           <p sx={closingStyle}>{closing}</p>
@@ -162,7 +161,7 @@ export const RotatingQuotes: React.FC<Props> = ({
   const [timerId, setTimerId] = useState<number>();
 
   const interval = 3000;
-  const intervalAfterLock = interval / 3;
+  // const intervalAfterLock = interval / 3;
 
   useEffect(() => {
     startRotation();

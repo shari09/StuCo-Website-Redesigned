@@ -59,20 +59,20 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   /**
    * Increases the current image index.
    */
-  const incrementIdx = () => {
+  const incrementIdx = useCallback(() => {
     setIndex((index + 1) % photos.length);
 
     setLoading(true);
-  };
+  }, [photos, index]);
 
   /**
    * Decreases the current image index.
    */
-  const decrementIdx = () => {
+  const decrementIdx = useCallback(() => {
     setIndex(index - 1 < 0 ? photos.length - 1 : index - 1);
 
     setLoading(true);
-  };
+  }, [photos, index]);
 
   // A memoized callback function to interact with keyboard
   // functionality -- only needs to be created once.
@@ -256,6 +256,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
       <div sx={overlayContainerStyle} onClick={closeHandler}>
         <img
           src={fetchOverlayImageUrl(photos[index].photoId)}
+          alt=""
           sx={overlayStyle}
           onLoad={handleOverlayLoadingState}
           onError={() => {

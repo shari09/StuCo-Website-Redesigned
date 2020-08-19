@@ -45,6 +45,7 @@ interface FormattedValue {
 }
 
 // ============================================================
+
 // ============================================================
 // ClubDescriptionItem - for the sidebar with the club name and description
 const ClubDescriptionItem: React.FC<ClubDescriptionItemProps> = ({
@@ -224,7 +225,6 @@ const ClubInfoItem: React.FC<ClubInfoItemProps> = ({
 };
 
 // ============================================================
-// ============================================================
 // ClubPhoto -- for the background club photo and the translucent rectangle
 const ClubPhoto: React.FC<ClubPhotoProps> = ({
   photoId,
@@ -256,6 +256,8 @@ const ClubPhoto: React.FC<ClubPhotoProps> = ({
     </React.Fragment>
   );
 };
+
+// ============================================================
 
 // ============================================================
 // ClubPopup -- for the actual main club info popup

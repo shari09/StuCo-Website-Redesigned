@@ -32,7 +32,7 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
         Math.round(mainImageRefDiv.current.getBoundingClientRect().height),
       );
     }
-  }, [mainImageRefDiv]);
+  }, [mainImageRefDiv, orientation]);
 
   /*
   i hate this. i hate this so so much. someone please save me.

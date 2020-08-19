@@ -10,21 +10,21 @@ interface Props {
   collapsed?: boolean;
 }
 
+//ok sift i'm writing comments now so stop judging my uncommented code >:((
 /**
- * ok sift i'm writing comments now so stop judging my uncommented code >:((  
- * @description 
- * You can put any children inside Collapsable components and it will render them  
- * in the collapsible list/tree format 
- * 
+ * @description
+ * You can put any children inside Collapsable components and it will render them
+ * in the collapsible list/tree format.
+ *
  * @example
  * <Collapsable title='hello'>
  *   You can have text
  *   <OrComponenents sx={withStyle} onClick={andFunctions}/>
  * </Collapsable>
- * 
+ *
  * //title can be a component as well
  * const myTitle = <span><p>My twitter page</p><TwitterIcon/></span>;
- * 
+ *
  * <Collapsable title={myTitle}>
  *   //children
  * </Collapsable>
@@ -54,7 +54,7 @@ export const Collapsable: React.FC<Props> = ({
     });
     ro.observe(childrenRef.current);
     return () => ro.disconnect();
-  }, []);
+  }, [childrenHeight]);
 
   const wrapperStyle: SxStyleProp = {
     position: 'relative',
@@ -69,7 +69,7 @@ export const Collapsable: React.FC<Props> = ({
   };
 
   /**
-   * gets height difference when resized  
+   * gets height difference when resized
    */
   const getHeightDiff = () => {
     const diff = Math.abs(childrenHeight - prevHeight.current);

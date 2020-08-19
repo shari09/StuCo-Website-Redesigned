@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import React, {ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
-import {
-  // TODO: figure this out later lol
-  FaGithub,
-  FaFacebookSquare,
-  FaTwitterSquare,
-  FaInstagramSquare,
-} from 'react-icons/fa';
+// import {
+//   // TODO: figure this out later lol
+//   FaGithub,
+//   FaFacebookSquare,
+//   FaTwitterSquare,
+//   FaInstagramSquare,
+// } from 'react-icons/fa';
 
 // For the links on the footer
 import {routes, NavItem} from './Navigation';
@@ -178,7 +178,6 @@ export const Footer: React.FC = () => {
     });
   };
 
-  // actual footer code
   return (
     // yes shari i know you hate bootstrap but im just using these
     // names to name the divs. Kapeesh? Kapeesh.
