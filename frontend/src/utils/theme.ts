@@ -37,6 +37,7 @@ export const theme = {
       event: [16, 24, 30, 40],
     },
     body: [12, 14, 16, 20, 24, 32],
+    event: [10, 12, 14, 16, 20, 24, 32],
     bodySmall: [10, 12, 16],
     bodyBig: [20, 24, 28],
     footer: [11, 12, 14, 16],
