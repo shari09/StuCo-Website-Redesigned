@@ -7,17 +7,29 @@ import {getImageUrl} from '../utils/functions';
 export interface ViewerPhotoProps {
   photoId: string;
   loadHandler: () => void;
+  // With the new provided dimensions, it is now easier to get
+  // the orientation of the current photo by simply comparing the
+  // original dimensions.
+  /** The original dimensions of the photo. These dimensions must be present. */
+  originalDimensions: {width: number; height: number};
 }
 
+//=====================================================================
 // ViewerPhoto is for the main big photo in the PhotoViewer.
 export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
   photoId,
   loadHandler,
+  originalDimensions,
 }): ReactElement => {
   const [mainImageLimit, setMainImageLimit] = useState<number>(0);
   const [orientation, setOrientation] = useState<string>(null);
   const mainImageRefDiv = useRef<HTMLDivElement>(null);
-  const mainImageRef = useRef<HTMLImageElement>(null);
+
+  // Determine the orientation of the photo at the get go to cut
+  // down on rerenders and loading wrong images
+  useEffect(() => {
+    determineOrientation();
+  }, [photoId]);
 
   useEffect(() => {
     if (!mainImageRefDiv.current) return;
@@ -34,28 +46,7 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
     }
   }, [mainImageRefDiv, orientation]);
 
-  /*
-  i hate this. i hate this so so much. someone please save me.
-  this is such a stupid way to get the orientation of the image.
-  why do i have to load another image element? where does this
-  element go? this probably increases the load time of this element.
-  i yearn for death, and this function is an abomination
-  to mankind itself.
-  */
-  // useEffect(() => {
-  //   function detectOrientation() {
-  //     const h = mainImg.naturalHeight || mainImg.height;
-  //     const w = mainImg.naturalWidth || mainImg.width;
-
-  //     h > w ? setOrientation('portrait') : setOrientation('landscape');
-  //   }
-
-  //   const mainImg: HTMLImageElement = document.createElement('img');
-  //   mainImg.src = fetchMainImageUrl(photoId);
-  //   mainImg.onload = detectOrientation;
-  // }, [photoId]);
-
-  // fun styles
+  // Fun styles --
   const mainImageContainerStyle: SxStyleProp = {
     // positioning
     position: 'relative',
@@ -90,6 +81,7 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
     },
   };
 
+  // Functions --
   /**
    * Fetches and returns a url to a specified drive photo with
    * formatted width and height. The exact dimensions of the photo
@@ -116,8 +108,8 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
    * Determines the orientation of the current photo.
    */
   const determineOrientation = (): void => {
-    const h = mainImageRef.current.naturalHeight || mainImageRef.current.height;
-    const w = mainImageRef.current.naturalWidth || mainImageRef.current.width;
+    const h = originalDimensions.height;
+    const w = originalDimensions.width;
 
     h > w ? setOrientation('portrait') : setOrientation('landscape');
   };
@@ -127,12 +119,10 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
    * this image loading.
    */
   const performLoadActivities = (): void => {
-    console.log('finished loading main image');
-    determineOrientation();
     loadHandler();
   };
 
-  // TODO: Swithcing photos is pretty choppy ngl
+  // Returning the viewer code --
   return (
     <div sx={mainImageContainerStyle} ref={mainImageRefDiv}>
       <a
@@ -143,7 +133,6 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
           src={fetchMainImageUrl(photoId)}
           alt=""
           sx={mainImageStyle}
-          ref={mainImageRef}
           onLoad={performLoadActivities}
           onError={() => {
             console.log('failed to load main image');

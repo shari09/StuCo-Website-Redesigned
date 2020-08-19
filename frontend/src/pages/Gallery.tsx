@@ -4,7 +4,6 @@ import React, {
   useRef,
   useEffect,
   useState,
-  useCallback,
   ReactElement,
 } from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
@@ -20,7 +19,9 @@ import {getImageUrl, splitArray} from '../utils/functions';
 import {Photo as PhotoInfo} from '../utils/interfaces';
 
 // note: all the images are in their widthScale:heightScale ratio
+/** The width scale for the column photo width. */
 const widthScale: number = 1;
+/** The height scale for the column photo height. */
 const heightScale: number = 1.25;
 
 // Interfaces --
@@ -30,7 +31,8 @@ export interface GalleryPhotoProps {
   extraPhotoStyle?: SxStyleProp;
 }
 
-// GalleryPhoto element handles the actual img element
+//=====================================================================
+// GalleryPhoto element handles the actual img element.
 // this assumes that each img will be placed in an appropriately sized
 // div or element
 export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
@@ -40,13 +42,13 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
 }): ReactElement => {
   const [loading, setLoading] = useState<boolean>(true);
 
+  // Styles --
   const photoStyle: SxStyleProp = {
-    // positioning
     maxWidth: '100%',
     mx: 'auto',
     objectFit: 'cover',
-    width: photo.photoDimensions.width,
-    height: photo.photoDimensions.height,
+    width: photo.newPhotoDimensions.width,
+    height: photo.newPhotoDimensions.height,
 
     display: loading ? 'none' : 'block',
 
@@ -55,12 +57,13 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
     },
   };
 
+  // Functions --
   /**
    * Does the cleanup once the image is loaded.
    */
-  const finishLoading = useCallback(() => {
+  const finishLoading = () => {
     setLoading(false);
-  }, []);
+  };
 
   /**
    * Initializes the photo viewer.
@@ -72,7 +75,7 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
   /**
    * Returns a formatted loading spinner
    */
-  const displayLoadSpinner = (): ReactElement => {
+  const displayLoadSpinner = (): ReactElement | void => {
     if (loading) {
       return (
         <div sx={{display: 'inline-block', my: '50%'}}>
@@ -100,8 +103,11 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
 export const Gallery: React.FC = (): ReactElement => {
   const galleryPhotos: PhotoInfo[] = useContext<IInfoContext>(InfoContext)
     .gallery;
+
+  // the width and height are both used for the column photos
   const [width, setWidth] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
+  /** Used to find the size for the column photos. */
   const referenceDiv = useRef<HTMLDivElement>(null);
   const [viewIndex, setViewIndex] = useState<number>(0);
   const [showViewer, setShowViewer] = useState<boolean>(false);
@@ -127,7 +133,8 @@ export const Gallery: React.FC = (): ReactElement => {
 
   We take the galleryPhotos in PhotoInfo interface format and convert
   each array of 'photos' into our custom Photo interface, which
-  contains a proper url and dimensions for future use.
+  contains a proper url, number, and both original and requested
+  dimensions for future use.
 
   Consecutive pictures are ordered column down, so if we had 9
   images, the order would become:
@@ -142,7 +149,6 @@ export const Gallery: React.FC = (): ReactElement => {
   photo to get resized version.
   //TODO: maybe we can provide photoViewer the resized images...
   */
-
   let currentImageNumber = -1; // this seems scuffed
   const [leftPhotos, centerPhotos, rightPhotos]: Photo[][] = splitArray<
     PhotoInfo
@@ -152,7 +158,11 @@ export const Gallery: React.FC = (): ReactElement => {
       return {
         photoUrl: getImageUrl(photo.photoId, 1000, height),
         photoNum: currentImageNumber,
-        photoDimensions: {
+        originalPhotoDimensions: {
+          width: parseInt(photo.width),
+          height: parseInt(photo.height),
+        },
+        newPhotoDimensions: {
           width: width,
           height: height,
         },
@@ -165,13 +175,13 @@ export const Gallery: React.FC = (): ReactElement => {
   const allGalleryStyle: SxStyleProp = {
     textAlign: 'center',
     maxWidth: '32%',
+    width: '32%',
     position: 'relative',
   };
   const leftGalleryStyle: SxStyleProp = {
     left: '2%',
     minHeight: '100vh',
 
-    // pushing gallery to the left
     ml: 0,
     mr: 'auto',
   };
@@ -179,7 +189,6 @@ export const Gallery: React.FC = (): ReactElement => {
     right: '2%',
     minHeight: '100vh',
 
-    // pushing gallery to the right
     mr: 0,
     ml: 'auto',
   };
@@ -204,7 +213,6 @@ export const Gallery: React.FC = (): ReactElement => {
     const photoContainerStyle: SxStyleProp = {
       my: '5%',
       width: '100%',
-      // border for image / loading circle
 
       // fade and move animations here so both border and image have it
       transition: 'transform .2s, .2s ease',
@@ -229,7 +237,6 @@ export const Gallery: React.FC = (): ReactElement => {
   };
 
   // Functions regarding the displaying of the photo viewer --
-
   /**
    * Initializes the photo viewer.
    * @param startIndex - the photo index which the viewer should begin at.
@@ -274,7 +281,7 @@ export const Gallery: React.FC = (): ReactElement => {
     }
   };
 
-  // The rest of the custom styles needed for this page
+  // The rest of the custom styles needed for this page --
   const wrapperStyle: SxStyleProp = {
     // the main page div
 
@@ -302,9 +309,8 @@ export const Gallery: React.FC = (): ReactElement => {
   };
 
   // Returning the formatted page
-
+  // yes shari i know even more grid classnames but its finee
   return (
-    // yes shari i know even more grid classnames but its finee
     <div sx={wrapperStyle}>
       {displayViewer()}
       <div sx={innerWrapperStyle}>

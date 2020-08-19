@@ -1,8 +1,14 @@
 /** @jsx jsx */
-import React, {useState, useRef, useEffect} from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  ReactElement,
+} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
-import {theme} from '../utils/theme';
+import {CircleSpinner} from './CircleSpinner';
 import AboutUsSpeechBubble from '../assets/speech bubble.svg';
+import {theme} from '../utils/theme';
 import {fadeIn} from '../utils/animation';
 
 interface Props {
@@ -26,6 +32,7 @@ const vmax = Math.max(window.innerWidth, window.innerHeight);
 const imgSize = vmax * 0.17;
 
 const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const sizeRef = useRef<number | string>(size);
   const marginRef = useRef({
     mt: Math.random() * 10 + 1,
@@ -61,9 +68,50 @@ const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
     height: sizeRef.current,
   };
 
+  /**
+   * Handles when an image finishes loading by setting the loading
+   * state to false.
+   */
+  const handleLoading = () => {
+    setLoading(false);
+  };
+
+  /**
+   * Determines whether or not to render a loading spinner based on
+   * the image's load status.
+   * @returns either a loading spinner, or nothing.
+   */
+  const displayLoadSpinner = (): ReactElement | void => {
+    if (loading) {
+      const spinnerWrapper: SxStyleProp = {
+        position: 'absolute', // don't skew the circles
+        width: '100%',
+        height: '100%',
+
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+      };
+      return (
+        <div sx={spinnerWrapper}>
+          <div sx={{display: 'inline', margin: 'auto'}}>
+            {/* hardcoded size means the spinner will be the same size
+            despite circle size, but for now this'll do */}
+            <CircleSpinner
+              height={30}
+              width={30}
+              color={theme.colors.text.light}
+            />
+          </div>
+        </div>
+      );
+    }
+  };
+
   return (
     <div sx={wrapperStyle} onClick={onClick}>
-      <img src={imageUrl} alt="" sx={imageStyle} />
+      {displayLoadSpinner()}
+      <img src={imageUrl} alt="" sx={imageStyle} onLoad={handleLoading} />
       <div sx={overlayStyle} />
     </div>
   );

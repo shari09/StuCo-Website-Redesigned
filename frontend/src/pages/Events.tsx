@@ -10,6 +10,7 @@ import {jsx, SxStyleProp} from 'theme-ui';
 
 import {Heading} from '../components/Heading';
 import {TranslucentRectangle} from '../components/TranslucentRectangle';
+import {LoadingSquare} from '../components/LoaderComponents';
 
 import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
@@ -139,6 +140,7 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
   photoLocation,
 }) => {
   const [imgWidth, setImgWidth] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
   const imageRef = useRef<HTMLDivElement>(null);
 
   // Get the width of the div that contains the image, so that we can
@@ -149,62 +151,83 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
     setImgWidth(Math.round(imageRef.current.getBoundingClientRect().width));
   }, [imageRef]);
 
-  // Check to see if the photoID is present.
-  // TODO: should we remove this check and assume everything is valid??
-  if (photoID) {
-    const wrapperStyle: SxStyleProp = {
-      // The wrapper that holds both the image and the rect for now
+  // Styles --
+  const wrapperStyle: SxStyleProp = {
+    // The wrapper that holds both the image and the rect for now
 
-      position: 'absolute',
-      top: '5%',
-      right: photoLocation === 'right' ? 0 : 'auto',
-      left: photoLocation === 'left' ? 0 : 'auto',
-      width: width,
-      maxWidth: width,
-      height: height,
-      maxHeight: '75vh', // make sure the image doesn't break the page
+    position: 'absolute',
+    top: '5%',
+    right: photoLocation === 'right' ? 0 : 'auto',
+    left: photoLocation === 'left' ? 0 : 'auto',
+    width: width,
+    maxWidth: width,
+    height: height,
+    maxHeight: '75vh', // make sure the image doesn't break the page
 
-      zIndex: 5, // draw over the title
+    zIndex: 5, // draw over the title
 
-      // fade and move animations here so both border and image have it
-      transition: 'transform .2s, .5s ease',
-      '&:hover': {
-        transform: 'scale(1.025)',
-        opacity: 0.95,
-      },
-    };
-    const imageStyle: SxStyleProp = {
-      objectFit: 'cover',
-      width: '100%',
-      height: '100%',
-    };
-    const rectStyling: SxStyleProp = {
-      // For extra styling of the TransparentRectangle
+    // fade and move animations here so both border and image have it
+    transition: 'transform .2s, .5s ease',
+    '&:hover': {
+      transform: 'scale(1.025)',
+      opacity: 0.95,
+    },
+  };
+  const imageStyle: SxStyleProp = {
+    objectFit: 'cover',
+    width: '100%',
+    height: '100%',
+  };
+  const rectStyling: SxStyleProp = {
+    // For extra styling of the TransparentRectangle
 
-      position: 'absolute',
-      backgroundColor: theme.colors.navbar + '66',
-      maxHeight: '75vh', // make sure the image doesn't break the page
-      maxWidth: '100%',
-      zIndex: 2,
+    position: 'absolute',
+    backgroundColor: theme.colors.navbar + '66',
+    maxHeight: '75vh', // make sure the image doesn't break the page
+    width: '100%',
+    zIndex: 2,
 
-      top: '3%',
-      right: photoLocation === 'right' ? '3%' : 'auto',
-      left: photoLocation === 'left' ? '3%' : 'auto',
-    };
+    top: '3%',
+    right: photoLocation === 'right' ? '3%' : 'auto',
+    left: photoLocation === 'left' ? '3%' : 'auto',
+  };
 
-    return (
-      // yes shari i know that the header isnt exactly right but
-      // ill fix that later i guess :)
-      <div sx={wrapperStyle} ref={imageRef}>
-        <img src={getImageUrl(photoID, 5000, height)} alt="" sx={imageStyle} />
-        <TranslucentRectangle
-          lengthX={imgWidth}
-          lengthY={height}
-          extraStyling={rectStyling}
-        />
-      </div>
-    );
-  }
+  // Functions --
+  /**
+   * Handles image loading and sets loading state to false.
+   */
+  const handleLoading = () => {
+    setLoading(false);
+  };
+
+  /**
+   * Determines whether to render a LoadingSquare or not.
+   * @returns either a loading square or nothing.
+   */
+  const displayLoadingSquare = (): ReactElement | void => {
+    if (loading) {
+      return <LoadingSquare />;
+    }
+  };
+
+  return (
+    // yes shari i know that the header isnt exactly right but
+    // ill fix that later i guess :)
+    <div sx={wrapperStyle} ref={imageRef}>
+      {displayLoadingSquare()}
+      <img
+        src={getImageUrl(photoID, 5000, height)}
+        alt=""
+        sx={imageStyle}
+        onLoad={handleLoading}
+      />
+      <TranslucentRectangle
+        lengthX={imgWidth}
+        lengthY={height}
+        extraStyling={rectStyling}
+      />
+    </div>
+  );
 
   return <div></div>;
 };

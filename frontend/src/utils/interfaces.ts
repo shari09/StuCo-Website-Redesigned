@@ -49,6 +49,8 @@ export interface FAQ {
 export interface Photo {
   photoName: string;
   photoId: string;
+  width: string;
+  height: string;
 }
 
 export interface AboutStuco {

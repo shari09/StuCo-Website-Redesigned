@@ -1,8 +1,14 @@
 /** @jsx jsx */
-import React, {useState, useRef, useEffect, ReactElement} from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  ReactElement,
+} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 
 import {TranslucentRectangle} from './TranslucentRectangle';
+import {LoadingSquare} from './LoaderComponents';
 
 import {Club} from '../utils/interfaces';
 import {getImageUrl} from '../utils/functions';
@@ -230,13 +236,15 @@ const ClubPhoto: React.FC<ClubPhotoProps> = ({
   photoId,
   width,
 }): ReactElement => {
-  // Image styles
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Image styles --
+
   const photoStyle: SxStyleProp = {
     objectFit: 'cover',
     width: '100%',
     height: '100%',
   };
-
   const rectStyle: SxStyleProp = {
     position: 'absolute',
     top: '28%',
@@ -245,9 +253,35 @@ const ClubPhoto: React.FC<ClubPhotoProps> = ({
     backgroundColor: theme.colors.background.overlayNoalpha + '66',
   };
 
+  // Functions --
+  /**
+   * Handles image loading and sets loading state to false.
+   */
+  const handleLoading = () => {
+    setLoading(false);
+  };
+
+  /**
+   * Determines whether to render a LoadingSquare or not.
+   * @returns either a loading square or nothing.
+   */
+  const displayLoadingSquare = (): ReactElement | void => {
+    if (loading) {
+      return (
+        <LoadingSquare extraStyling={{backgroundColor: theme.colors.navbar}} />
+      );
+    }
+  };
+
   return (
     <React.Fragment>
-      <img src={getImageUrl(photoId, width, 5000)} alt="" sx={photoStyle} />
+      {displayLoadingSquare()}
+      <img
+        src={getImageUrl(photoId, width, 5000)}
+        alt=""
+        sx={photoStyle}
+        onLoad={handleLoading}
+      />
       <TranslucentRectangle
         lengthX="100%"
         lengthY="100%"
