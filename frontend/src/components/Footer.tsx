@@ -14,8 +14,6 @@ import {routes, NavItem} from './Navigation';
 
 import {theme} from '../utils/theme';
 
-// Do these have to be here? -----
-// if so I could probably move this out to another area lol
 // Interfaces --
 interface socialMediaContainer {
   email: [string, string];

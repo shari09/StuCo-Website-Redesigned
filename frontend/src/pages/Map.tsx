@@ -8,10 +8,11 @@ export const Map: React.FC = () => {
   const backgroundStyle: SxStyleProp = {
     backgroundColor: theme.colors.background.dark,
     width: '100%',
-    minHeight: '100vh',
     textAlign: 'center',
   };
   const divStyle: SxStyleProp = {
+    position: 'relative',
+    top: '10vh',
     textAlign: 'center',
     width: '100%',
   };

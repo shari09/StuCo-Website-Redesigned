@@ -1,4 +1,3 @@
-
 export interface rgbItem {
   r: number;
   g: number;
@@ -59,7 +58,9 @@ export const getImageUrl = (
   width: number,
   height: number,
 ): string => {
-  return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${Math.round(width)}-h${Math.round(height)}`;
+  return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${Math.round(
+    width,
+  )}-h${Math.round(height)}`;
 };
 
 /**

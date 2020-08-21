@@ -29,15 +29,42 @@ export interface ResponseProp {
 //TODO: yes shari i will add padding later
 //TODO: please for the love of god clean this file up
 
-// The function that returns a FAQ object
-// it's pretty big though...
-export const FAQ: React.FC = (): ReactElement => {
-  // Grab the questions
-  const faqQuestions: FAQInterface[] = useContext<IInfoContext>(InfoContext)
-    .faq;
+//=====================================================================
+// To hold the speech bubble and question
+const QuestionItem: React.FC<QuestionProp> = ({
+  question,
+  extraStyling,
+  imageExtraStyling,
+}): ReactElement => {
+  // Yay more styles!!
+  const outerContainerDiv: SxStyleProp = {
+    // 'Holds' the inner wrapper, and behaves like a top margin
+    width: '100%',
 
-  // Custom styles!!!!
-  const titleText: SxStyleProp = {
+    ...extraStyling,
+  };
+  const innerWrapperDiv: SxStyleProp = {
+    // positioning
+    top: '3.5em',
+    maxWidth: '95vw', // to make sure the page doesn't scroll to the right
+    position: 'relative',
+    display: 'inline-block',
+    textAlign: 'center',
+
+    ...extraStyling,
+  };
+  const textWrapperDiv: SxStyleProp = {
+    // positioning
+    display: 'flex',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  };
+  const titleTextStyle: SxStyleProp = {
     fontSize: theme.fontSizes.body,
     fontFamily: theme.fonts.heading,
     color: theme.colors.text.light,
@@ -45,7 +72,41 @@ export const FAQ: React.FC = (): ReactElement => {
     textAlign: 'center',
     margin: 'auto',
   };
-  const responseText: SxStyleProp = {
+
+  return (
+    <div sx={outerContainerDiv}>
+      <div sx={innerWrapperDiv}>
+        <img
+          src="./assets/speech_bubble.svg"
+          alt=""
+          sx={{
+            maxWidth: '100vw',
+            display: 'inline-block',
+            ...imageExtraStyling,
+          }}
+        />
+        <div sx={textWrapperDiv}>
+          <p sx={titleTextStyle}>{question}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+//=====================================================================
+// ResponseItem holds the response div and rect
+const ResponseItem: React.FC<ResponseProp> = ({
+  response,
+  textExtraStyling,
+  rectExtraStyling,
+}): ReactElement => {
+  const textWrapperDiv: SxStyleProp = {
+    height: '100%',
+    width: '90%',
+    maxWidth: '100vw',
+    display: 'inline-block',
+  };
+  const responseTextStyle: SxStyleProp = {
     top: '35%',
     position: 'relative',
     color: theme.colors.text.darkSlate,
@@ -54,6 +115,37 @@ export const FAQ: React.FC = (): ReactElement => {
     wordWrap: 'normal',
     lineHeight: 1.6,
   };
+
+  return (
+    // yes shari i know the rectangles aren't EXACTLY the way it is on
+    // the planning xd but this is good enoughhh. it serves its purpose
+    // and i can reuse it!!
+    <TranslucentRectangle
+      lengthX="60em"
+      lengthY="40vh" // wonky on mobile
+      extraStyling={{
+        ...textExtraStyling,
+        ...rectExtraStyling,
+      }}
+    >
+      <div sx={textWrapperDiv}>
+        <p sx={{...responseTextStyle, ...textExtraStyling}}>{response}</p>
+      </div>
+    </TranslucentRectangle>
+  );
+};
+
+//=====================================================================
+
+//=====================================================================
+// The function that returns a FAQ object
+// it's pretty big though...
+export const FAQ: React.FC = (): ReactElement => {
+  // Grab the questions
+  const faqQuestions: FAQInterface[] = useContext<IInfoContext>(InfoContext)
+    .faq;
+
+  // Custom styles!!! --
   const wrapperStyle: SxStyleProp = {
     // the main page div
 
@@ -118,32 +210,20 @@ export const FAQ: React.FC = (): ReactElement => {
       }
 
       // Styling the funky transparent rectangle
-      let rectStyling: SxStyleProp =
-        i % 3 === 0
-          ? {
-              maxWidth: '95vw',
-              backgroundColor: theme.colors.background.overlay,
-            }
-          : {
-              maxWidth: '95vw',
-              backgroundColor: theme.colors.background.overlayNoalpha + '00',
-            };
+      const rectStyling: SxStyleProp = {
+        maxWidth: '95vw',
+        backgroundColor:
+          1 % 3 === 0 ? theme.colors.background.overlay : 'transparent',
+      };
 
       faqItems.push(
         // To squeeze the next list items into the previous ones
         <li key={i} sx={{mb: '-2em'}}>
-          <div
-            sx={{
-              width: '100%',
-              // border: '5px solid',
-            }}
-          >
+          <div sx={{width: '100%'}}>
             <QuestionItem
               question={faqQuestions[i].question}
               extraStyling={{
                 ...styling,
-                // Get some smaller spacing for the speech div
-                ...(i % 2 === 0 ? {left: '5%'} : {right: '5%'}),
               }}
               imageExtraStyling={imageStyling}
             />
@@ -158,91 +238,6 @@ export const FAQ: React.FC = (): ReactElement => {
     }
 
     return faqItems;
-  };
-
-  // To hold the speech bubble and question
-  const QuestionItem: React.FC<QuestionProp> = ({
-    question,
-    extraStyling,
-    imageExtraStyling,
-  }): ReactElement => {
-    // Yay more styles!!
-    const outerWrapperDiv: SxStyleProp = {
-      ...extraStyling,
-      width: '100%',
-    };
-    const innerWrapperDiv: SxStyleProp = {
-      // positioning
-      top: '3.5em',
-      maxWidth: '95vw', // to make sure the page doesn't scroll to the right
-      position: 'relative',
-      display: 'inline-block',
-      textAlign: 'center',
-
-      ...extraStyling,
-    };
-    const textWrapperDiv: SxStyleProp = {
-      // positioning
-      display: 'flex',
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    };
-
-    return (
-      <div sx={outerWrapperDiv}>
-        <div sx={innerWrapperDiv}>
-          <img
-            src="./assets/speech_bubble.svg"
-            alt=""
-            sx={{
-              maxWidth: '100vh',
-              display: 'inline-block',
-              ...imageExtraStyling,
-            }}
-          />
-          <div sx={textWrapperDiv}>
-            <p sx={titleText}>{question}</p>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // ResponseItem holds the response div and rect
-  const ResponseItem: React.FC<ResponseProp> = ({
-    response,
-    textExtraStyling,
-    rectExtraStyling,
-  }): ReactElement => {
-    const textWrapperDiv: SxStyleProp = {
-      height: '100%',
-      width: '90%',
-      maxWidth: '100vw',
-      display: 'inline-block',
-    };
-
-    return (
-      // yes shari i know the rectangles aren't EXACTLY the way it is on
-      // the planning xd but this is good enoughhh. it serves its purpose
-      // and i can reuse it!!
-      <TranslucentRectangle
-        lengthX="60em"
-        lengthY="40vh"
-        extraStyling={{
-          ...textExtraStyling,
-          ...rectExtraStyling,
-        }}
-      >
-        <div sx={textWrapperDiv}>
-          <p sx={{...responseText, ...textExtraStyling}}>{response}</p>
-        </div>
-      </TranslucentRectangle>
-    );
   };
 
   return (

@@ -13,7 +13,6 @@ import {Collapsable} from '../components/Collapsable';
 import {PhotoSlideDeck, Photo} from '../components/PhotoSlideDeck';
 import {getImageUrl} from '../utils/functions';
 
-
 /**
  * The home screen, big parallax background plus the timer
  */
@@ -61,12 +60,12 @@ const Main: React.FC = () => {
 //=============================================================
 
 /**
- * The green board that has dots in the background 
+ * The green board that has dots in the background
  */
 const BackgroundWithDots: React.FC = (props) => {
   const [rendered, setRendered] = useState<boolean>(false);
-  const [updated,  setUpdated] = useState<boolean>(false);
-  
+  const [updated, setUpdated] = useState<boolean>(false);
+
   //for getting the width
   const componentRef = useRef<HTMLDivElement>(null);
 
@@ -79,32 +78,31 @@ const BackgroundWithDots: React.FC = (props) => {
     pt: 20,
   };
 
-
   useEffect(() => {
     setRendered(true);
 
     //used to re-render the dots upon resizing, because it may be a long list
-    const ro = new ResizeObserver(entries => {
-      entries.forEach(entry => {
-        setUpdated(updated => !updated);
+    const ro = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        setUpdated((updated) => !updated);
       });
     });
     ro.observe(componentRef.current);
     return () => ro.disconnect();
   }, []);
 
-
   /**
-   * Gets random dots for the background at  
+   * Gets random dots for the background at
    * *x ∈ [0, 1/3(width)] ∪ [2/3(width), width], y ∈ [0, height]*
    */
   const getRandomDots = () => {
     if (!rendered) return;
     //to trigger the update on resize
-    if (updated || !updated) {}
+    if (updated || !updated) {
+    }
     const height = componentRef.current.getBoundingClientRect().height;
     const width = componentRef.current.getBoundingClientRect().width;
-    
+
     const numDots = height / 40;
     const dots = [];
     for (let i = 0; i < numDots; i++) {
@@ -138,7 +136,6 @@ const BackgroundWithDots: React.FC = (props) => {
 
 //=============================================================
 
-
 const UpcomingBoard: React.FC = () => {
   const {upcomingMiniEvents} = useContext<IInfoContext>(InfoContext);
 
@@ -167,14 +164,16 @@ const UpcomingBoard: React.FC = () => {
     return upcomingMiniEvents.map((event) => {
       const title = (
         <React.Fragment>
-          <MdControlPoint/> {event.name}
+          <MdControlPoint /> {event.name}
         </React.Fragment>
       );
 
       if (!event.description)
-        return <Collapsable title={title} extraStyling={style} />;
+        return (
+          <Collapsable key={event.name} title={title} extraStyling={style} />
+        );
       return (
-        <Collapsable title={title} extraStyling={style}>
+        <Collapsable key={event.name} title={title} extraStyling={style}>
           <div sx={descriptionStyle}>{event.description}</div>
         </Collapsable>
       );
@@ -204,13 +203,14 @@ const UpcomingBoard: React.FC = () => {
   }
 
   return (
-    <div sx={style} >
+    <div sx={style}>
       <Heading alignment="center" text="Upcoming" />
       <BackgroundWithDots>
-        {upcomingMiniEvents.length > 0 ?
-          <div sx={eventListWrapper}>{getEventsList()}</div> :
+        {upcomingMiniEvents.length > 0 ? (
+          <div sx={eventListWrapper}>{getEventsList()}</div>
+        ) : (
           getPlaceHolder()
-        }
+        )}
       </BackgroundWithDots>
     </div>
   );
