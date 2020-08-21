@@ -16,40 +16,47 @@ import {theme} from '../utils/theme';
 
 // Interfaces --
 interface socialMediaContainer {
-  email: [string, string];
-  instagram?: [string, string];
-  facebook?: [string, string];
-  twitter?: [string, string];
+  email: linkImagePair;
+  instagram?: linkImagePair;
+  facebook?: linkImagePair;
+  twitter?: linkImagePair;
 }
 
+interface linkImagePair {
+  link: string;
+  image: string;
+}
+
+// All the social media needed for the footer
+// If we need more, just add according to format!
 const socialMediaList: socialMediaContainer = {
-  // social media -> [link, picture]
   // Hoping pictures don't need darkmodes
-  email: [
-    'mailto:rhhsstuco.contact@gmail.com',
-    './assets/icons/email-32px.png',
-  ],
-  instagram: [
-    'https://www.instagram.com/rhhs_stuco',
-    './assets/icons/instagram-r-32.png',
-  ],
-  facebook: [
-    'https://www.facebook.com/rhhsstuco/',
-    './assets/icons/facebook-r-32.png',
-  ],
-  twitter: [
-    'https://twitter.com/rhhs_stuco',
-    './assets/icons/twitter-r-32.png',
-  ],
+  email: {
+    link: 'mailto:rhhsstuco.contact@gmail.com',
+    image: './assets/icons/email-32px.png',
+  },
+  instagram: {
+    link: 'https://www.instagram.com/rhhs_stuco',
+    image: './assets/icons/instagram-r-32.png',
+  },
+  facebook: {
+    link: 'https://www.facebook.com/rhhsstuco/',
+    image: './assets/icons/facebook-r-32.png',
+  },
+  twitter: {
+    link: 'https://twitter.com/rhhs_stuco',
+    image: './assets/icons/twitter-r-32.png',
+  },
 };
 
+//=====================================================================
+// SocialMediaItem is for the individual social media buttons
 interface SocialMediaProps {
   name: string;
   link: string;
   pictureLink: string;
 }
 
-// Independently draw a social media button/item
 const SocialMediaItem: React.FC<SocialMediaProps> = ({
   name,
   link,
@@ -61,10 +68,10 @@ const SocialMediaItem: React.FC<SocialMediaProps> = ({
       backgroundColor: theme.colors.secondary,
     },
   };
-
   const linkStyle: SxStyleProp = {
     paddingX: '0.5em', // rudimentary spacing between the pictures lol
   };
+
   return (
     <a href={link} sx={linkStyle}>
       <img sx={imageStyle} src={pictureLink} alt={name} />
@@ -80,43 +87,130 @@ const getSocialMedia = (
     return (
       <SocialMediaItem
         name={sitename}
-        link={socialMediaList[sitename][0]}
-        pictureLink={socialMediaList[sitename][1]}
+        link={socialMediaList[sitename].link}
+        pictureLink={socialMediaList[sitename].image}
         key={sitename}
       />
     );
   });
 };
-// ------------------------------
 
-// The actual footer code and stuff
-export const Footer: React.FC = () => {
-  // styling stuff
-  const footerStyle: SxStyleProp = {
-    color: theme.colors.text.light,
-    backgroundColor: theme.colors.footer,
-    pt: '2em',
-    position: 'relative',
-    zIndex: 1,
-    top: 'auto',
-    mt: 'auto',
-    bottom: 0,
-    width: '100%',
-  };
-  const textStyle: SxStyleProp = {
-    fontFamily: theme.fonts.body,
-    fontSize: theme.fontSizes.footer,
-    whiteSpace: 'nowrap',
-  };
+// ====================================================================
+// CopyrightItem is for the copyright text and source text
+
+interface CopyrightItemProps {
+  textStyle: SxStyleProp;
+}
+
+const CopyrightItem: React.FC<CopyrightItemProps> = ({textStyle}) => {
   const linkStyle: SxStyleProp = {
     color: theme.colors.text.light,
+    mb: '0.25em',
+
     '&:hover': {
       color: theme.colors.primary,
       textDecoration: 'none',
     },
   };
 
-  // TODO: what do i type routes as lmao
+  const copyrightTextStyle: SxStyleProp = {
+    ...textStyle,
+
+    // Add space above copyright if rearranged
+    '@media only screen and (max-width: 500px)': {
+      mt: '1em',
+    },
+  };
+  const imageStyle: SxStyleProp = {mr: '0.5em'};
+
+  return (
+    <p sx={copyrightTextStyle}>
+      &copy; RHHS Student Council {new Date().getFullYear()}
+      &nbsp; |&nbsp;
+      <a
+        href="https://github.com/shari09/StuCo-Website-Redesigned"
+        sx={linkStyle}
+      >
+        <img
+          src="./assets/icons/Github-Mark-Light-20px.png"
+          alt=""
+          sx={imageStyle}
+        />
+        Source
+      </a>
+    </p>
+  );
+};
+
+//=====================================================================
+
+//=====================================================================
+// The actual footer code and stuff
+export const Footer: React.FC = () => {
+  // styling stuff --
+  const footerStyle: SxStyleProp = {
+    color: theme.colors.text.light,
+    backgroundColor: theme.colors.footer,
+    pt: '2em',
+    position: 'relative',
+
+    zIndex: 1,
+
+    width: '100%',
+    top: 'auto',
+    mt: 'auto',
+    mb: 0,
+    bottom: 0,
+  };
+  const textStyle: SxStyleProp = {
+    fontFamily: theme.fonts.body,
+    fontSize: theme.fontSizes.footer,
+    whiteSpace: 'nowrap',
+  };
+  const bottomFooterStyle: SxStyleProp = {
+    // Rearrange the footer if the screen is small enough.
+    '@media only screen and (max-width: 500px)': {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      textAlign: 'center',
+    },
+
+    width: '100%',
+    margin: 'auto',
+  };
+  const socialMediaContainerStyle: SxStyleProp = {
+    left: '5%',
+    width: '50%',
+
+    // Format for the rearrangement
+    '@media only screen and (max-width: 500px)': {
+      // Add space to seperate from links if rearranged
+      mt: '1em',
+      left: 0,
+      width: '100%',
+    },
+  };
+  const copyrightContainerStyle: SxStyleProp = {
+    right: '5%',
+    width: '50%',
+    textAlign: 'right',
+
+    // Format for the rearrangement
+    '@media only screen and (max-width: 500px)': {
+      right: 0,
+      width: '100%',
+      textAlign: 'center',
+    },
+  };
+
+  // Functions --
+  /**
+   * Gets all routes, splits them in half, and returns all the
+   * routes in a formatted style.
+   * @param routes - All the possible routes to go to.
+   * @return all routes in a container element.
+   */
   const getAllFooterRoutes = (routes): ReactElement => {
     // Split the routes in half to format links correctly
     const half: number = Math.ceil(Object.keys(routes).length / 2);
@@ -130,84 +224,84 @@ export const Footer: React.FC = () => {
       half,
     ) as string[][];
 
+    // Styles ---------------------------------------------------------
+    const leftRoutesStyle: SxStyleProp = {
+      ...textStyle,
+      textAlign: 'right',
+    };
+    const rightRoutesStyle: SxStyleProp = {
+      ...textStyle,
+    };
+    const routeContainerStyle: SxStyleProp = {
+      width: '100%',
+      margin: 'auto',
+    };
+    const leftListStyle: SxStyleProp = {listStyleType: 'none'};
+    const rightListStyle: SxStyleProp = {listStyleType: 'none', pl: 0};
+    //-----------------------------------------------------------------
+
     return (
-      <div className="row">
+      <div className="row" sx={routeContainerStyle}>
         <div className="col">
-          <div
-            sx={{
-              ...textStyle,
-              textAlign: 'right',
-            }}
-          >
+          <div sx={leftRoutesStyle}>
             {/* first column of links goes here */}
-            <ul sx={{listStyleType: 'none'}}>{getRouteItems(leftRoutes)}</ul>
+            <ul sx={leftListStyle}>{getRouteItems(leftRoutes)}</ul>
           </div>
         </div>
         <div className="col">
-          <div sx={textStyle}>
+          <div sx={rightRoutesStyle}>
             {/* second column of links goes here */}
-            <ul sx={{listStyleType: 'none'}}>{getRouteItems(rightRoutes)}</ul>
+            <ul sx={rightListStyle}>{getRouteItems(rightRoutes)}</ul>
           </div>
         </div>
       </div>
     );
   };
 
-  // Get a NavItem from an array of routes
+  /**
+   * Convert a list of routes to a list of actual NavItem elements.
+   * @param routes - All the routes in this list of links.
+   * @returns a list of NavItem elements to the desired route.
+   */
   const getRouteItems = (routes: string[][]): ReactElement[] => {
+    const navStyle: SxStyleProp = {
+      px: 0,
+      mx: 0,
+      py: 1,
+
+      display: 'inline',
+      '&:hover': {
+        color: theme.colors.primary,
+        textDecoration: 'none',
+      },
+    };
+
     return routes.map((route) => {
       return (
         <li key={route[1]}>
-          <NavItem
-            route={route[0]}
-            text={route[1]}
-            extraStyling={{
-              px: 0,
-              py: 1,
-              display: 'inline',
-              '&:hover': {
-                color: theme.colors.primary,
-                textDecoration: 'none',
-              },
-            }}
-          />
+          <NavItem route={route[0]} text={route[1]} extraStyling={navStyle} />
         </li>
       );
     });
   };
 
+  // Return the footer code --
   return (
     // yes shari i know you hate bootstrap but im just using these
     // names to name the divs. Kapeesh? Kapeesh.
-    <div className="footer" sx={footerStyle}>
-      <div className="container">
-        {/* top half of the footer */}
-        {getAllFooterRoutes(routes)}
+    <div sx={footerStyle}>
+      {/* top half of the footer */}
+      {getAllFooterRoutes(routes)}
 
-        {/* bottom half of the footer */}
-        <div className="row">
-          <div className="col" sx={{width: '50%'}}>
-            {getSocialMedia(socialMediaList)}
-          </div>
+      {/* bottom half of the footer */}
+      <div className="row" sx={bottomFooterStyle}>
+        <div className="col" sx={socialMediaContainerStyle}>
+          {getSocialMedia(socialMediaList)}
+        </div>
 
-          {/* {//TODO: this doesn't scale that well down :/// */}
-          <div className="col" sx={{textAlign: 'right', width: '50%'}}>
-            <p sx={textStyle}>
-              &copy; RHHS Student Council {new Date().getFullYear()}
-              &nbsp;|&nbsp;
-              <a
-                href="https://github.com/shari09/StuCo-Website-Redesigned"
-                sx={linkStyle}
-              >
-                <img
-                  src="./assets/icons/Github-Mark-Light-20px.png"
-                  alt=""
-                  sx={{mr: '0.5em', mb: '0.25em'}}
-                />
-                Source
-              </a>
-            </p>
-          </div>
+        {/* {//TODO: this doesn't scale that well down :/// */}
+        <div className="col" sx={copyrightContainerStyle}>
+          <CopyrightItem textStyle={textStyle} />
         </div>
       </div>
     </div>

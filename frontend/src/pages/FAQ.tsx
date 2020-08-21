@@ -72,19 +72,16 @@ const QuestionItem: React.FC<QuestionProp> = ({
     textAlign: 'center',
     margin: 'auto',
   };
+  const imageStyle = {
+    maxWidth: '100vw',
+    display: 'inline-block',
+    ...imageExtraStyling,
+  };
 
   return (
     <div sx={outerContainerDiv}>
       <div sx={innerWrapperDiv}>
-        <img
-          src="./assets/speech_bubble.svg"
-          alt=""
-          sx={{
-            maxWidth: '100vw',
-            display: 'inline-block',
-            ...imageExtraStyling,
-          }}
-        />
+        <img src="./assets/speech_bubble.svg" alt="" sx={imageStyle} />
         <div sx={textWrapperDiv}>
           <p sx={titleTextStyle}>{question}</p>
         </div>
@@ -101,19 +98,45 @@ const ResponseItem: React.FC<ResponseProp> = ({
   rectExtraStyling,
 }): ReactElement => {
   const textWrapperDiv: SxStyleProp = {
-    height: '100%',
-    width: '90%',
-    maxWidth: '100vw',
+    position: 'relative',
     display: 'inline-block',
+
+    // TODO: mt is based off width which i find extremely stupid so
+    // fix this and make it better
+    // to push the wrapper down a bit and make description text readable
+    mt: '10%',
+    // scaling with browser is friendlier
+    '@media only screen and (max-width: 750px)': {
+      mt: '15%',
+    },
+    // phone sizing
+    '@media only screen and (max-width: 500px) and (max-height: 1200px)': {
+      mt: '20%',
+    },
+
+    width: '90%',
   };
   const responseTextStyle: SxStyleProp = {
-    top: '35%',
     position: 'relative',
+
     color: theme.colors.text.darkSlate,
     fontSize: theme.fontSizes.body,
     fontFamily: theme.fonts.body,
     wordWrap: 'normal',
     lineHeight: 1.6,
+  };
+  const rectStyling: SxStyleProp = {
+    // tablet sizing
+    '@media only screen and (max-width: 1200px)': {
+      minHeight: '30vh',
+    },
+    // phone sizing
+    '@media only screen and (max-width: 500px)': {
+      minHeight: '25vh',
+    },
+
+    ...textExtraStyling,
+    ...rectExtraStyling,
   };
 
   return (
@@ -122,11 +145,8 @@ const ResponseItem: React.FC<ResponseProp> = ({
     // and i can reuse it!!
     <TranslucentRectangle
       lengthX="60em"
-      lengthY="40vh" // wonky on mobile
-      extraStyling={{
-        ...textExtraStyling,
-        ...rectExtraStyling,
-      }}
+      minLengthY="40vh"
+      extraStyling={rectStyling}
     >
       <div sx={textWrapperDiv}>
         <p sx={{...responseTextStyle, ...textExtraStyling}}>{response}</p>
@@ -213,7 +233,7 @@ export const FAQ: React.FC = (): ReactElement => {
       const rectStyling: SxStyleProp = {
         maxWidth: '95vw',
         backgroundColor:
-          1 % 3 === 0 ? theme.colors.background.overlay : 'transparent',
+          i % 3 === 0 ? theme.colors.background.overlay : 'transparent',
       };
 
       faqItems.push(
@@ -222,9 +242,7 @@ export const FAQ: React.FC = (): ReactElement => {
           <div sx={{width: '100%'}}>
             <QuestionItem
               question={faqQuestions[i].question}
-              extraStyling={{
-                ...styling,
-              }}
+              extraStyling={styling}
               imageExtraStyling={imageStyling}
             />
             <ResponseItem
