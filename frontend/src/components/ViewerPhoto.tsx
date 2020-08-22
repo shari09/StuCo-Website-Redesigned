@@ -2,7 +2,6 @@
 import React, {useState, useEffect, useRef, ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {getImageUrl} from '../utils/functions';
-//TODO: should this even be in a seperate module?
 
 export interface ViewerPhotoProps {
   photoId: string;
@@ -102,15 +101,6 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
   };
 
   /**
-   * Fetches and returns a url to the original specified drive photo.
-   * @param photoId - the drive id for the photo.
-   * @returns a url to the original photo.
-   */
-  const fetchOriginalImageUrl = (photoId: string): string => {
-    return `https://drive.google.com/uc?export=view&id=${photoId}`;
-  };
-
-  /**
    * Determines the orientation of the current photo.
    */
   const determineOrientation = (): void => {
@@ -131,21 +121,16 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
   // Returning the viewer code --
   return (
     <div sx={mainImageContainerStyle} ref={mainImageRefDiv}>
-      <a
-        href={fetchOriginalImageUrl(photoId)}
-        sx={{width: '100%', height: '100%'}}
-      >
-        <img
-          src={fetchMainImageUrl(photoId)}
-          alt=""
-          sx={mainImageStyle}
-          onLoad={performLoadActivities}
-          onError={() => {
-            console.log('failed to load main image');
-            loadHandler();
-          }}
-        />
-      </a>
+      <img
+        src={fetchMainImageUrl(photoId)}
+        alt=""
+        sx={mainImageStyle}
+        onLoad={performLoadActivities}
+        onError={() => {
+          console.log('failed to load main image');
+          loadHandler();
+        }}
+      />
     </div>
   );
 };

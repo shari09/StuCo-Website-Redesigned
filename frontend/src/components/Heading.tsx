@@ -34,11 +34,7 @@ export const Heading: React.FC<HeadingProps> = ({
     background: theme.colors.primary,
     borderRadius: 10,
     height: 7,
-    width: 400,
-    '@media screen and (max-width: 500px)': {
-      // if it gets too small, shrink the line
-      width: '100%',
-    },
+    width: ['100%', 400],
 
     margin: alignment === 'left' ? undefined : 'auto',
   };

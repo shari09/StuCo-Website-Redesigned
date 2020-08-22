@@ -1,13 +1,13 @@
 /** @jsx jsx */
 import React, {ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
-// import {
-//   // TODO: figure this out later lol
-//   FaGithub,
-//   FaFacebookSquare,
-//   FaTwitterSquare,
-//   FaInstagramSquare,
-// } from 'react-icons/fa';
+import {
+  FaGithub,
+  FaEnvelopeSquare,
+  FaFacebookSquare,
+  FaTwitterSquare,
+  FaInstagramSquare,
+} from 'react-icons/fa';
 
 // For the links on the footer
 import {routes, NavItem} from './Navigation';
@@ -24,28 +24,36 @@ interface socialMediaContainer {
 
 interface linkImagePair {
   link: string;
-  image: string;
+  image: string | ReactElement;
 }
+
+// The style for social media icons
+const socialMediaStyle: SxStyleProp = {
+  transition: 'transform .2s ease',
+  '&:hover': {
+    transform: 'scale(1.1)',
+    cursor: 'pointer',
+  },
+};
 
 // All the social media needed for the footer
 // If we need more, just add according to format!
 const socialMediaList: socialMediaContainer = {
-  // Hoping pictures don't need darkmodes
   email: {
     link: 'mailto:rhhsstuco.contact@gmail.com',
-    image: './assets/icons/email-32px.png',
+    image: <FaEnvelopeSquare size={32} sx={socialMediaStyle} />,
   },
   instagram: {
     link: 'https://www.instagram.com/rhhs_stuco',
-    image: './assets/icons/instagram-r-32.png',
+    image: <FaInstagramSquare size={32} sx={socialMediaStyle} />,
   },
   facebook: {
     link: 'https://www.facebook.com/rhhsstuco/',
-    image: './assets/icons/facebook-r-32.png',
+    image: <FaFacebookSquare size={32} sx={socialMediaStyle} />,
   },
   twitter: {
     link: 'https://twitter.com/rhhs_stuco',
-    image: './assets/icons/twitter-r-32.png',
+    image: <FaTwitterSquare size={32} sx={socialMediaStyle} />,
   },
 };
 
@@ -54,7 +62,7 @@ const socialMediaList: socialMediaContainer = {
 interface SocialMediaProps {
   name: string;
   link: string;
-  pictureLink: string;
+  pictureLink: string | ReactElement;
 }
 
 const SocialMediaItem: React.FC<SocialMediaProps> = ({
@@ -62,19 +70,36 @@ const SocialMediaItem: React.FC<SocialMediaProps> = ({
   link,
   pictureLink,
 }) => {
-  const imageStyle: SxStyleProp = {
-    borderRadius: '50%',
-    '&:hover': {
-      backgroundColor: theme.colors.secondary,
-    },
-  };
   const linkStyle: SxStyleProp = {
     paddingX: '0.5em', // rudimentary spacing between the pictures lol
   };
 
+  const renderIcon = () => {
+    const imageStyle: SxStyleProp = {
+      borderRadius: '50%',
+      '&:hover': {},
+    };
+
+    const iconStyle = {
+      display: 'inline',
+      color: theme.colors.background.light,
+
+      height: '100%',
+      width: 'auto',
+
+      ...imageStyle,
+    };
+
+    if (typeof pictureLink == 'string') {
+      return <img sx={imageStyle} src={pictureLink} alt={name} />;
+    }
+
+    return <div sx={iconStyle}>{pictureLink}</div>;
+  };
+
   return (
     <a href={link} sx={linkStyle}>
-      <img sx={imageStyle} src={pictureLink} alt={name} />
+      {renderIcon()}
     </a>
   );
 };
@@ -122,7 +147,7 @@ const CopyrightItem: React.FC<CopyrightItemProps> = ({textStyle}) => {
       mt: '1em',
     },
   };
-  const imageStyle: SxStyleProp = {mr: '0.5em'};
+  const imageStyle: SxStyleProp = {mr: '0.5em', mb: '0.25em'};
 
   return (
     <p sx={copyrightTextStyle}>
@@ -132,11 +157,7 @@ const CopyrightItem: React.FC<CopyrightItemProps> = ({textStyle}) => {
         href="https://github.com/shari09/StuCo-Website-Redesigned"
         sx={linkStyle}
       >
-        <img
-          src="./assets/icons/Github-Mark-Light-20px.png"
-          alt=""
-          sx={imageStyle}
-        />
+        <FaGithub sx={imageStyle} size={20} />
         Source
       </a>
     </p>
@@ -183,7 +204,7 @@ export const Footer: React.FC = () => {
   const socialMediaContainerStyle: SxStyleProp = {
     left: '5%',
     width: '50%',
-    bottom: '0.75em',
+    bottom: '0.5em',
 
     // Format for the rearrangement
     '@media only screen and (max-width: 500px)': {
@@ -217,8 +238,6 @@ export const Footer: React.FC = () => {
   const getAllFooterRoutes = (routes): ReactElement => {
     // Split the routes in half to format links correctly
     const half: number = Math.ceil(Object.keys(routes).length / 2);
-    // honestly I thought about keeping them as objects but I figured
-    // that would be too much hassle
     const leftRoutes: string[][] = Object.entries(routes).slice(
       0,
       half,

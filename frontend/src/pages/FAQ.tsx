@@ -1,8 +1,10 @@
 /** @jsx jsx */
 import React, {useContext, ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
+
 import {Heading} from '../components/Heading';
 import {TranslucentRectangle} from '../components/TranslucentRectangle';
+
 import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
 import {FAQ as FAQInterface} from '../utils/interfaces';
@@ -27,8 +29,6 @@ export interface ResponseProp {
 }
 
 //TODO: yes shari i will add padding later
-//TODO: please for the love of god clean this file up
-
 //=====================================================================
 // To hold the speech bubble and question
 const QuestionItem: React.FC<QuestionProp> = ({
@@ -44,7 +44,6 @@ const QuestionItem: React.FC<QuestionProp> = ({
     ...extraStyling,
   };
   const innerWrapperDiv: SxStyleProp = {
-    // positioning
     top: '3.5em',
     maxWidth: '95vw', // to make sure the page doesn't scroll to the right
     position: 'relative',
@@ -54,7 +53,6 @@ const QuestionItem: React.FC<QuestionProp> = ({
     ...extraStyling,
   };
   const textWrapperDiv: SxStyleProp = {
-    // positioning
     display: 'flex',
     position: 'absolute',
     width: '100%',
@@ -104,16 +102,7 @@ const ResponseItem: React.FC<ResponseProp> = ({
     // TODO: mt is based off width which i find extremely stupid so
     // fix this and make it better
     // to push the wrapper down a bit and make description text readable
-    mt: '10%',
-    // scaling with browser is friendlier
-    '@media only screen and (max-width: 750px)': {
-      mt: '15%',
-    },
-    // phone sizing
-    '@media only screen and (max-width: 500px) and (max-height: 1200px)': {
-      mt: '20%',
-    },
-
+    mt: ['20%', '15%', '10%'],
     width: '90%',
   };
   const responseTextStyle: SxStyleProp = {
@@ -126,14 +115,7 @@ const ResponseItem: React.FC<ResponseProp> = ({
     lineHeight: 1.6,
   };
   const rectStyling: SxStyleProp = {
-    // tablet sizing
-    '@media only screen and (max-width: 1200px)': {
-      minHeight: '30vh',
-    },
-    // phone sizing
-    '@media only screen and (max-width: 500px)': {
-      minHeight: '25vh',
-    },
+    minHeight: ['25vh', '30vh', '40vh'],
 
     ...textExtraStyling,
     ...rectExtraStyling,
@@ -143,11 +125,7 @@ const ResponseItem: React.FC<ResponseProp> = ({
     // yes shari i know the rectangles aren't EXACTLY the way it is on
     // the planning xd but this is good enoughhh. it serves its purpose
     // and i can reuse it!!
-    <TranslucentRectangle
-      lengthX="60em"
-      minLengthY="40vh"
-      extraStyling={rectStyling}
-    >
+    <TranslucentRectangle lengthX="60em" extraStyling={rectStyling}>
       <div sx={textWrapperDiv}>
         <p sx={{...responseTextStyle, ...textExtraStyling}}>{response}</p>
       </div>
@@ -159,9 +137,7 @@ const ResponseItem: React.FC<ResponseProp> = ({
 
 //=====================================================================
 // The function that returns a FAQ object
-// it's pretty big though...
 export const FAQ: React.FC = (): ReactElement => {
-  // Grab the questions
   const faqQuestions: FAQInterface[] = useContext<IInfoContext>(InfoContext)
     .faq;
 
@@ -201,14 +177,10 @@ export const FAQ: React.FC = (): ReactElement => {
       return <div></div>;
     }
 
-    const faqItems: ReactElement[] = [];
-    // yes shari, a for loop
-    // i want the index >:(
-    for (let i = 0; i < faqQuestions.length; ++i) {
+    return faqQuestions.map((question, i) => {
       let styling: SxStyleProp;
       let imageStyling: SxStyleProp | undefined;
 
-      // Change styles for every even list option
       if (i % 2 === 0) {
         // Left side of the page
         styling = {
@@ -236,8 +208,7 @@ export const FAQ: React.FC = (): ReactElement => {
           i % 3 === 0 ? theme.colors.background.overlay : 'transparent',
       };
 
-      faqItems.push(
-        // To squeeze the next list items into the previous ones
+      return (
         <li key={i} sx={{mb: '-2em'}}>
           <div sx={{width: '100%'}}>
             <QuestionItem
@@ -251,11 +222,9 @@ export const FAQ: React.FC = (): ReactElement => {
               rectExtraStyling={rectStyling}
             />
           </div>
-        </li>,
+        </li>
       );
-    }
-
-    return faqItems;
+    });
   };
 
   return (

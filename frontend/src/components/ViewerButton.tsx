@@ -2,7 +2,6 @@
 import React, {ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
-//TODO: should this even be in a seperate module?
 
 export interface ViewerButtonProps {
   imageSrc: string;
@@ -17,20 +16,14 @@ export const ViewerButton: React.FC<ViewerButtonProps> = ({
   extraButtonStyling,
 }): ReactElement => {
   const buttonContainerStyle: SxStyleProp = {
-    // dimensions and shape
     position: 'relative',
 
     py: '1%',
     px: '1%',
     mx: '5%',
 
-    width: '50px',
-    height: '50px',
-    // making the buttons more responsive and friendly
-    '@media only screen and (max-height: 500px)': {
-      width: '30px',
-      height: '30px',
-    },
+    width: ['30px', '40px', '45px', '50px'],
+    height: ['30px', '40px', '45px', '50px'],
 
     borderRadius: '50%',
 
@@ -50,8 +43,6 @@ export const ViewerButton: React.FC<ViewerButtonProps> = ({
       opacity: 0.8,
     },
 
-    // extra styling is applied on the div cause i'd assume that's where
-    // most people actually intend to edit if you even need to...
     ...extraButtonStyling,
   };
 

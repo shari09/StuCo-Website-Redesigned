@@ -222,7 +222,6 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   const overlayStyle: SxStyleProp = {
     // for the actual picture in the overlay
 
-    // cover the div
     objectFit: 'cover',
     opacity: '0.9',
     height: '100%',

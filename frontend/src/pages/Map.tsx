@@ -40,7 +40,7 @@ export const Map: React.FC = () => {
           alt="The school's second floor."
           sx={{
             ...imageStyle,
-            mb: '14em', // pushing away the footer
+            mb: ['8em', '14em'], // pushing away the footer
           }}
         />
       </div>
