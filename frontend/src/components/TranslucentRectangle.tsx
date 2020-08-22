@@ -13,7 +13,7 @@ export interface TransRectProps {
 
 // Default background colour for IE kids (ie no one)
 const backRgba: rgbItem = hexToRgba(
-  theme.colors.background.overlayNoalpha,
+  theme.colors.secondary,
   0.5,
 );
 

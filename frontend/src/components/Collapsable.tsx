@@ -6,7 +6,8 @@ import ResizeObserver from 'resize-observer-polyfill';
 
 interface Props {
   title: string | React.ReactElement;
-  extraStyling?: SxStyleProp;
+  titleStyle?: SxStyleProp;
+  childrenStyle?: SxStyleProp;
   collapsed?: boolean;
 }
 
@@ -32,12 +33,15 @@ interface Props {
 export const Collapsable: React.FC<Props> = ({
   children,
   title,
-  extraStyling,
-  collapsed,
+  titleStyle,
+  collapsed = true,
+  childrenStyle,
 }) => {
-  const [childrenCollapsed, setChildrenCollapsed] = useState<boolean>(true);
+  const [childrenCollapsed, setChildrenCollapsed] = useState<boolean>(collapsed);
   const [childrenHeight, setChildrenHeight] = useState<number>(0);
+  const [childWrapperWidth, setChildWrapperWidth] = useState<number>(0);
   const childrenRef = useRef<HTMLDivElement>(null);
+  const childWrapperRef = useRef<HTMLDivElement>(null);
   const prevHeight = useRef<number>(0);
 
   useEffect(() => {
@@ -53,6 +57,8 @@ export const Collapsable: React.FC<Props> = ({
       });
     });
     ro.observe(childrenRef.current);
+    setChildWrapperWidth(childWrapperRef.current.getBoundingClientRect().width);
+    console.log(childWrapperRef.current.scrollWidth);
     return () => ro.disconnect();
   }, []);
 
@@ -60,12 +66,13 @@ export const Collapsable: React.FC<Props> = ({
     position: 'relative',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    overflowX: 'hidden',
+    overflow: 'visible',
     verticalAlign: 'middle',
     color: theme.colors.text.light,
     fill: theme.colors.text.light,
-    height: collapsed ? 0 : 'auto',
+    height: 'auto',
     padding: '0.3em',
+    width: childWrapperWidth === 0 ? 'auto' : childWrapperWidth,
   };
 
   /**
@@ -85,12 +92,12 @@ export const Collapsable: React.FC<Props> = ({
     borderLeftWidth: 2,
     borderLeftColor: theme.colors.text.light,
     borderLeftStyle: 'dashed',
-    overflow: 'hidden',
+    overflowY: 'hidden',
     height: childrenCollapsed ? 0 : childrenHeight,
     transitionDuration: transitionTime,
   };
 
-  const titleStyle: SxStyleProp = {
+  const defaultTitleStyle: SxStyleProp = {
     borderBottomWidth: childrenCollapsed ? 0 : 1.5,
     transitionDuration: transitionTime,
     borderBottomColor: theme.colors.text.light,
@@ -104,7 +111,7 @@ export const Collapsable: React.FC<Props> = ({
   return (
     <div sx={wrapperStyle}>
       <span
-        sx={{...titleStyle, ...extraStyling}}
+        sx={{...defaultTitleStyle, ...titleStyle}}
         onClick={() => {
           if (React.Children.count(children) === 0) return;
           setChildrenCollapsed((childrenCollapsed) => !childrenCollapsed);
@@ -112,7 +119,7 @@ export const Collapsable: React.FC<Props> = ({
       >
         {title}
       </span>
-      <div sx={childrenWrapperStyle}>
+      <div sx={{...childrenWrapperStyle, ...childrenStyle}} ref={childWrapperRef}>
         <div ref={childrenRef} children={children} />
       </div>
     </div>

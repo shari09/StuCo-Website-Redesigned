@@ -27,6 +27,7 @@ export interface Recent {
 export interface UpcomingMiniEvents {
   name: string;
   description: string;
+  link: string;
 }
 
 export interface Club {
@@ -39,6 +40,11 @@ export interface Club {
   meetingLocation: string;
   instagram: string;
   email: string;
+}
+
+export interface ClubHighlight {
+  photoId: string;
+  photoName: string;
 }
 
 export interface FAQ {

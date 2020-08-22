@@ -1,4 +1,4 @@
-import {google, sheets_v4} from 'googleapis';
+import {google} from 'googleapis';
 const sheets = google.sheets('v4');
 
 const spreadsheetId = '1oF4Abo1kJmjGhtFhJy_DbR44XfEVsCLqcc53jeTDy8U';
@@ -29,7 +29,7 @@ class DataBlock {
 
 const getMetaData = async() => {
   //getting meta data — the ranges of the sheets
-  //update: this actually makes everything slower
+  //update: this actually makes everything slower by a few hundred ms
   //but maybe this is better practice?
 
   const metaData = (await sheets.spreadsheets.values.get({

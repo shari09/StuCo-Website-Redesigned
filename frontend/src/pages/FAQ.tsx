@@ -126,7 +126,7 @@ export const FAQ: React.FC = (): ReactElement => {
             }
           : {
               maxWidth: '95vw',
-              backgroundColor: theme.colors.background.overlayNoalpha + '00',
+              backgroundColor: theme.colors.secondary + '00',
             };
 
       faqItems.push(

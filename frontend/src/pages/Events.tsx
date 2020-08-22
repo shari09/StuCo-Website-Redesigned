@@ -238,7 +238,6 @@ const EventButton: React.FC<EventButtonProps> = ({
       transition: 'transform .2s, .5s ease',
       '&:hover': {
         transform: 'scale(1.025)',
-        opacity: 0.7,
         cursor: 'pointer',
       },
 

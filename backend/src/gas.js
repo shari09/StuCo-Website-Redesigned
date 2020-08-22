@@ -2,7 +2,7 @@
 //ok just skip this entire section cuz i found a much easier better and faster way
 //which is enabling the advanced drive api service
 //welp, i spent a while trying to figure this out so im still just gonna leave it here
-//just skip to after the huge comment block
+//just skip to after the huge comment block (around line 110)
 
 
 function byteToNum(byteArr) {
@@ -34,9 +34,9 @@ function getJpgSize(hexArr) {
     }
 
     //get the second byte of the marker, which indicates the marker type
-    marker = hexArr[i++];
+    marker = hexArr[++i];
 
-    //these are segments that don't have any data stored in it
+    //these are segments that don't have any data stored in it, thus only 2 bytes
     //01 and D1 through D9
     if (marker === '01' || (!isNaN(parseInt(marker[1])) && marker[0] === 'd')) {
       i++;
@@ -60,6 +60,7 @@ function getJpgSize(hexArr) {
       - P [sample precision], one byte
       - Y [number of lines in the src img], two bytes, which is essentially the height
       - X [number of samples per line], two bytes, which is essentially the width 
+      ... [other parameters]
 
     sofn marker codes: https://www.digicamsoft.com/itu/itu-t81-36.html
     apparently there are other sofn markers but these two the most common ones
@@ -107,13 +108,13 @@ function getSize(file) {
 //=====================================================================
 //actual useful code starts here 
 
-async function getGallery() {
+function getFolderImages(folderId) {
   let nextPageToken;
   let files = [];
   while (true) {
-    const res = await Drive.Files.list({
+    const res = Drive.Files.list({
       pageToken: nextPageToken,
-      q: `'1xD8Wgi68bCZQFGY8tPU6EzKzRutCoLtx' in parents and mimeType contains 'image/'`,
+      q: `'${folderId}' in parents and mimeType contains 'image/'`,
     });
     files = [...files, ...res.items];
     nextPageToken = res.nextPageToken;
@@ -122,10 +123,31 @@ async function getGallery() {
   return files;
 }
 
+function getClubHighlights() {
+  const files = getFolderImages('1THs3rA2l7Dc_Ao5mtwQxmvudyN2QA2-v');
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('clubHighlights');
+  sheet.clear({
+    contentsOnly: true,
+  });
+
+  //writes back the properties
+  const range = sheet.getRange('A1:B1');
+  range.setValues([['photoName', 'photoId']]);
+
+  let rowNum = 2;
+
+  files.forEach(file => {
+    const range = sheet.getRange(rowNum, 1, 1, 2);
+    range.setValues([[file.originalFilename, file.id]]);
+    rowNum++;
+  });
+  
+  setRange('clubHighlights');
+}
 
 
 function getPhotos() {
-  const files = await getGallery();
+  const files = getFolderImages('1xD8Wgi68bCZQFGY8tPU6EzKzRutCoLtx');
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('gallery');
   sheet.clear({
     contentsOnly: true,
@@ -174,6 +196,16 @@ function setRange(sheetName) {
 }
 
 function onEdit(e) {
-  const sheet = SpreadsheetApp.getActiveSheet().getName();
-  setRange(sheet);
+  const sheetName = SpreadsheetApp.getActiveSheet().getName();
+  setRange(sheetName);
 }
+
+//sorts the club sheet according to the first column
+//first row is header
+function sortClubsSheet() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var sheet = spreadsheet.getActiveSheet();
+  if (sheet.getName() !== 'clubs') return;
+  const range = sheet.getDataRange();
+  range.offset(1, 0, range.getNumRows() - 1).sort({column: 1, ascending: true});
+};

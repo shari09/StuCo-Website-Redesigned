@@ -6,12 +6,19 @@ import {theme} from '../utils/theme';
 interface Props {
   text: string;
   alignment: 'left' | 'center';
+  underline?: boolean;
+  extraStyling?: SxStyleProp;
 }
 
 /**
  * A styled heading
  */
-export const Heading: React.FC<Props> = ({text, alignment}) => {
+export const Heading: React.FC<Props> = ({
+  text,
+  alignment,
+  underline = true,
+  extraStyling,
+}) => {
   const wrapperStyle: SxStyleProp = {
     textAlign: alignment,
   };
@@ -32,11 +39,11 @@ export const Heading: React.FC<Props> = ({text, alignment}) => {
   };
 
   return (
-    <div sx={wrapperStyle}>
+    <div sx={{...wrapperStyle, ...extraStyling}}>
       <div sx={textStyle}>{text}</div>
-      <div sx={lineStyle} />
+      {underline ? <div sx={lineStyle} /> : undefined}
     </div>
-  )
+  );
 };
 
 export default Heading;

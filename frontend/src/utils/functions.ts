@@ -1,4 +1,3 @@
-
 export interface rgbItem {
   r: number;
   g: number;
@@ -59,7 +58,9 @@ export const getImageUrl = (
   width: number,
   height: number,
 ): string => {
-  return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${Math.round(width)}-h${Math.round(height)}`;
+  return `https://drive.google.com/thumbnail?id=${imageId}&sz=w${Math.round(
+    width,
+  )}-h${Math.round(height)}`;
 };
 
 /**
@@ -82,3 +83,9 @@ export function splitArray<T>(arr: T[], n: number): T[][] {
 
   return result;
 }
+
+export const randNum = (min: number, max: number) =>
+  Math.round((Math.random() * (max - min) + min)*100)/100;
+
+export const randInt = (min: number, max: number) => 
+  Math.floor(randNum(min, max));

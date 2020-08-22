@@ -3,15 +3,16 @@ import React, {useContext, useState, useRef, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {Link} from 'react-router-dom';
 import {MdControlPoint} from 'react-icons/md';
+import {GiClick} from 'react-icons/gi';
 import ResizeObserver from 'resize-observer-polyfill';
 import {theme} from '../utils/theme';
 import {InfoContext, IInfoContext} from '../utils/contexts';
 import {CountDownTimer} from '../components/CountDownTimer';
 import {Heading} from '../components/Heading';
-import {RandomDot} from '../components/RandomDot';
 import {Collapsable} from '../components/Collapsable';
 import {PhotoSlideDeck, Photo} from '../components/PhotoSlideDeck';
 import {getImageUrl} from '../utils/functions';
+import {RandomDot} from '../utils/RandomDot';
 
 
 /**
@@ -62,10 +63,11 @@ const Main: React.FC = () => {
 
 /**
  * The green board that has dots in the background 
+ * sketchiest code
  */
 const BackgroundWithDots: React.FC = (props) => {
-  const [rendered, setRendered] = useState<boolean>(false);
-  const [updated,  setUpdated] = useState<boolean>(false);
+  const [randomDots, setRandomDots] = useState<RandomDot[]>([]);
+  const [numDots, setNumDots] = useState<number>(null);
   
   //for getting the width
   const componentRef = useRef<HTMLDivElement>(null);
@@ -81,56 +83,46 @@ const BackgroundWithDots: React.FC = (props) => {
 
 
   useEffect(() => {
-    setRendered(true);
 
     //used to re-render the dots upon resizing, because it may be a long list
     const ro = new ResizeObserver(entries => {
       entries.forEach(entry => {
-        setUpdated(updated => !updated);
+        const height = entry.contentRect.height;
+        generateRandomDots(height);
       });
     });
     ro.observe(componentRef.current);
     return () => ro.disconnect();
-  }, []);
+  }, [randomDots]);
+
 
 
   /**
    * Gets random dots for the background at  
    * *x ∈ [0, 1/3(width)] ∪ [2/3(width), width], y ∈ [0, height]*
    */
-  const getRandomDots = () => {
-    if (!rendered) return;
-    //to trigger the update on resize
-    if (updated || !updated) {}
-    const height = componentRef.current.getBoundingClientRect().height;
+  const generateRandomDots = (height: number) => {
     const width = componentRef.current.getBoundingClientRect().width;
-    
-    const numDots = height / 40;
-    const dots = [];
-    for (let i = 0; i < numDots; i++) {
-      dots.push(
-        <RandomDot
-          x={width - width / 3}
-          y={height / 20}
-          width={width / 3}
-          height={height - height / 10}
-        />,
-      );
-      dots.push(
-        <RandomDot
-          x={0}
-          y={height / 20}
-          width={width / 3}
-          height={height - height / 10}
-        />,
-      );
+    const dotsPerSideHeightInterval = 40;
+    setNumDots(height/dotsPerSideHeightInterval*2);
+    const numNewDots = height / dotsPerSideHeightInterval - randomDots.length/2;
+
+    for (let i = 0; i < numNewDots; i++) {
+      setRandomDots( oldArr => {
+        const clone = [...oldArr];
+        clone.push(new RandomDot(width-width/3, height/20, width/3, height-height/10));
+        clone.push(new RandomDot(0, height/20, width/3, height-height/10));
+        return clone;
+      });
     }
-    return dots;
+
   };
+
+
 
   return (
     <div sx={style} ref={componentRef}>
-      {getRandomDots()}
+      {randomDots.map(dot => dot.getComponent()).slice(0, numDots)}
       {props.children}
     </div>
   );
@@ -165,16 +157,28 @@ const UpcomingBoard: React.FC = () => {
     };
 
     return upcomingMiniEvents.map((event) => {
+      const iconStyle: SxStyleProp = {
+        color: theme.colors.text.light,
+        ml: '0.5em',
+      };
+
       const title = (
         <React.Fragment>
-          <MdControlPoint/> {event.name}
+          <MdControlPoint sx={{mr: '1em'}}/> 
+          {event.name}
+          {event.link
+          ? <a href={event.link}>
+              <GiClick sx={iconStyle}/>
+            </a>
+          : undefined
+          }
         </React.Fragment>
       );
 
       if (!event.description)
-        return <Collapsable title={title} extraStyling={style} />;
+        return <Collapsable title={title} titleStyle={style} />;
       return (
-        <Collapsable title={title} extraStyling={style}>
+        <Collapsable title={title} titleStyle={style}>
           <div sx={descriptionStyle}>{event.description}</div>
         </Collapsable>
       );

@@ -8,7 +8,8 @@ import {
   FAQ,
   Photo,
   CountDown,
-  AboutStuco
+  AboutStuco,
+  ClubHighlight,
 } from './interfaces';
 
 export interface IInfoContext {
@@ -21,6 +22,7 @@ export interface IInfoContext {
   faq: FAQ[];
   gallery: Photo[];
   aboutStuco: AboutStuco[];
+  clubHighlights: ClubHighlight[];
 }
 
 export const InfoContext = createContext<IInfoContext>({
@@ -33,4 +35,5 @@ export const InfoContext = createContext<IInfoContext>({
   faq: [],
   gallery: [],
   aboutStuco: [],
+  clubHighlights: [],
 });

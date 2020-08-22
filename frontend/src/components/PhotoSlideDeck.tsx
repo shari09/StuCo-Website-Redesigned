@@ -182,8 +182,16 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
   const intervalAfterLock = interval / 3;
   useEffect(() => {
     startRotation();
-    return () => window.clearInterval(timerId);
+    return bruteForceClearInterval;
   }, []);
+
+  const bruteForceClearInterval = () => {
+    const highestId = window.setTimeout(() => {
+      for (let i = highestId; i >= 0; i--) {
+        window.clearInterval(i);
+      }
+    }, 0);
+  };
 
   const getPrevIdx = (curIdx: number) => {
     let newIdx = curIdx - 1;

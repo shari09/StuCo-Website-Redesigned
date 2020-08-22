@@ -12,7 +12,6 @@ export const theme = {
       darkest: '#00000088',
       black: '#000000',
       overlay: '#93CCBE29',
-      overlayNoalpha: '#93CCBE',
       accent: '#DE7F68C7',
     },
     primary: '#68DEB5',
@@ -22,6 +21,10 @@ export const theme = {
     imageOverlayForText: '#FFFFFFD9',
     imageGrayOverlay: '#8B8B8BA6',
     imageDarkGrayOverlay: '#4D4D4DA6',
+    searchBox: {
+      darkGray: '#707070',
+      lightGray: '#E1E1E1',
+    },
     modes: {
       dark: {},
     },
@@ -39,6 +42,7 @@ export const theme = {
     body: [12, 14, 16, 20, 24, 32],
     bodySmall: [10, 12, 16],
     bodyBig: [20, 24, 28],
+    event: [11, 12, 14, 16, 20, 24, 32],
     footer: [11, 12, 14, 16],
   },
   bodyPadding: {
