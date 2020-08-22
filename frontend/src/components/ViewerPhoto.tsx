@@ -56,11 +56,17 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
     // adjusting the size
     width: orientation === 'landscape' ? '80%' : '35%',
     height: '100%',
+
     mx: 'auto',
     zIndex: 15, // to draw over the overlay
 
-    border: '1px solid',
-    borderColor: 'black',
+    '@media only screen and (max-width: 800px)': {
+      height: orientation === 'landscape' ? '30%' : '60%',
+      width: orientation === 'landscape' ? '90%' : '60%',
+      margin: 'auto',
+    },
+
+    border: '1px solid black',
   };
   const mainImageStyle: SxStyleProp = {
     // positioning

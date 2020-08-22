@@ -115,6 +115,7 @@ const CopyrightItem: React.FC<CopyrightItemProps> = ({textStyle}) => {
 
   const copyrightTextStyle: SxStyleProp = {
     ...textStyle,
+    my: 'auto',
 
     // Add space above copyright if rearranged
     '@media only screen and (max-width: 500px)': {
@@ -182,6 +183,7 @@ export const Footer: React.FC = () => {
   const socialMediaContainerStyle: SxStyleProp = {
     left: '5%',
     width: '50%',
+    bottom: '0.75em',
 
     // Format for the rearrangement
     '@media only screen and (max-width: 500px)': {
@@ -201,6 +203,7 @@ export const Footer: React.FC = () => {
       right: 0,
       width: '100%',
       textAlign: 'center',
+      mb: '0.5em',
     },
   };
 

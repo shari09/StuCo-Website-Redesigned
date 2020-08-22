@@ -174,16 +174,17 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
    * @returns an X button which exits the viewer upon click.
    */
   const renderExitButton = (): ReactElement => {
+    const buttonStyling: SxStyleProp = {
+      position: 'absolute',
+      top: '5%',
+      right: '5%',
+      mx: '0%',
+    };
     return (
       <ViewerButton
         imageSrc="./assets/icons/x-button.png"
         actionHandler={closeHandler}
-        extraButtonStyling={{
-          position: 'absolute',
-          top: '5%',
-          right: '5%',
-          mx: '0%',
-        }}
+        extraButtonStyling={buttonStyling}
       />
     );
   };
@@ -266,6 +267,33 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     flexDirection: 'row',
     textAlign: 'center',
     alignItems: 'center',
+
+    '@media only screen and (max-width: 800px)': {
+      display: 'flex',
+      flexDirection: 'column',
+      textAlign: 'center',
+      alignItems: 'center',
+    },
+  };
+  const leftButtonStyle: SxStyleProp = {
+    '@media only screen and (max-width: 800px)': {
+      position: 'fixed',
+      top: '5%',
+      mx: 'auto',
+
+      // I dont like how i have to overwrite imagesrc like this...
+      backgroundImage: 'url(./assets/icons/double-arrow-up.png)',
+    },
+  };
+  const rightButtonStyle: SxStyleProp = {
+    '@media only screen and (max-width: 800px)': {
+      position: 'fixed',
+      bottom: '5%',
+      mx: 'auto',
+
+      // I dont like how i have to overwrite imagesrc like this...
+      backgroundImage: 'url(./assets/icons/double-arrow-down.png)',
+    },
   };
 
   //-------------------------------------------------------------------
@@ -294,6 +322,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
         <ViewerButton
           imageSrc="./assets/icons/double-arrow-left.png"
           actionHandler={decrementIdx}
+          extraButtonStyling={leftButtonStyle}
         />
 
         <ViewerPhoto
@@ -308,6 +337,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
         <ViewerButton
           imageSrc="./assets/icons/double-arrow-right.png"
           actionHandler={incrementIdx}
+          extraButtonStyling={rightButtonStyle}
         />
 
         {renderExitButton()}
