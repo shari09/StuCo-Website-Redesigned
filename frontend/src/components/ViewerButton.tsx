@@ -57,16 +57,16 @@ export const ViewerButton: React.FC<ViewerButtonProps> = ({
     },
   };
   // in case you wanna use css arrows but i dont wanna style this lol
-  const arrow: SxStyleProp = {
-    borderStyle: 'solid',
-    borderColor: 'white',
-    borderWidth: '0 3px 3px 0',
-    width: '100%',
-    height: '100%',
-    display: 'inline-block',
-    padding: '3px',
-    zIndex: 16, // draw button image over overlay
-  };
+  // const arrow: SxStyleProp = {
+  //   borderStyle: 'solid',
+  //   borderColor: 'white',
+  //   borderWidth: '0 3px 3px 0',
+  //   width: '100%',
+  //   height: '100%',
+  //   display: 'inline-block',
+  //   padding: '3px',
+  //   zIndex: 16, // draw button image over overlay
+  // };
 
   return (
     <div sx={buttonContainerStyle} onClick={actionHandler}>

@@ -2,17 +2,17 @@
 import React from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
-import {Heading} from '../components/Heading';
 
 export const Map: React.FC = () => {
   // styles
   const backgroundStyle: SxStyleProp = {
     backgroundColor: theme.colors.background.dark,
     width: '100%',
-    minHeight: '100vh',
     textAlign: 'center',
   };
   const divStyle: SxStyleProp = {
+    position: 'relative',
+    top: '10vh',
     textAlign: 'center',
     width: '100%',
   };

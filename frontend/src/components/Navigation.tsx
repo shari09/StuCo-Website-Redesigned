@@ -11,7 +11,12 @@ interface LinkProps {
   extraStyling?: SxStyleProp;
 }
 
-export const NavItem: React.FC<LinkProps> = ({route, text, extraStyling, children}) => {
+export const NavItem: React.FC<LinkProps> = ({
+  route,
+  text,
+  extraStyling,
+  children,
+}) => {
   const style: SxStyleProp = {
     color: theme.colors.text.light,
     fontFamily: theme.fonts.body,
@@ -27,7 +32,7 @@ export const NavItem: React.FC<LinkProps> = ({route, text, extraStyling, childre
   };
 
   return (
-    <Link to={'/'+route} sx={{...style, ...extraStyling}}>
+    <Link to={'/' + route} sx={{...style, ...extraStyling}}>
       {text}
       {children}
     </Link>
@@ -78,15 +83,15 @@ export const Navigation: React.FC = () => {
     marginLeft: '10%',
     '&:hover': {
       background: theme.colors.navbar,
-      cursor: 'pointer'
+      cursor: 'pointer',
     },
-    height: '3.5rem'
+    height: '3.5rem',
   };
 
   return (
     <div sx={style}>
-      <Link to='/' sx={logoStyle}>
-        <img src={logo} sx={logoStyle}/>
+      <Link to="/" sx={logoStyle}>
+        <img src={logo} alt="" sx={logoStyle} />
       </Link>
       {getNavItems()}
     </div>

@@ -1,9 +1,14 @@
 /** @jsx jsx */
-import React, {useContext, useState, useRef, useEffect} from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  ReactElement,
+} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
-import ResizeObserver from 'resize-observer-polyfill';
-import {theme} from '../utils/theme';
+import {CircleSpinner} from './CircleSpinner';
 import AboutUsSpeechBubble from '../assets/speech bubble.svg';
+import {theme} from '../utils/theme';
 import {fadeIn} from '../utils/animation';
 
 interface Props {
@@ -27,6 +32,7 @@ const vmax = Math.max(window.innerWidth, window.innerHeight);
 const imgSize = vmax * 0.17;
 
 const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const sizeRef = useRef<number | string>(size);
   const marginRef = useRef({
     mt: Math.random() * 10 + 1,
@@ -62,9 +68,50 @@ const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
     height: sizeRef.current,
   };
 
+  /**
+   * Handles when an image finishes loading by setting the loading
+   * state to false.
+   */
+  const handleLoading = () => {
+    setLoading(false);
+  };
+
+  /**
+   * Determines whether or not to render a loading spinner based on
+   * the image's load status.
+   * @returns either a loading spinner, or nothing.
+   */
+  const displayLoadSpinner = (): ReactElement | void => {
+    if (loading) {
+      const spinnerWrapper: SxStyleProp = {
+        position: 'absolute', // don't skew the circles
+        width: '100%',
+        height: '100%',
+
+        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+      };
+      return (
+        <div sx={spinnerWrapper}>
+          <div sx={{display: 'inline', margin: 'auto'}}>
+            {/* hardcoded size means the spinner will be the same size
+            despite circle size, but for now this'll do */}
+            <CircleSpinner
+              height={30}
+              width={30}
+              color={theme.colors.text.light}
+            />
+          </div>
+        </div>
+      );
+    }
+  };
+
   return (
     <div sx={wrapperStyle} onClick={onClick}>
-      <img src={imageUrl} sx={imageStyle} />
+      {displayLoadSpinner()}
+      <img src={imageUrl} alt="" sx={imageStyle} onLoad={handleLoading} />
       <div sx={overlayStyle} />
     </div>
   );
@@ -138,10 +185,10 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
   return (
     <div sx={extraStyling}>
       <div sx={imageWrapper}>
-        <img src={imageUrl} sx={imageStyle} key={imageUrl} />
+        <img src={imageUrl} alt="" sx={imageStyle} key={imageUrl} />
       </div>
       <div sx={bubbleAndQuoteWrapperStyle}>
-        <img sx={speechBubbleStyle} src={AboutUsSpeechBubble} />
+        <img sx={speechBubbleStyle} alt="" src={AboutUsSpeechBubble} />
         <div sx={quoteWrapperStyle}>
           <p sx={quoteStyle}>{quote}</p>
           <p sx={closingStyle}>{closing}</p>
@@ -162,7 +209,7 @@ export const RotatingQuotes: React.FC<Props> = ({
   const [timerId, setTimerId] = useState<number>();
 
   const interval = 3000;
-  const intervalAfterLock = interval / 3;
+  // const intervalAfterLock = interval / 3;
 
   useEffect(() => {
     startRotation();

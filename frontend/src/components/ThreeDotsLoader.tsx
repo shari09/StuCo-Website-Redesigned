@@ -3,21 +3,21 @@ import {theme} from '../utils/theme';
 
 import Loader from 'react-loader-spinner';
 
-export interface CircleSpinnerProps {
+export interface ThreeDotsLoaderProps {
   width?: number;
   height?: number;
   color?: string;
 }
 
-// yes shari i decided to import a library just for spinners
-export const CircleSpinner: React.FC<CircleSpinnerProps> = ({
+// yes shari a second file dedicated to three dot loaders
+export const ThreeDotsLoader: React.FC<ThreeDotsLoaderProps> = ({
   width,
   height,
   color,
 }) => {
   return (
     <Loader
-      type="TailSpin"
+      type="ThreeDots"
       color={color ? color : theme.colors.secondary}
       width={width}
       height={height}

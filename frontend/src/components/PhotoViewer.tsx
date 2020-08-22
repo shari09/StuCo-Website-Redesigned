@@ -17,11 +17,22 @@ import {getImageUrl} from '../utils/functions';
 // todo: minor, but make naming consistant i guess
 import {Photo as PhotoInfo} from '../utils/interfaces';
 
+// yes shari since this function was messy i tried out a new
+// commenting style
+
 // Interfaces --
 export interface Photo {
   photoUrl: string;
   photoNum: number;
-  photoDimensions?: {
+
+  /** The photo dimensions provided in the spreadsheet. */
+  originalPhotoDimensions?: {
+    width: number;
+    height: number;
+  };
+
+  /** The new requested dimensions for this photo. */
+  newPhotoDimensions?: {
     width: number;
     height: number;
   };
@@ -33,6 +44,7 @@ export interface PhotoViewerProps {
   closeHandler: () => void;
 }
 
+//=====================================================================
 // PhotoViewer is a gallery viewer of photos. Resolutions of photos
 // with the same orientation are the same.
 const PhotoViewer: React.FC<PhotoViewerProps> = ({
@@ -40,6 +52,9 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   startIndex,
   closeHandler,
 }): ReactElement => {
+  //-------------------------------------------------------------------
+  // React Hook Initialization --
+  //-------------------------------------------------------------------
   const [index, setIndex] = useState<number>(startIndex);
   const [loading, setLoading] = useState<boolean>(true);
   const [overlayWidth, setOverlayWidth] = useState<number>(0);
@@ -59,23 +74,27 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   /**
    * Increases the current image index.
    */
-  const incrementIdx = () => {
+  const incrementIdx = useCallback(() => {
     setIndex((index + 1) % photos.length);
 
     setLoading(true);
-  };
+  }, [photos, index]);
 
   /**
    * Decreases the current image index.
    */
-  const decrementIdx = () => {
+  const decrementIdx = useCallback(() => {
     setIndex(index - 1 < 0 ? photos.length - 1 : index - 1);
 
     setLoading(true);
-  };
+  }, [photos, index]);
 
   // A memoized callback function to interact with keyboard
   // functionality -- only needs to be created once.
+  /**
+   * Determines the action to be taken depending on what key was pressed.
+   * @param event - The event object emitted upon keyDown.
+   */
   const reactToKeystrokes = useCallback(
     (event: KeyboardEvent) => {
       switch (event.keyCode) {
@@ -102,6 +121,9 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     };
   }, [reactToKeystrokes]);
 
+  //-------------------------------------------------------------------
+  // Functions --
+  //-------------------------------------------------------------------
   /**
    * Generates a larger version of the specified image, usable as a full
    * page background.
@@ -123,11 +145,9 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   };
 
   /**
-   * Logs out that the overlay loaded successfully and handles it.
-   * this is a debug function lmao
+   * Handles when the overlay loads.
    */
   const handleOverlayLoadingState = (): void => {
-    console.log('finished loading overlay');
     handleLoadingState();
   };
 
@@ -195,7 +215,9 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     }
   };
 
-  // styles for the components
+  //-------------------------------------------------------------------
+  // Styles for the components --
+  //-------------------------------------------------------------------
   const overlayStyle: SxStyleProp = {
     // for the actual picture in the overlay
 
@@ -213,7 +235,6 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   const overlayContainerStyle: SxStyleProp = {
     // the div containing the overlay picture
 
-    // positioning
     position: 'fixed',
     width: '100%',
     height: '100%',
@@ -224,7 +245,6 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   const mainWrapperStyle: SxStyleProp = {
     // the main wrapper for everything in this viewer
 
-    // positioning
     position: 'fixed',
     height: '100vh',
     width: '100vw',
@@ -239,7 +259,6 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   const contentWrapperStyle: SxStyleProp = {
     // The wrapper for all the interactable things in this viewer
 
-    // more positioning
     position: 'relative',
     height: '100%',
     width: '100%',
@@ -249,6 +268,9 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     alignItems: 'center',
   };
 
+  //-------------------------------------------------------------------
+  // The actual viewer code --
+  //-------------------------------------------------------------------
   return (
     // the wrapper that wraps everything
     <div sx={mainWrapperStyle} ref={overlayReferenceDiv}>
@@ -256,6 +278,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
       <div sx={overlayContainerStyle} onClick={closeHandler}>
         <img
           src={fetchOverlayImageUrl(photos[index].photoId)}
+          alt=""
           sx={overlayStyle}
           onLoad={handleOverlayLoadingState}
           onError={() => {
@@ -268,22 +291,25 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
       {renderSpinner()}
       {/* the content wrapper */}
       <div sx={contentWrapperStyle}>
-        {/* left button */}
         <ViewerButton
           imageSrc="./assets/icons/double-arrow-left.png"
           actionHandler={decrementIdx}
         />
-        {/* main image */}
+
         <ViewerPhoto
           photoId={photos[index].photoId}
           loadHandler={handleLoadingState}
+          originalDimensions={{
+            width: parseInt(photos[index].width),
+            height: parseInt(photos[index].height),
+          }}
         />
-        {/* right button */}
+
         <ViewerButton
           imageSrc="./assets/icons/double-arrow-right.png"
           actionHandler={incrementIdx}
         />
-        {/* x button */}
+
         {renderExitButton()}
       </div>
     </div>
