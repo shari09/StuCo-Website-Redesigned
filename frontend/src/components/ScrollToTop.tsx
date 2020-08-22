@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {withRouter} from 'react-router-dom';
 
 export const ScrollToTop = withRouter(() => {
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scroll({top: 0, behavior: 'smooth'});
   });
-  return <React.Fragment/>;
+  return <React.Fragment />;
 });
 
 export default ScrollToTop;

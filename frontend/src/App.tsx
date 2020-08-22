@@ -17,7 +17,7 @@ import {AboutUs} from './pages/AboutUs';
 
 import {IInfoContext, InfoContext} from './utils/contexts';
 
-const backendIP = 'http://localhost:8080';
+const backendUrl = 'http://localhost:8080';
 
 /**
  * Creates a timed delay for an unmounting component so that unmounting
@@ -58,7 +58,7 @@ const App: React.FC = () => {
   const shouldRenderLoading = useUnmountingDelay(showLoading, unmountSpeed);
 
   const getData = async () => {
-    const res = await fetch(backendIP, {
+    const res = await fetch(backendUrl, {
       method: 'GET',
       mode: 'cors',
     });

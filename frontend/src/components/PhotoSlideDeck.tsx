@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 import {slideUp, slideBackDown, fadeIn} from '../utils/animation';
+import { bruteForceClearInterval } from '../utils/functions';
 
 export interface Photo {
   url: string;
@@ -185,13 +186,7 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
     return bruteForceClearInterval;
   }, []);
 
-  const bruteForceClearInterval = () => {
-    const highestId = window.setTimeout(() => {
-      for (let i = highestId; i >= 0; i--) {
-        window.clearInterval(i);
-      }
-    }, 0);
-  };
+  
 
   const getPrevIdx = (curIdx: number) => {
     let newIdx = curIdx - 1;

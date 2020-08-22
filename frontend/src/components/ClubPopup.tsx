@@ -1,10 +1,5 @@
 /** @jsx jsx */
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  ReactElement,
-} from 'react';
+import React, {useState, useRef, useEffect, ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 
 import {TranslucentRectangle} from './TranslucentRectangle';
@@ -12,7 +7,9 @@ import {LoadingSquare} from './LoaderComponents';
 
 import {Club} from '../utils/interfaces';
 import {getImageUrl} from '../utils/functions';
+
 import {theme} from '../utils/theme';
+import {popIn} from '../utils/animation';
 // yes shari in case you couldnt tell from the code and the comments
 // i was really tired while coding this
 
@@ -309,12 +306,32 @@ export const ClubPopup: React.FC<ClubPopupProps> = ({
   }, [clubPhotoRef]);
 
   // Yay styles
+  const overlayStyle: SxStyleProp = {
+    width: '100vw',
+    height: '100vh',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: theme.colors.secondary,
+    opacity: 0.5,
+  };
+
   const mainWrapperStyle: SxStyleProp = {
     position: 'fixed',
     width: '100vw',
     height: '100vh',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
 
     zIndex: 15, // draw over everything
+
+    '@keyframes popIn': popIn,
+    animationName: 'popIn',
+    animationDuration: '1s',
   };
   const clickEventContainerStyle: SxStyleProp = {
     width: '100%',
@@ -367,8 +384,9 @@ export const ClubPopup: React.FC<ClubPopupProps> = ({
 
   return (
     // sets the height, width, and position
-    <div sx={mainWrapperStyle}>
-      <TranslucentRectangle lengthX="100%" lengthY="100%">
+    <React.Fragment>
+      <div sx={overlayStyle}/>
+      <div sx={mainWrapperStyle}>
         {/* handles the click event to close the popup */}
         <div sx={clickEventContainerStyle} onClick={handleClosingParent}>
           {/* the background photo */}
@@ -383,7 +401,7 @@ export const ClubPopup: React.FC<ClubPopupProps> = ({
           />
           <ClubInfoItem clubContactInfo={clubContactInfo} />
         </div>
-      </TranslucentRectangle>
-    </div>
+      </div>
+    </React.Fragment>
   );
 };

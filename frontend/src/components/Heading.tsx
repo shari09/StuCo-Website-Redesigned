@@ -21,9 +21,6 @@ export const Heading: React.FC<HeadingProps> = ({
 }) => {
   const wrapperStyle: SxStyleProp = {
     textAlign: alignment,
-
-    // make heading scalaable
-    width: alignment === 'left' ? '95%' : '100%',
   };
 
   const textStyle: SxStyleProp = {

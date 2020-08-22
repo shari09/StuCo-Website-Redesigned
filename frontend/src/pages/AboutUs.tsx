@@ -50,8 +50,6 @@ const Paragraph: React.FC = () => {
 
 //======================================================================
 
-//======================================================================
-
 export const AboutUs: React.FC = () => {
   const {members} = useContext<IInfoContext>(InfoContext);
   const [height, setHeight] = useState<number>(0);
@@ -61,10 +59,11 @@ export const AboutUs: React.FC = () => {
   const translateScale = 0.4;
 
   useEffect(() => {
-    const ro = new ResizeObserver((entries) => {
+    
+    const ro = new ResizeObserver(entries => {
       const pageHeight = bodyRef.current.getBoundingClientRect().height;
       const decorHeight = decorRef.current.getBoundingClientRect().height;
-      setHeight(pageHeight + decorHeight * (1 - translateScale));
+      setHeight(pageHeight+decorHeight*(1-translateScale));
     });
     ro.observe(bodyRef.current);
     ro.observe(decorRef.current);
@@ -96,7 +95,7 @@ export const AboutUs: React.FC = () => {
 
   const decorWrapper: SxStyleProp = {
     // position: 'absolute',
-    transform: `translateY(-${translateScale * 100}%)`,
+    transform: `translateY(-${translateScale*100}%)`,
   };
 
   const getQuoteSet = () => {
@@ -111,13 +110,14 @@ export const AboutUs: React.FC = () => {
   };
 
   return (
-    <div sx={wrapper}>
+    <div sx={wrapper} >
       <div sx={bodyStyle} ref={bodyRef}>
         <Paragraph />
         <RotatingQuotes quoteSets={getQuoteSet()} />
+        
       </div>
       <div sx={decorWrapper} ref={decorRef}>
-        <img src={BottomPageDecor} alt="" sx={bottomDecorStyle} />
+        <img src={BottomPageDecor} sx={bottomDecorStyle} />
       </div>
     </div>
   );

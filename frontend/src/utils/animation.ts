@@ -41,3 +41,18 @@ export const fadeIn: SxStyleProp = {
     opacity: 1,
   },
 };
+
+export const popIn: SxStyleProp = {
+  '0%': {
+    opacity: 0,
+    width: 0,
+    height: 0,
+    transform: 'translate3d(50%, 50%, 0)',
+  },
+  '100%': {
+    opacity: 1,
+    width: '100%',
+    height: '100%',
+    transform: 'translate3d(0, 0, 0)',
+  },
+};

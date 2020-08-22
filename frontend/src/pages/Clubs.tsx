@@ -7,8 +7,10 @@ import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
 import {BsThreeDots, BsSearch} from 'react-icons/bs';
 import {getImageUrl, randNum, randInt} from '../utils/functions';
+import {Club} from '../utils/interfaces';
 import clubBackground from '../assets/clubBackground.png';
 import ResizeObserver from 'resize-observer-polyfill';
+import { ClubPopup } from '../components/ClubPopup';
 
 //x1, y1 - top middle
 //x2, y2 - bottom left
@@ -43,6 +45,8 @@ export const Clubs: React.FC = () => {
   const {clubs, clubHighlights} = useContext<IInfoContext>(InfoContext);
   const [height, setHeight] = useState<number>(0);
   const [query, setQuery] = useState<string>('');
+  const [isPopup, setIsPopup] = useState<boolean>(false);
+  const [popupClub, setPopupClub] = useState<Club>(null);
   const pageRef = useRef<HTMLDivElement>(null);
   const bgRectWidth = useRef<number[]>([]);
   const bgTriangleProp = useRef<BgTriangleProp[]>([]);
@@ -74,8 +78,18 @@ export const Clubs: React.FC = () => {
       }
     });
 
+
     const getClubs = (category) => {
-      return categories[category].map((club) => <div>{club.name}</div>);
+      return categories[category].map((club) => {
+        return (
+          <div onClick={() => {
+            setPopupClub(club);
+            setIsPopup(true);
+          }}>
+            {club.name}
+          </div>
+        );
+      });
     };
 
     return Object.keys(categories).map((category, index) => {
@@ -92,6 +106,9 @@ export const Clubs: React.FC = () => {
         pl: '1em',
         fontSize: theme.fontSizes.bodySmall,
         width: '100%',
+        '&:hover': {
+          cursor: 'pointer',
+        },
       };
       const titleWrapper: SxStyleProp = {
         textAlign: ['left', 'right', 'right'],
@@ -139,9 +156,19 @@ export const Clubs: React.FC = () => {
       zIndex: 2,
       display: 'block',
       margin: 'auto',
+      '&:hover': {
+        cursor: 'pointer',
+      },
     };
     const results = getSearchResult(query).map((club) => {
-      return <div sx={style}>{club.name}</div>;
+      return (
+        <div sx={style} onClick={() => {
+          setPopupClub(club);
+          setIsPopup(true);
+        }}>
+          {club.name}
+        </div>
+      );
     });
 
     return <div sx={wrapperStyle}>{results}</div>;
@@ -165,13 +192,12 @@ export const Clubs: React.FC = () => {
 
     return Array.from(new Array(Math.floor(height / 250)).keys()).map((i) => {
       if (!bgRectWidth.current[i]) bgRectWidth.current.push(randNum(5, 55));
-      console.log(i);
       return <div sx={getStyle(i)} />;
     });
   };
 
   const getTriangleImages = () => {
-    const getStyle = (i) => {
+    const getStyle = (i: number) => {
       const imageUrl = getImageUrl(
         clubHighlights[i % clubHighlights.length].photoId,
         400,
@@ -189,9 +215,7 @@ export const Clubs: React.FC = () => {
       return style;
     };
 
-    const triangles = Array.from(
-      new Array(Math.floor(height / 250)).keys(),
-    ).map((i) => {
+    const triangles = Array.from(new Array(Math.floor(height / 250)).keys()).map((i) => {
       if (!bgTriangleProp.current[i]) {
         bgTriangleProp.current.push(
           new BgTriangleProp(
@@ -321,6 +345,15 @@ export const Clubs: React.FC = () => {
       )}
 
       {getTriangleImages()}
+
+      {isPopup && popupClub
+       ? <ClubPopup
+          closeHandler={() => setIsPopup(false)}
+          clubInfo={popupClub}
+        />
+       : undefined
+      }
+
     </div>
   );
 };

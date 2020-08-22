@@ -31,25 +31,7 @@ export const Calendar: React.FC<CalendarProps> = () => {
 
   return (
     <div sx={wrapperStyle}>
-      {/* yeet this once you're done looking at it lol */}
-      <ClubPopup
-        closeHandler={() => {
-          alert('closing!');
-        }}
-        clubInfo={{
-          category: 'Sports',
-          name: 'Parkour Club',
-          description:
-            'Literally the best club in the entire school and everyone should definitely join and tell all their friends about parkour club!!! 100% I totally agree and think it is a great and fun club!!!',
-          photoId: '1KeGWg4cXvlBX8_Xwi6JWs63fmMubHo4I',
-          meetingFrequency: 'Weekly',
-          meetingDay: 'Monday',
-          meetingLocation: 'Room 5003',
-          instagram: '@rhhs.parkour',
-          email: 'rhhsparkour@gmail.com',
-        }}
-      />
-      <div sx={innerWrapperStyle}></div>
+
     </div>
   );
 };
