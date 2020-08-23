@@ -11,7 +11,7 @@ import {getImageUrl, randNum, randInt} from '../utils/functions';
 import {Club} from '../utils/interfaces';
 import clubBackground from '../assets/clubBackground.png';
 import ResizeObserver from 'resize-observer-polyfill';
-import { ClubPopup } from '../components/ClubPopup';
+import {ClubPopup} from '../components/ClubPopup';
 
 //x1, y1 - top middle
 //x2, y2 - bottom left
@@ -79,14 +79,15 @@ export const Clubs: React.FC = () => {
       }
     });
 
-
     const getClubs = (category) => {
       return categories[category].map((club) => {
         return (
-          <div onClick={() => {
-            setPopupClub(club);
-            setIsPopup(true);
-          }}>
+          <div
+            onClick={() => {
+              setPopupClub(club);
+              setIsPopup(true);
+            }}
+          >
             {club.name}
           </div>
         );
@@ -167,10 +168,13 @@ export const Clubs: React.FC = () => {
     };
     const results = getSearchResult(query).map((club) => {
       return (
-        <div sx={style} onClick={() => {
-          setPopupClub(club);
-          setIsPopup(true);
-        }}>
+        <div
+          sx={style}
+          onClick={() => {
+            setPopupClub(club);
+            setIsPopup(true);
+          }}
+        >
           {club.name}
         </div>
       );
@@ -220,7 +224,9 @@ export const Clubs: React.FC = () => {
       return style;
     };
 
-    const triangles = Array.from(new Array(Math.floor(height / 250)).keys()).map((i) => {
+    const triangles = Array.from(
+      new Array(Math.floor(height / 250)).keys(),
+    ).map((i) => {
       if (!bgTriangleProp.current[i]) {
         bgTriangleProp.current.push(
           new BgTriangleProp(
@@ -369,14 +375,12 @@ export const Clubs: React.FC = () => {
 
       {isFirstBreakpoint ? getTriangleImages() : undefined}
 
-      {isPopup && popupClub
-       ? <ClubPopup
+      {isPopup && popupClub ? (
+        <ClubPopup
           closeHandler={() => setIsPopup(false)}
           clubInfo={popupClub}
         />
-       : undefined
-      }
-
+      ) : undefined}
     </div>
   );
 };

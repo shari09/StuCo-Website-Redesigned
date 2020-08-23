@@ -7,13 +7,18 @@ import React, {
   useCallback,
 } from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
+import {FaTimes, FaArrowRight, FaArrowLeft} from 'react-icons/fa';
 
 import {ViewerPhoto} from './ViewerPhoto';
 import {ViewerButton} from './ViewerButton';
 import {CircleSpinner} from './CircleSpinner';
 
 import {theme} from '../utils/theme';
-import {getImageUrl} from '../utils/functions';
+import {
+  getImageUrl,
+  detectSwipeDirection,
+  allowScrolling,
+} from '../utils/functions';
 // todo: minor, but make naming consistant i guess
 import {Photo as PhotoInfo} from '../utils/interfaces';
 
@@ -60,6 +65,9 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   const [overlayWidth, setOverlayWidth] = useState<number>(0);
   const overlayReferenceDiv = useRef<HTMLDivElement>(null);
 
+  const xTouchLoc = useRef<number>(-1);
+  const yTouchLoc = useRef<number>(-1);
+
   // Setting up overlay width for proper background image sizing
   useEffect(() => {
     if (!overlayReferenceDiv.current) return;
@@ -89,6 +97,15 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     setLoading(true);
   }, [photos, index]);
 
+  /**
+   * Handles this viewer's cleanup functions, like re-enabling scrolling
+   * and closing the viewer.
+   */
+  const handleClosing = useCallback((): void => {
+    allowScrolling();
+    closeHandler();
+  }, [closeHandler]);
+
   // A memoized callback function to interact with keyboard
   // functionality -- only needs to be created once.
   /**
@@ -99,7 +116,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     (event: KeyboardEvent) => {
       switch (event.keyCode) {
         case 27: // esc key
-          closeHandler();
+          handleClosing();
           break;
         case 39: // right arrow key
           incrementIdx();
@@ -109,17 +126,87 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
           break;
       }
     },
-    [closeHandler, incrementIdx, decrementIdx],
+    [handleClosing, incrementIdx, decrementIdx],
+  );
+
+  /**
+   * Handles touchstart events for devices, and determines whether
+   * to later react to this event or not.
+   */
+  const initializeTouch = useCallback((event: TouchEvent) => {
+    const touchLocations = event.touches;
+
+    if (touchLocations.length === 1 && touchLocations[0]) {
+      // If the tap starts at the picture, just ignore.
+      // (for adjusting zoom level, perhaps).
+      if ((event.target as Element).id != 'main-photo') {
+        xTouchLoc.current = touchLocations[0].clientX;
+        yTouchLoc.current = touchLocations[0].clientY;
+      }
+
+      /* 
+    If you put a second finger down, there will be a very small
+    amount of time where an event with only one touch property 
+    propegates before the proper 2 touch property event propegates,
+    and that can cause unwanted scrolling/shuffling.
+
+    We solve this by simply listening to any events with more than
+    one touch event, and reset the x and y location if we detect any.
+    Now we know that any touch events that pass these checks are
+    from a single finger.
+    */
+    } else if (touchLocations.length > 1) {
+      xTouchLoc.current = -1;
+      yTouchLoc.current = -1;
+    }
+  }, []);
+
+  /**
+   * Handles a touchend event, implying that a swipe has occured.
+   * Reacts to said swipe and performs any tasks as a result from that
+   * swipe.
+   */
+  const reactToSwipe = useCallback(
+    (event: TouchEvent) => {
+      // Make sure we are actually supposed to react to this event.
+      if (xTouchLoc.current === -1 || yTouchLoc.current === -1) return;
+
+      const xOld = xTouchLoc.current;
+      const yOld = yTouchLoc.current;
+      // Reset location
+      xTouchLoc.current = -1;
+      yTouchLoc.current = -1;
+
+      // If this doesn't exist, do nothing.
+      if (!event.changedTouches[0]) return;
+
+      const xMove = event.changedTouches[0].clientX;
+      const yMove = event.changedTouches[0].clientY;
+
+      switch (detectSwipeDirection({x: xOld, y: yOld}, {x: xMove, y: yMove})) {
+        case 'down': // swipe down == going up
+          decrementIdx();
+          break;
+        case 'up': // swipe up == going down
+          incrementIdx();
+          break;
+      }
+    },
+    [decrementIdx, incrementIdx],
   );
 
   // Setting up keyboard functionality
   useEffect(() => {
     document.addEventListener('keydown', reactToKeystrokes, false);
+    document.addEventListener('touchstart', initializeTouch, false);
+    document.addEventListener('touchend', reactToSwipe, false);
 
     return () => {
       document.removeEventListener('keydown', reactToKeystrokes, false);
+      document.removeEventListener('touchstart', initializeTouch, false);
+      document.removeEventListener('touchend', reactToSwipe, false);
     };
-  }, [reactToKeystrokes]);
+  }, [reactToKeystrokes, initializeTouch, reactToSwipe]);
 
   //-------------------------------------------------------------------
   // Functions --
@@ -174,16 +261,22 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
    * @returns an X button which exits the viewer upon click.
    */
   const renderExitButton = (): ReactElement => {
+    const buttonStyling: SxStyleProp = {
+      position: 'absolute',
+      top: '5%',
+      right: '3%',
+      mx: '0%',
+
+      '@media only screen and (max-width: 800px)': {
+        transform: 'rotate(720deg)', // extremely very important :)))
+        right: '5%',
+      },
+    };
     return (
       <ViewerButton
-        imageSrc="./assets/icons/x-button.png"
-        actionHandler={closeHandler}
-        extraButtonStyling={{
-          position: 'absolute',
-          top: '5%',
-          right: '5%',
-          mx: '0%',
-        }}
+        imageSrc={<FaTimes sx={arrowStyle} />}
+        actionHandler={handleClosing}
+        extraButtonStyling={buttonStyling}
       />
     );
   };
@@ -221,7 +314,6 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   const overlayStyle: SxStyleProp = {
     // for the actual picture in the overlay
 
-    // cover the div
     objectFit: 'cover',
     opacity: '0.9',
     height: '100%',
@@ -240,7 +332,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     height: '100%',
     zIndex: 12, // make this higher priority than main wrapper
 
-    backgroundColor: theme.colors.background.darkest,
+    backgroundColor: theme.colors.background.black,
   };
   const mainWrapperStyle: SxStyleProp = {
     // the main wrapper for everything in this viewer
@@ -255,6 +347,8 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     zIndex: 11, // cause nav is 10 :/
 
     textAlign: 'center',
+
+    overscrollBehavior: 'contain',
   };
   const contentWrapperStyle: SxStyleProp = {
     // The wrapper for all the interactable things in this viewer
@@ -266,6 +360,48 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     flexDirection: 'row',
     textAlign: 'center',
     alignItems: 'center',
+
+    '@media only screen and (max-width: 800px)': {
+      display: 'flex',
+      flexDirection: 'column',
+      textAlign: 'center',
+      alignItems: 'center',
+    },
+  };
+  const arrowStyle: SxStyleProp = {
+    margin: 'auto',
+    padding: '2.5px',
+    width: ['35px', '30px', '35px', '40px'],
+    height: ['35px', '30px', '35px', '40px'],
+  };
+  const bothButtonStyle: SxStyleProp = {
+    position: 'fixed',
+    mx: 'auto',
+
+    // Overwrite previous hover code to keep consistant rotation
+    '&:hover': {
+      transform: 'rotate(90deg) scale(1.2)',
+      cursor: 'pointer',
+      opacity: 0.8,
+    },
+  };
+  const leftButtonStyle: SxStyleProp = {
+    '@media only screen and (max-width: 800px)': {
+      top: '5%',
+
+      transform: 'rotate(90deg)', // rotate to look like an up arrow
+
+      ...bothButtonStyle,
+    },
+  };
+  const rightButtonStyle: SxStyleProp = {
+    '@media only screen and (max-width: 800px)': {
+      bottom: '5%',
+
+      transform: 'rotate(90deg)', // rotate to look like a down arrow
+
+      ...bothButtonStyle,
+    },
   };
 
   //-------------------------------------------------------------------
@@ -275,7 +411,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     // the wrapper that wraps everything
     <div sx={mainWrapperStyle} ref={overlayReferenceDiv}>
       {/* the overlay */}
-      <div sx={overlayContainerStyle} onClick={closeHandler}>
+      <div sx={overlayContainerStyle} onClick={handleClosing}>
         <img
           src={fetchOverlayImageUrl(photos[index].photoId)}
           alt=""
@@ -292,8 +428,9 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
       {/* the content wrapper */}
       <div sx={contentWrapperStyle}>
         <ViewerButton
-          imageSrc="./assets/icons/double-arrow-left.png"
+          imageSrc={<FaArrowLeft sx={arrowStyle} />}
           actionHandler={decrementIdx}
+          extraButtonStyling={leftButtonStyle}
         />
 
         <ViewerPhoto
@@ -306,8 +443,9 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
         />
 
         <ViewerButton
-          imageSrc="./assets/icons/double-arrow-right.png"
+          imageSrc={<FaArrowRight sx={arrowStyle} />}
           actionHandler={incrementIdx}
+          extraButtonStyling={rightButtonStyle}
         />
 
         {renderExitButton()}

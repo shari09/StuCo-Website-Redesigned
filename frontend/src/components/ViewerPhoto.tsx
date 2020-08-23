@@ -1,8 +1,13 @@
 /** @jsx jsx */
-import React, {useState, useEffect, useRef, ReactElement} from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  ReactElement,
+} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {getImageUrl} from '../utils/functions';
-//TODO: should this even be in a seperate module?
 
 export interface ViewerPhotoProps {
   photoId: string;
@@ -27,9 +32,19 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
 
   // Determine the orientation of the photo at the get go to cut
   // down on rerenders and loading wrong images
+  /**
+   * Determines the orientation of the current photo.
+   */
+  const determineOrientation = useCallback((): void => {
+    const h = originalDimensions.height;
+    const w = originalDimensions.width;
+
+    h > w ? setOrientation('portrait') : setOrientation('landscape');
+  }, [originalDimensions]);
+
   useEffect(() => {
     determineOrientation();
-  }, [photoId]);
+  }, [photoId, determineOrientation]);
 
   useEffect(() => {
     if (!mainImageRefDiv.current) return;
@@ -56,8 +71,17 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
     // adjusting the size
     width: orientation === 'landscape' ? '80%' : '35%',
     height: '100%',
+
     mx: 'auto',
     zIndex: 15, // to draw over the overlay
+
+    '@media only screen and (max-width: 800px)': {
+      height: orientation === 'landscape' ? '30%' : '60%',
+      width: orientation === 'landscape' ? '90%' : '60%',
+      margin: 'auto',
+    },
+
+    border: '1px solid black',
   };
   const mainImageStyle: SxStyleProp = {
     // positioning
@@ -93,25 +117,6 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
   };
 
   /**
-   * Fetches and returns a url to the original specified drive photo.
-   * @param photoId - the drive id for the photo.
-   * @returns a url to the original photo.
-   */
-  const fetchOriginalImageUrl = (photoId: string): string => {
-    return `https://drive.google.com/uc?export=view&id=${photoId}`;
-  };
-
-  /**
-   * Determines the orientation of the current photo.
-   */
-  const determineOrientation = (): void => {
-    const h = originalDimensions.height;
-    const w = originalDimensions.width;
-
-    h > w ? setOrientation('portrait') : setOrientation('landscape');
-  };
-
-  /**
    * Performs the various loading functions that are related to
    * this image loading.
    */
@@ -122,21 +127,17 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
   // Returning the viewer code --
   return (
     <div sx={mainImageContainerStyle} ref={mainImageRefDiv}>
-      <a
-        href={fetchOriginalImageUrl(photoId)}
-        sx={{width: '100%', height: '100%'}}
-      >
-        <img
-          src={fetchMainImageUrl(photoId)}
-          alt=""
-          sx={mainImageStyle}
-          onLoad={performLoadActivities}
-          onError={() => {
-            console.log('failed to load main image');
-            loadHandler();
-          }}
-        />
-      </a>
+      <img
+        id="main-photo"
+        src={fetchMainImageUrl(photoId)}
+        alt=""
+        sx={mainImageStyle}
+        onLoad={performLoadActivities}
+        onError={() => {
+          console.log('failed to load main image');
+          loadHandler();
+        }}
+      />
     </div>
   );
 };

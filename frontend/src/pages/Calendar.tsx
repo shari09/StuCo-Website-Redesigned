@@ -4,9 +4,6 @@ import {jsx, SxStyleProp} from 'theme-ui';
 
 import {theme} from '../utils/theme';
 
-// testing only
-import {ClubPopup} from '../components/ClubPopup';
-
 export interface CalendarProps {}
 
 export const Calendar: React.FC<CalendarProps> = () => {
@@ -29,9 +26,5 @@ export const Calendar: React.FC<CalendarProps> = () => {
     mb: '14em',
   };
 
-  return (
-    <div sx={wrapperStyle}>
-
-    </div>
-  );
+  return <div sx={wrapperStyle}></div>;
 };

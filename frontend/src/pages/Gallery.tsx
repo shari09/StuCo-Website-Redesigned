@@ -6,7 +6,7 @@ import React, {
   useState,
   ReactElement,
 } from 'react';
-import {jsx, SxStyleProp} from 'theme-ui';
+import {jsx, SxStyleProp, Flex} from 'theme-ui';
 
 import {Heading} from '../components/Heading';
 import PhotoViewer, {Photo} from '../components/PhotoViewer';
@@ -14,7 +14,7 @@ import {CircleSpinner} from '../components/CircleSpinner';
 
 import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
-import {getImageUrl, splitArray} from '../utils/functions';
+import {getImageUrl, splitArray, disallowScrolling} from '../utils/functions';
 // todo: minor, but make naming consistant i guess
 import {Photo as PhotoInfo} from '../utils/interfaces';
 
@@ -73,6 +73,15 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
   };
 
   /**
+   * Performs specified click actions upon a click event. This includes
+   * disabling the scrolling and displaying the viewer.
+   */
+  const handleClickEvent = () => {
+    disallowScrolling(window.scrollY);
+    displayViewer();
+  };
+
+  /**
    * Returns a formatted loading spinner
    */
   const displayLoadSpinner = (): ReactElement | void => {
@@ -91,7 +100,7 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
       <img
         src={photo.photoUrl}
         alt=""
-        onClick={displayViewer}
+        onClick={handleClickEvent}
         onLoad={finishLoading}
         sx={{...photoStyle, ...extraPhotoStyle}}
       />
@@ -172,22 +181,41 @@ export const Gallery: React.FC = (): ReactElement => {
 
   // Styles related to the photos and the galleries --
   const extraPhotoStyle: SxStyleProp = {};
+  const photoColumnContainerStyle: SxStyleProp = {
+    '@media only screen and (max-width: 500px)': {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      textAlign: 'center',
+    },
+  };
   const allGalleryStyle: SxStyleProp = {
     textAlign: 'center',
     maxWidth: '32%',
     width: '32%',
     position: 'relative',
+
+    // Pushing away the footer
+    mb: '5em',
+
+    '@media only screen and (max-width: 500px)': {
+      width: '95%',
+      maxWidth: '95%',
+
+      my: 0,
+      left: 'auto',
+      right: 'auto',
+      mx: 'auto',
+    },
   };
   const leftGalleryStyle: SxStyleProp = {
     left: '2%',
-    minHeight: '100vh',
 
     ml: 0,
     mr: 'auto',
   };
   const rightGalleryStyle: SxStyleProp = {
     right: '2%',
-    minHeight: '100vh',
 
     mr: 0,
     ml: 'auto',
@@ -211,7 +239,8 @@ export const Gallery: React.FC = (): ReactElement => {
     if (!photoColumn) return [<div key="0"></div>];
 
     const photoContainerStyle: SxStyleProp = {
-      my: '5%',
+      // Space the images
+      mb: '5%',
       width: '100%',
 
       // fade and move animations here so both border and image have it
@@ -262,21 +291,11 @@ export const Gallery: React.FC = (): ReactElement => {
   const displayViewer = (): ReactElement | void => {
     if (showViewer) {
       return (
-        <div
-          sx={{
-            zIndex: 11,
-            height: '100vh',
-            width: '100vw',
-            position: 'fixed',
-            backgroundColor: theme.colors.background.black,
-          }}
-        >
-          <PhotoViewer
-            photos={galleryPhotos}
-            startIndex={viewIndex}
-            closeHandler={toggleViewer}
-          />
-        </div>
+        <PhotoViewer
+          photos={galleryPhotos}
+          startIndex={viewIndex}
+          closeHandler={toggleViewer}
+        />
       );
     }
   };
@@ -320,7 +339,7 @@ export const Gallery: React.FC = (): ReactElement => {
         {/* yes shari i could use flexbox here to achieve the same
         effect and stay on your good side just bear with me for
         now ok :)) */}
-        <div className="row">
+        <div className="row" sx={photoColumnContainerStyle}>
           {/* We only need one div to be reference div since
           all images are same size anyways. */}
           <div

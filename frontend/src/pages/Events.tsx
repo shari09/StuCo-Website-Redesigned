@@ -53,28 +53,11 @@ interface EventButtonProps {
   extraButtonStyling?: SxStyleProp;
 }
 
-export interface NumberedEvent {
-  event: Event;
-  number: number;
-}
-
 export interface EventDetails {
   description: string;
   buttonText?: string;
   buttonLink?: string;
 }
-
-/**
- * Converts a list of Event objects in a list of NumberedEvent objects.
- * @param events - a list of Event objects to be converted.
- * @returns a list of NumberedEvent objects
- */
-export const convertToNumEvents = (events: Event[]) => {
-  //map is superior 🤪
-  return events.map((event, i) => {
-    return {event: event, number: i};
-  });
-};
 
 // ============================================================
 // EventHeading -- for the main header containing the event name.
@@ -88,9 +71,8 @@ const EventHeading: React.FC<EventHeadingProps> = ({
     position: 'relative',
     my: '3%',
     py: '1%',
-    width: '80%',
+    width: ['95%', '90%', '80%'],
     height: 'auto',
-    maxWidth: '80%',
 
     // position this based on text location
     ml: textLocation === 'left' ? 'auto' : 0,
@@ -99,7 +81,7 @@ const EventHeading: React.FC<EventHeadingProps> = ({
     pl: textLocation === 'left' ? '2em' : 0,
     zIndex: 3,
 
-    textAlign: textLocation === 'left' ? 'left' : 'right',
+    textAlign: textLocation,
 
     backgroundColor: theme.colors.primary,
 
@@ -112,7 +94,6 @@ const EventHeading: React.FC<EventHeadingProps> = ({
     fontFamily: theme.fonts.body,
     color: theme.colors.text.light,
 
-    // center the text
     margin: 'auto',
 
     ...extraTextStyling,
@@ -154,14 +135,14 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
     top: '5%',
     right: photoLocation === 'right' ? 0 : 'auto',
     left: photoLocation === 'left' ? 0 : 'auto',
+
     width: width,
     maxWidth: width,
     height: height,
-    maxHeight: '75vh', // make sure the image doesn't break the page
+    maxHeight: '100%', // make sure the image doesn't break the page
 
     zIndex: 5, // draw over the title
 
-    // fade and move animations here so both border and image have it
     transition: 'transform .2s, .5s ease',
     '&:hover': {
       transform: 'scale(1.025)',
@@ -178,7 +159,7 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
 
     position: 'absolute',
     backgroundColor: theme.colors.navbar + '66',
-    maxHeight: '75vh', // make sure the image doesn't break the page
+    maxHeight: '100%', // make sure the image doesn't break the page
     width: '100%',
     zIndex: 2,
 
@@ -232,56 +213,46 @@ const EventButton: React.FC<EventButtonProps> = ({
   buttonLink,
   extraButtonStyling,
 }) => {
-  // Check to make sure there's actually text for the button.
-  // (presence of text implies that a link is there too).
+  // Assumes button text and button link is valid
+  const wrapperStyle: SxStyleProp = {
+    display: 'inline-block',
+    backgroundColor: theme.colors.primary,
 
-  // TODO: is this check even good for this element? should we assume
-  // that text and stuff is valid?
-  if (buttonText) {
-    const wrapperStyle: SxStyleProp = {
-      display: 'inline-block',
-      backgroundColor: theme.colors.primary,
+    textAlign: 'center',
 
-      textAlign: 'center',
+    px: '2%',
+    py: '1%',
+    mx: '5%',
+    mt: '2%',
+    mb: '0.5%',
 
-      // sizing and placement of button
-      px: '2%',
-      py: '1%',
-      mx: '5%',
-      mt: '2%',
-      mb: '0.5%',
+    transition: 'transform .2s, .5s ease',
+    '&:hover': {
+      transform: 'scale(1.025)',
+      cursor: 'pointer',
+    },
 
-      // cool button animations
-      transition: 'transform .2s, .3s ease',
-      '&:hover': {
-        transform: 'scale(1.025)',
-        opacity: 0.7,
-        cursor: 'pointer',
-      },
+    ...extraButtonStyling,
+  };
+  const buttonStyle: SxStyleProp = {
+    color: theme.colors.text.light,
+    fontFamily: theme.fonts.body,
+    fontSize: theme.fontSizes.body,
+    whiteSpace: 'nowrap',
 
-      ...extraButtonStyling,
-    };
-    const buttonStyle: SxStyleProp = {
+    '&:hover': {
       color: theme.colors.text.light,
-      whiteSpace: 'nowrap',
+      textDecoration: 'none',
+    },
+  };
 
-      '&:hover': {
-        color: theme.colors.text.light,
-        textDecoration: 'none',
-      },
-    };
-
-    return (
-      <div sx={wrapperStyle}>
-        <a href={buttonLink} sx={buttonStyle}>
-          {buttonText}
-        </a>
-      </div>
-    );
-  }
-
-  // No text was present - return an empty div.
-  return <div></div>;
+  return (
+    <div sx={wrapperStyle}>
+      <a href={buttonLink} sx={buttonStyle}>
+        {buttonText}
+      </a>
+    </div>
+  );
 };
 
 // ============================================================
@@ -387,6 +358,7 @@ const EventItem: React.FC<EventItemProps> = ({
   // Sty;es fpr every event items
   const wrapperStyle: SxStyleProp = {
     py: '3%',
+    my: ['2%', '1%', 0],
   };
   const rectangleBarrierStyling: SxStyleProp = {
     my: '-0.5em', // pulling the rectangles closer together
@@ -394,6 +366,9 @@ const EventItem: React.FC<EventItemProps> = ({
 
     display: 'flex',
     flexDirection: 'column',
+
+    minHeight: ['35vh', '45vh', '55vh', height],
+
     ...rectStyling,
   };
 
@@ -423,7 +398,6 @@ const EventItem: React.FC<EventItemProps> = ({
     <div sx={wrapperStyle} ref={eventItemRef}>
       <TranslucentRectangle
         lengthX={width}
-        minLengthY={height}
         extraStyling={rectangleBarrierStyling}
       >
         <EventHeading text={event.eventName} textLocation={textLocation} />
@@ -443,7 +417,6 @@ const EventItem: React.FC<EventItemProps> = ({
 // Events -- renders the page of all events.
 export const Events: React.FC = () => {
   const eventInfo: Event[] = useContext<IInfoContext>(InfoContext).events;
-  const numberedEventInfo: NumberedEvent[] = convertToNumEvents(eventInfo);
 
   // Styles for the page
   const wrapperStyle: SxStyleProp = {
@@ -477,24 +450,19 @@ export const Events: React.FC = () => {
    * @returns a list containing all the EventItem elements.
    */
   const getAllEvents = (): ReactElement[] => {
-    return numberedEventInfo.map((numEvent) => {
+    return eventInfo.map((event, index) => {
       const extraRectStyling: SxStyleProp = {
         backgroundColor:
-          numEvent.number % 2 === 1
-            ? theme.colors.background.overlay
-            : 'transparent',
+          index % 2 === 1 ? theme.colors.background.overlay : 'transparent',
       };
 
       return (
-        <div
-          key={numEvent.number}
-          sx={{position: 'relative', display: 'inline'}}
-        >
+        <div key={index} sx={{position: 'relative', display: 'inline'}}>
           <EventItem
             width="100%"
             height="65vh"
-            event={numEvent.event}
-            textLocation={numEvent.number % 2 === 1 ? 'left' : 'right'}
+            event={event}
+            textLocation={index % 2 === 1 ? 'left' : 'right'}
             rectStyling={extraRectStyling}
           />
         </div>
