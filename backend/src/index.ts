@@ -3,7 +3,7 @@ const sheets = google.sheets('v4');
 
 const spreadsheetId = '1oF4Abo1kJmjGhtFhJy_DbR44XfEVsCLqcc53jeTDy8U';
 
-const auth = async () => {
+const initAuth = async () => {
   const auth = new google.auth.GoogleAuth({
     keyFile: '../service-key.json',
     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
@@ -77,7 +77,7 @@ exports.run = async (req, res) => {
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Credentials', 'true');
 
-  await auth();
+  await initAuth();
 
   const metaData = await getMetaData();
   const rawData = await getSheet(metaData);

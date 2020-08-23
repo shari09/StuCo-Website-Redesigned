@@ -1,9 +1,9 @@
 /** @jsx jsx */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 import {slideUp, slideBackDown, fadeIn} from '../utils/animation';
-import { bruteForceClearInterval } from '../utils/functions';
+import {bruteForceClearInterval} from '../utils/functions';
 
 export interface Photo {
   url: string;
@@ -95,6 +95,13 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
   lockImage,
   unlockImage,
 }) => {
+  const [wrapperWidth, setWrapperWidth] = useState<number>(null);
+  const wrapperRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    setWrapperWidth(wrapperRef.current.getBoundingClientRect().width);
+  }, []);
+
   const popupScale = 1.3;
   const wrapperStyle: SxStyleProp = {
     boxShadow: '1vw 1vh .7em gray',
@@ -108,10 +115,12 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
       transform: 'translateY(0)',
     },
     '&:hover img': {
-      width: photoDimension.width * popupScale,
-      height: photoDimension.height * popupScale,
-      transitionDuration: '.3s',
+      width: [wrapperWidth, photoDimension.width * popupScale],
+      height: [photoDimension.height * popupScale],
+      transitionDuration: '.5s',
     },
+    backgroundColor: 'transparent',
+    transitionDuration: '.5s',
     '@keyframes fadeIn': fadeIn,
     '@keyframes slideUp': slideUp,
     '@keyframes slideBackDown': slideBackDown,
@@ -143,10 +152,20 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
   };
 
   return (
-    <div sx={wrapperStyle} onMouseEnter={lockImage} onMouseLeave={unlockImage}>
-      <img src={url} sx={imageStyle} key={url} />
-      <div sx={descriptionStyle}>{description}</div>
-    </div>
+    <React.Fragment>
+      {/* sketchy code just to get the width */}
+      <div ref={wrapperRef} sx={{width: '100%', position: 'absolute'}}/>
+      <div
+        sx={wrapperStyle}
+        onMouseEnter={lockImage}
+        onMouseLeave={unlockImage}
+        onFocus={lockImage}
+        
+      >
+        <img src={url} sx={imageStyle} key={url} />
+        <div sx={descriptionStyle}>{description}</div>
+      </div>
+    </React.Fragment>
   );
 };
 
@@ -186,8 +205,6 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
     return bruteForceClearInterval;
   }, []);
 
-  
-
   const getPrevIdx = (curIdx: number) => {
     let newIdx = curIdx - 1;
     if (newIdx < 0) newIdx = photos.length - 1;
@@ -201,6 +218,7 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
 
   const lockImage = () => {
     window.clearInterval(timerId);
+    // bruteForceClearInterval();
   };
 
   /**
@@ -214,6 +232,7 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
       window.clearInterval(oldId);
       return id;
     });
+    // bruteForceClearInterval();
   };
 
   const unlockImage = () => {
@@ -225,10 +244,7 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
 
   const resetTimer = () => {
     window.clearInterval(timerId);
-    // const id = window.setInterval(() => {
-    //   setCurPhoto(getNextIdx);
-    // }, interval);
-    // setTimerId(id);
+    // bruteForceClearInterval();
     startRotation();
   };
 

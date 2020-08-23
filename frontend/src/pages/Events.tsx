@@ -70,15 +70,10 @@ export interface EventDetails {
  * @returns a list of NumberedEvent objects
  */
 export const convertToNumEvents = (events: Event[]) => {
-  const numEvents: NumberedEvent[] = [];
-  for (let i = 0; i < events.length; i++) {
-    numEvents.push({
-      event: events[i],
-      number: i,
-    });
-  }
-
-  return numEvents;
+  //map is superior 🤪
+  return events.map((event, i) => {
+    return {event: event, number: i};
+  });
 };
 
 // ============================================================
@@ -228,8 +223,6 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
       />
     </div>
   );
-
-  return <div></div>;
 };
 
 // ============================================================
@@ -259,7 +252,7 @@ const EventButton: React.FC<EventButtonProps> = ({
       mb: '0.5%',
 
       // cool button animations
-      transition: 'transform .2s, .5s ease',
+      transition: 'transform .2s, .3s ease',
       '&:hover': {
         transform: 'scale(1.025)',
         opacity: 0.7,

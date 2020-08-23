@@ -58,8 +58,8 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
   const style: SxStyleProp = {
     top: '40%',
     left: '7%',
-    position: 'absolute',
-    backgroundColor: theme.colors.background.accent,
+    position: ['static', 'absolute'],
+    backgroundColor: ['transparent', theme.colors.background.accent],
     color: theme.colors.text.light,
     textAlign: 'center',
     fontFamily: theme.fonts.time,
@@ -69,7 +69,14 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
       color: theme.colors.text.light,
     },
     px: 20,
-    py: 2,
+    py: [1, 2],
+
+    //mobile
+    display: ['flex', 'inline'],
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    order: 0,
+    mt: ['20%', 0],
   };
 
   const TimeUnit: React.FC<TimeUnitI> = ({number, text}) => {

@@ -58,9 +58,6 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
     height: '100%',
     mx: 'auto',
     zIndex: 15, // to draw over the overlay
-
-    border: '1px solid',
-    borderColor: 'black',
   };
   const mainImageStyle: SxStyleProp = {
     // positioning

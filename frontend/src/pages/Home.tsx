@@ -5,15 +5,14 @@ import {Link} from 'react-router-dom';
 import {MdControlPoint} from 'react-icons/md';
 import {GiClick} from 'react-icons/gi';
 import ResizeObserver from 'resize-observer-polyfill';
-import {theme} from '../utils/theme';
+import {theme, FIRST_BREAKPOINT} from '../utils/theme';
 import {InfoContext, IInfoContext} from '../utils/contexts';
 import {CountDownTimer} from '../components/CountDownTimer';
 import {Heading} from '../components/Heading';
 import {Collapsable} from '../components/Collapsable';
 import {PhotoSlideDeck, Photo} from '../components/PhotoSlideDeck';
-import {getImageUrl} from '../utils/functions';
+import {getImageUrl, hexToRgbArr} from '../utils/functions';
 import {RandomDot} from '../utils/RandomDot';
-
 
 /**
  * The home screen, big parallax background plus the timer
@@ -25,18 +24,28 @@ const Main: React.FC = () => {
     return <div />;
   }
 
+  // const bgTint = 
+
   const style: SxStyleProp = {
     width: '100%',
     height: '100vh',
     backgroundSize: 'cover',
-    backgroundImage: 'url("./assets/home-background.png")',
+    backgroundImage:
+      `linear-gradient(rgba(${hexToRgbArr(theme.colors.navbar)}, 0.8),`
+      + `rgba(${hexToRgbArr(theme.colors.navbar)}, 0.4)),`
+      + `url("./assets/home-background.png") `,
+    display: 'flex',
+    flexDirection: 'column',
   };
 
   const buttonStyle: SxStyleProp = {
     top: '62%',
     left: '7%',
-    position: 'absolute',
-    backgroundColor: theme.colors.background.accent,
+    width: 'fit-content',
+    mx: 'auto',
+    mt: '1em',
+    position: ['static', 'absolute'],
+    backgroundColor: ['transparent', theme.colors.background.accent],
     color: theme.colors.text.light,
     textAlign: 'center',
     fontFamily: theme.fonts.time,
@@ -47,6 +56,13 @@ const Main: React.FC = () => {
     },
     fontVariantCaps: 'titling-caps',
     px: 4,
+    order: 1,
+
+    //mobile
+    borderColor: theme.colors.background.accent,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    
   };
 
   return (
@@ -62,31 +78,20 @@ const Main: React.FC = () => {
 //=============================================================
 
 /**
- * The green board that has dots in the background 
+ * The green board that has dots in the background
  * sketchiest code
  */
 const BackgroundWithDots: React.FC = (props) => {
   const [randomDots, setRandomDots] = useState<RandomDot[]>([]);
   const [numDots, setNumDots] = useState<number>(null);
-  
+
   //for getting the width
   const componentRef = useRef<HTMLDivElement>(null);
 
-  const style: SxStyleProp = {
-    backgroundColor: theme.colors.secondary,
-    borderRadius: 30,
-    mt: 30,
-    position: 'relative',
-    pb: 60,
-    pt: 20,
-  };
-
-
   useEffect(() => {
-
     //used to re-render the dots upon resizing, because it may be a long list
-    const ro = new ResizeObserver(entries => {
-      entries.forEach(entry => {
+    const ro = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
         const height = entry.contentRect.height;
         generateRandomDots(height);
       });
@@ -95,41 +100,59 @@ const BackgroundWithDots: React.FC = (props) => {
     return () => ro.disconnect();
   }, [randomDots]);
 
-
-
   /**
-   * Gets random dots for the background at  
+   * Gets random dots for the background at
    * *x ∈ [0, 1/3(width)] ∪ [2/3(width), width], y ∈ [0, height]*
    */
   const generateRandomDots = (height: number) => {
     const width = componentRef.current.getBoundingClientRect().width;
     const dotsPerSideHeightInterval = 40;
-    setNumDots(height/dotsPerSideHeightInterval*2);
-    const numNewDots = height / dotsPerSideHeightInterval - randomDots.length/2;
+    setNumDots((height / dotsPerSideHeightInterval) * 2);
+    const numNewDots =
+      height / dotsPerSideHeightInterval - randomDots.length / 2;
 
     for (let i = 0; i < numNewDots; i++) {
-      setRandomDots( oldArr => {
+      setRandomDots((oldArr) => {
         const clone = [...oldArr];
-        clone.push(new RandomDot(width-width/3, height/20, width/3, height-height/10));
-        clone.push(new RandomDot(0, height/20, width/3, height-height/10));
+        clone.push(
+          new RandomDot(
+            width - width / 3,
+            height / 20,
+            width / 3,
+            height - height / 10,
+          ),
+        );
+        clone.push(
+          new RandomDot(0, height / 20, width / 3, height - height / 10),
+        );
         return clone;
       });
     }
-
   };
 
+  const style: SxStyleProp = {
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 30,
+    mt: 30,
+    position: 'relative',
+    pb: 60,
+    pt: 20,
+    display: 'flex',
+  };
 
 
   return (
     <div sx={style} ref={componentRef}>
-      {randomDots.map(dot => dot.getComponent()).slice(0, numDots)}
+      {window.innerWidth > FIRST_BREAKPOINT 
+        ? randomDots.map((dot) => dot.getComponent()).slice(0, numDots)
+        : undefined
+      }
       {props.children}
     </div>
   );
 };
 
 //=============================================================
-
 
 const UpcomingBoard: React.FC = () => {
   const {upcomingMiniEvents} = useContext<IInfoContext>(InfoContext);
@@ -151,34 +174,44 @@ const UpcomingBoard: React.FC = () => {
 
     const descriptionStyle: SxStyleProp = {
       textAlign: 'left',
-      pl: '5em',
-      fontSize: theme.fontSizes.body,
+      pl: '1em',
+      fontSize: theme.fontSizes.body.map(n => n+2),
       py: '0.5em',
     };
 
     return upcomingMiniEvents.map((event) => {
       const iconStyle: SxStyleProp = {
-        color: theme.colors.text.light,
+        color: theme.colors.footer,
         ml: '0.5em',
+        // '&:hover': {
+        //   color: theme.colors.footer,
+        // },
+      };
+
+      const linkStyle: SxStyleProp = {
+        color: theme.colors.text.light,
+        '&:hover': {
+          textDecoration: 'none',
+          color: theme.colors.footer,
+        },
       };
 
       const title = (
         <React.Fragment>
-          <MdControlPoint sx={{mr: '1em'}}/> 
-          {event.name}
-          {event.link
-          ? <a href={event.link}>
-              <GiClick sx={iconStyle}/>
+          <MdControlPoint sx={{mr: '1em'}} />
+          {event.link ? (
+            <a href={event.link} sx={linkStyle}>
+              {event.name}
+              {/* <GiClick sx={iconStyle} /> */}
             </a>
-          : undefined
-          }
+          ) : event.name}
         </React.Fragment>
       );
 
       if (!event.description)
         return <Collapsable title={title} titleStyle={style} />;
       return (
-        <Collapsable title={title} titleStyle={style}>
+        <Collapsable title={title} titleStyle={style} childrenStyle={{ml: ['20%', '15em']}}>
           <div sx={descriptionStyle}>{event.description}</div>
         </Collapsable>
       );
@@ -200,7 +233,7 @@ const UpcomingBoard: React.FC = () => {
   };
 
   const eventListWrapper: SxStyleProp = {
-    ml: '30%',
+    margin: 'auto',
   };
 
   if (!upcomingMiniEvents) {
@@ -208,13 +241,14 @@ const UpcomingBoard: React.FC = () => {
   }
 
   return (
-    <div sx={style} >
+    <div sx={style}>
       <Heading alignment="center" text="Upcoming" />
       <BackgroundWithDots>
-        {upcomingMiniEvents.length > 0 ?
-          <div sx={eventListWrapper}>{getEventsList()}</div> :
+        {upcomingMiniEvents.length > 0 ? (
+          <div sx={eventListWrapper}>{getEventsList()}</div>
+        ) : (
           getPlaceHolder()
-        }
+        )}
       </BackgroundWithDots>
     </div>
   );
@@ -247,7 +281,7 @@ const Recent: React.FC = () => {
   };
 
   //scale in relation to viewport width
-  const scale = 2.6;
+  const scale = width > FIRST_BREAKPOINT ? 0.38 : 0.75;
 
   const photos: Photo[] = recents.map((event) => {
     return {
@@ -259,16 +293,16 @@ const Recent: React.FC = () => {
   //target photo dimension
   //photos are 1.5:1 aspect ratio
   const photoDimension = {
-    width: width / scale,
-    height: width / scale / 1.5,
+    width: width * scale,
+    height: width * scale / 1.5,
   };
 
   const line: SxStyleProp = {
     backgroundColor: theme.colors.primary,
     height: '0.2em',
-    width: '20%',
+    width: ['80%', '20%'],
     borderRadius: 3,
-    mt: '2%',
+    mt: ['1em', '1.5em'],
     mx: 'auto',
   };
   return (

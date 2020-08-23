@@ -3,9 +3,10 @@ import React, {useContext, useRef, useEffect, useState} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {Heading} from '../components/Heading';
 import {Collapsable} from '../components/Collapsable';
-import {theme} from '../utils/theme';
+import {theme, FIRST_BREAKPOINT} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
 import {BsThreeDots, BsSearch} from 'react-icons/bs';
+import {FaTimes} from 'react-icons/fa';
 import {getImageUrl, randNum, randInt} from '../utils/functions';
 import {Club} from '../utils/interfaces';
 import clubBackground from '../assets/clubBackground.png';
@@ -98,11 +99,15 @@ export const Clubs: React.FC = () => {
         borderColor: theme.colors.text.darkGray,
         fontSize: theme.fontSizes.bodyBig,
         fontFamily: theme.fonts.body,
+        '&:hover': {
+          color: theme.colors.text.darkGray,
+          cursor: 'pointer',
+        },
       };
       const childrenStyle: SxStyleProp = {
         color: theme.colors.text.darkSlate,
         borderColor: theme.colors.text.darkSlate,
-        ml: ['10%', '80%', '80%'],
+        ml: '80%',
         pl: '1em',
         fontSize: theme.fontSizes.bodySmall,
         width: '100%',
@@ -111,7 +116,7 @@ export const Clubs: React.FC = () => {
         },
       };
       const titleWrapper: SxStyleProp = {
-        textAlign: ['left', 'right', 'right'],
+        textAlign: 'right',
       };
       const titleComponent = (
         <div sx={titleWrapper}>
@@ -257,12 +262,16 @@ export const Clubs: React.FC = () => {
     display: 'flex',
     flexWrap: 'wrap',
     ...theme.bodyPadding,
+    pb: '20vh',
+    overflow: 'hidden',
+    flexDirection: ['column', 'row'],
   };
 
   const clubListWrapper: SxStyleProp = {
     display: 'block',
     ml: [0, '10%', '30%'],
     zIndex: 2,
+    mr: ['50%', 0],
   };
   const lineStyle: SxStyleProp = {
     backgroundColor: theme.colors.secondary,
@@ -286,8 +295,9 @@ export const Clubs: React.FC = () => {
   const searchBoxStyle: SxStyleProp = {
     height: '1.3em',
     borderRadius: 15,
-    borderColor: theme.colors.searchBox.darkGray,
+    borderColor: theme.colors.navbar,
     borderWidth: 1,
+    width: '100%',
     py: '1em',
     px: '0.5em',
     fontSize: theme.fontSizes.bodySmall.map((n) => n + 5),
@@ -301,18 +311,27 @@ export const Clubs: React.FC = () => {
   const searchBoxWrapperStyle: SxStyleProp = {
     position: 'relative',
     width: ['100%', '40%', '20%'],
-    marginLeft: 'auto',
-    my: 'auto',
+    ml: [0, 'auto'],
+    mt: ['2em', 'auto'],
+    mb: ['1em', 'auto'],
     fontSize: theme.fontSizes.bodySmall.map((n) => n + 5),
   };
   const iconStyle: SxStyleProp = {
     position: 'absolute',
-    right: 0,
+    right: '0.5em',
     top: '0.5em',
+  };
+
+  const headingStyle: SxStyleProp = {
+    display: 'inline', 
+    mt: ['20%', 'auto'],
+    mb: [0, 'auto'],
   };
 
   //==============================================================
   //render
+
+  const isFirstBreakpoint = window.innerWidth > FIRST_BREAKPOINT;
 
   return (
     <div sx={wrapperStyle} ref={pageRef}>
@@ -320,10 +339,10 @@ export const Clubs: React.FC = () => {
       {getTransluteRects()}
 
       <Heading
-        text="Clubs"
-        alignment="left"
+        text='Clubs'
+        alignment={isFirstBreakpoint ? 'left' : 'center'}
         underline={false}
-        extraStyling={{display: 'inline', my: 'auto'}}
+        extraStyling={headingStyle}
       />
 
       <div sx={searchBoxWrapperStyle}>
@@ -332,9 +351,13 @@ export const Clubs: React.FC = () => {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="search"
+          placeholder="Club name"
         />
-        <BsSearch sx={iconStyle} />
+        {query === ''
+         ? <BsSearch sx={iconStyle} />
+         : <FaTimes sx={iconStyle} onClick={() => setQuery('')}/>
+        }
+        
       </div>
 
       <div sx={lineStyle} />
@@ -344,7 +367,7 @@ export const Clubs: React.FC = () => {
         displaySearchResults()
       )}
 
-      {getTriangleImages()}
+      {isFirstBreakpoint ? getTriangleImages() : undefined}
 
       {isPopup && popupClub
        ? <ClubPopup

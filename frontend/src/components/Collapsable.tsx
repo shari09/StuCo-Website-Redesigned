@@ -12,20 +12,20 @@ interface Props {
 }
 
 /**
- * ok sift i'm writing comments now so stop judging my uncommented code >:((  
- * @description 
- * You can put any children inside Collapsable components and it will render them  
- * in the collapsible list/tree format 
- * 
+ * ok sift i'm writing comments now so stop judging my uncommented code >:((
+ * @description
+ * You can put any children inside Collapsable components and it will render them
+ * in the collapsible list/tree format
+ *
  * @example
  * <Collapsable title='hello'>
  *   You can have text
  *   <OrComponenents sx={withStyle} onClick={andFunctions}/>
  * </Collapsable>
- * 
+ *
  * //title can be a component as well
  * const myTitle = <span><p>My twitter page</p><TwitterIcon/></span>;
- * 
+ *
  * <Collapsable title={myTitle}>
  *   //children
  * </Collapsable>
@@ -37,15 +37,16 @@ export const Collapsable: React.FC<Props> = ({
   collapsed = true,
   childrenStyle,
 }) => {
-  const [childrenCollapsed, setChildrenCollapsed] = useState<boolean>(collapsed);
+  const [childrenCollapsed, setChildrenCollapsed] = useState<boolean>(
+    collapsed,
+  );
   const [childrenHeight, setChildrenHeight] = useState<number>(0);
-  const [childWrapperWidth, setChildWrapperWidth] = useState<number>(0);
+  // const [childWrapperWidth, setChildWrapperWidth] = useState<number>(0);
   const childrenRef = useRef<HTMLDivElement>(null);
   const childWrapperRef = useRef<HTMLDivElement>(null);
   const prevHeight = useRef<number>(0);
 
   useEffect(() => {
-    if (!childrenRef.current) return;
 
     //if the children has children and they resize, normally it won't re-render
     //which is why the oberserver is added
@@ -57,8 +58,7 @@ export const Collapsable: React.FC<Props> = ({
       });
     });
     ro.observe(childrenRef.current);
-    setChildWrapperWidth(childWrapperRef.current.getBoundingClientRect().width);
-    console.log(childWrapperRef.current.scrollWidth);
+    // setChildWrapperWidth(childWrapperRef.current.getBoundingClientRect().width);
     return () => ro.disconnect();
   }, []);
 
@@ -72,11 +72,12 @@ export const Collapsable: React.FC<Props> = ({
     fill: theme.colors.text.light,
     height: 'auto',
     padding: '0.3em',
-    width: childWrapperWidth === 0 ? 'auto' : childWrapperWidth,
+    // width: ['auto', childWrapperWidth === 0 ? 'auto' : 'auto'],
+    width: 'auto',
   };
 
   /**
-   * gets height difference when resized  
+   * gets height difference when resized
    */
   const getHeightDiff = () => {
     const diff = Math.abs(childrenHeight - prevHeight.current);
@@ -98,13 +99,20 @@ export const Collapsable: React.FC<Props> = ({
   };
 
   const defaultTitleStyle: SxStyleProp = {
-    borderBottomWidth: childrenCollapsed ? 0 : 1.5,
-    transitionDuration: transitionTime,
-    borderBottomColor: theme.colors.text.light,
-    borderBottomStyle: 'dashed',
+    // borderBottomWidth: childrenCollapsed ? 0 : 1.5,
+    // transitionDuration: transitionTime,
+    // borderBottomColor: theme.colors.text.light,
+    // borderBottomStyle: 'dashed',
+    width: 'auto',
 
     '&:hover': {
       cursor: React.Children.count(children) > 0 ? 'pointer' : 'default',
+      color: [
+        theme.colors.text.light,
+        React.Children.count(children) > 0
+          ? theme.colors.footer
+          : theme.colors.text.light,
+      ],
     },
   };
 
@@ -119,7 +127,10 @@ export const Collapsable: React.FC<Props> = ({
       >
         {title}
       </span>
-      <div sx={{...childrenWrapperStyle, ...childrenStyle}} ref={childWrapperRef}>
+      <div
+        sx={{...childrenWrapperStyle, ...childrenStyle}}
+        ref={childWrapperRef}
+      >
         <div ref={childrenRef} children={children} />
       </div>
     </div>

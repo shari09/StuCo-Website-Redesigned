@@ -1,14 +1,10 @@
 /** @jsx jsx */
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  ReactElement,
-} from 'react';
+import React, {useState, useRef, useEffect, ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {CircleSpinner} from './CircleSpinner';
 import AboutUsSpeechBubble from '../assets/speech bubble.svg';
-import {theme} from '../utils/theme';
+import AboutUsSpeechBubbleMobile from '../assets/speechBubbleMobile.svg';
+import {theme, FIRST_BREAKPOINT} from '../utils/theme';
 import {fadeIn} from '../utils/animation';
 
 interface Props {
@@ -29,7 +25,8 @@ interface GrayBubbleProps {
 }
 
 const vmax = Math.max(window.innerWidth, window.innerHeight);
-const imgSize = vmax * 0.17;
+const isFirstBreakpoint = window.innerWidth > FIRST_BREAKPOINT;
+const imgSize = isFirstBreakpoint ? vmax * 0.17 : window.innerWidth * 0.4;
 
 const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -142,12 +139,15 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
 
   //speech bubble ratio 1.7:1
   const speechBubbleStyle: SxStyleProp = {
-    width: imgSize * 2.5,
+    width: ['100%', imgSize * 2.5],
     height: imgSize * 1.5,
   };
 
   const bubbleAndQuoteWrapperStyle: SxStyleProp = {
-    transform: `translate3d(-${imgSize * 2.25}px, -${imgSize * 0.45}px, 0)`,
+    transform: [
+      `translate3d(0, -${imgSize * 0.45}px, 0)`,
+      `translate3d(-${imgSize * 2.25}px, -${imgSize * 0.45}px, 0)`,
+    ],
     textAlign: 'center',
     fontFamily: theme.fonts.body,
     fontSize: theme.fontSizes.bodySmall,
@@ -164,31 +164,44 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     bottom: 0,
     display: 'flex',
     flexDirection: 'column',
+    py: ['2em', 0],
+    justifyContent: 'space-between',
   };
 
   const quoteStyle: SxStyleProp = {
-    margin: 'auto',
     width: '100%',
     lineHeight: '2em',
     padding: '4em',
-    flex: 3,
+    pb: [0, '4em'],
+    flex: ['none', 3],
+    order: 0,
   };
 
   const closingStyle: SxStyleProp = {
     textAlign: 'right',
-    margin: 'auto',
     width: '100%',
     px: '4em',
-    flex: 1.5,
+    flex: ['none', 1.5],
+    order: 1,
+  };
+
+  const wrapperStyle: SxStyleProp = {
+    // width: ['100%', 'auto'],
   };
 
   return (
-    <div sx={extraStyling}>
+    <div sx={{...wrapperStyle, ...extraStyling}}>
       <div sx={imageWrapper}>
         <img src={imageUrl} alt="" sx={imageStyle} key={imageUrl} />
       </div>
       <div sx={bubbleAndQuoteWrapperStyle}>
-        <img sx={speechBubbleStyle} alt="" src={AboutUsSpeechBubble} />
+        <img
+          sx={speechBubbleStyle}
+          alt=""
+          src={
+            isFirstBreakpoint ? AboutUsSpeechBubble : AboutUsSpeechBubbleMobile
+          }
+        />
         <div sx={quoteWrapperStyle}>
           <p sx={quoteStyle}>{quote}</p>
           <p sx={closingStyle}>{closing}</p>
@@ -260,16 +273,19 @@ export const RotatingQuotes: React.FC<Props> = ({
     display: 'flex',
     ml: '5%',
     flex: 2,
+    flexDirection: ['column', 'row'],
+    textAlign: ['right', 'left'],
   };
 
   const shownBubbleStyle: SxStyleProp = {
-    mt: '25vh',
+    mt: [0, '25vh'],
   };
 
   const grayBubbleWrapper: SxStyleProp = {
-    position: 'absolute',
+    position: ['static', 'absolute'],
     right: 0,
-    width: vmax * 0.25,
+    width: ['100%', vmax * 0.25],
+    textAlign: ['center', 'left'],
   };
 
   //index 0 will always be the main photo

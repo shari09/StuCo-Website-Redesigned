@@ -98,3 +98,14 @@ export const bruteForceClearInterval = () => {
     }
   }, 0);
 };
+
+
+export const hexToRgbArr = (hex) => {
+  if (hex[0] === '#') hex = hex.slice(1);
+  const rgb = [
+    parseInt(hex.slice(0, 2), 16),
+    parseInt(hex.slice(2, 4), 16),
+    parseInt(hex.slice(4, 6), 16),
+  ];
+  return rgb;
+};

@@ -309,13 +309,13 @@ export const ClubPopup: React.FC<ClubPopupProps> = ({
   const overlayStyle: SxStyleProp = {
     width: '100vw',
     height: '100vh',
-    position: 'absolute',
+    position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: theme.colors.secondary,
-    opacity: 0.5,
+    backgroundColor: theme.colors.background.darkOverlay,
+    opacity: 0.8,
   };
 
   const mainWrapperStyle: SxStyleProp = {

@@ -17,7 +17,7 @@ import {AboutUs} from './pages/AboutUs';
 
 import {IInfoContext, InfoContext} from './utils/contexts';
 
-const backendUrl = 'http://localhost:8080';
+const backendUrl = 'http://192.168.1.28:8080';
 
 /**
  * Creates a timed delay for an unmounting component so that unmounting

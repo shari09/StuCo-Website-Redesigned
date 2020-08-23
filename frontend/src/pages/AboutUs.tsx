@@ -19,13 +19,13 @@ const Paragraph: React.FC = () => {
     color: theme.colors.text.light,
     fontSize: theme.fontSizes.heading.primary,
     fontFamily: theme.fonts.heading,
-    width: '35vw',
+    width: ['100%', '35vw'],
     lineHeight: '1.3em',
   };
 
   const lineStyle: SxStyleProp = {
     backgroundColor: theme.colors.secondary,
-    width: '25vw',
+    width: ['100%', '25vw'],
     borderRadius: 2,
     height: '.3em',
     my: '1em',
@@ -35,12 +35,18 @@ const Paragraph: React.FC = () => {
     color: theme.colors.text.light,
     fontFamily: theme.fonts.body,
     fontSize: theme.fontSizes.bodySmall,
-    width: '45vw',
+    width: ['100%', '45vw'],
     lineHeight: '2.2em',
   };
 
+  const wrapperStyle: SxStyleProp = {
+    display: 'inline-block',
+    mt: ['10vh', 0],
+    mb: ['5vh', 0],
+  };
+
   return (
-    <div sx={{display: 'inline-block'}}>
+    <div sx={wrapperStyle}>
       <div sx={headingStyle}>{aboutStuco[0].stucoTagline}</div>
       <div sx={lineStyle} />
       <div sx={bodyStyle}>{aboutStuco[0].stucoDescription}</div>
@@ -59,11 +65,10 @@ export const AboutUs: React.FC = () => {
   const translateScale = 0.4;
 
   useEffect(() => {
-    
-    const ro = new ResizeObserver(entries => {
+    const ro = new ResizeObserver((entries) => {
       const pageHeight = bodyRef.current.getBoundingClientRect().height;
       const decorHeight = decorRef.current.getBoundingClientRect().height;
-      setHeight(pageHeight+decorHeight*(1-translateScale));
+      setHeight(pageHeight + decorHeight * (1 - translateScale));
     });
     ro.observe(bodyRef.current);
     ro.observe(decorRef.current);
@@ -78,14 +83,15 @@ export const AboutUs: React.FC = () => {
     backgroundColor: theme.colors.background.dark,
     minHeight: '100vh',
     height: height === 0 ? undefined : height,
+    pb: '20vh',
   };
 
   const bodyStyle: SxStyleProp = {
     px: theme.bodyPadding.px,
     pt: '10%',
     display: 'flex',
-    flexDirection: 'row',
-    flexWrap: ['wrap', 'nowrap'],
+    flexDirection: ['column', 'row'],
+    flexWrap: 'nowrap',
   };
 
   const bottomDecorStyle: SxStyleProp = {
@@ -95,7 +101,7 @@ export const AboutUs: React.FC = () => {
 
   const decorWrapper: SxStyleProp = {
     // position: 'absolute',
-    transform: `translateY(-${translateScale*100}%)`,
+    transform: `translateY(-${translateScale * 100}%)`,
   };
 
   const getQuoteSet = () => {
@@ -110,11 +116,10 @@ export const AboutUs: React.FC = () => {
   };
 
   return (
-    <div sx={wrapper} >
+    <div sx={wrapper}>
       <div sx={bodyStyle} ref={bodyRef}>
         <Paragraph />
         <RotatingQuotes quoteSets={getQuoteSet()} />
-        
       </div>
       <div sx={decorWrapper} ref={decorRef}>
         <img src={BottomPageDecor} sx={bottomDecorStyle} />

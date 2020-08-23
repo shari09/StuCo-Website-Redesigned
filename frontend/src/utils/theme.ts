@@ -1,3 +1,6 @@
+//breakpoints: 640px, 832px,
+export const FIRST_BREAKPOINT = 640;
+export const SECOND_BREAKPOINT = 832;
 export const theme = {
   colors: {
     text: {
@@ -13,6 +16,7 @@ export const theme = {
       black: '#000000',
       overlay: '#93CCBE29',
       accent: '#DE7F68C7',
+      darkOverlay: '#5B7F76',
     },
     primary: '#68DEB5',
     secondary: '#93CCBE',
@@ -39,9 +43,9 @@ export const theme = {
       primary: [30, 40],
       event: [16, 24, 30, 40],
     },
-    body: [12, 14, 16, 20, 24, 28, 32],
+    body: [13, 14, 16, 20, 24, 28, 32],
     event: [10, 12, 14, 16, 20, 24, 32],
-    bodySmall: [10, 12, 16],
+    bodySmall: [11, 12, 16],
     bodyBig: [20, 24, 28],
     footer: [11, 12, 14, 16],
   },
