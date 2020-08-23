@@ -14,7 +14,7 @@ import {CircleSpinner} from '../components/CircleSpinner';
 
 import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
-import {getImageUrl, splitArray} from '../utils/functions';
+import {getImageUrl, splitArray, disallowScrolling} from '../utils/functions';
 // todo: minor, but make naming consistant i guess
 import {Photo as PhotoInfo} from '../utils/interfaces';
 
@@ -73,6 +73,15 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
   };
 
   /**
+   * Performs specified click actions upon a click event. This includes
+   * disabling the scrolling and displaying the viewer.
+   */
+  const handleClickEvent = () => {
+    disallowScrolling(window.scrollY);
+    displayViewer();
+  };
+
+  /**
    * Returns a formatted loading spinner
    */
   const displayLoadSpinner = (): ReactElement | void => {
@@ -91,7 +100,7 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
       <img
         src={photo.photoUrl}
         alt=""
-        onClick={displayViewer}
+        onClick={handleClickEvent}
         onLoad={finishLoading}
         sx={{...photoStyle, ...extraPhotoStyle}}
       />
@@ -282,21 +291,11 @@ export const Gallery: React.FC = (): ReactElement => {
   const displayViewer = (): ReactElement | void => {
     if (showViewer) {
       return (
-        <div
-          sx={{
-            zIndex: 11,
-            height: '100vh',
-            width: '100vw',
-            position: 'fixed',
-            backgroundColor: theme.colors.background.black,
-          }}
-        >
-          <PhotoViewer
-            photos={galleryPhotos}
-            startIndex={viewIndex}
-            closeHandler={toggleViewer}
-          />
-        </div>
+        <PhotoViewer
+          photos={galleryPhotos}
+          startIndex={viewIndex}
+          closeHandler={toggleViewer}
+        />
       );
     }
   };

@@ -85,11 +85,10 @@ export function splitArray<T>(arr: T[], n: number): T[][] {
 }
 
 export const randNum = (min: number, max: number) =>
-  Math.round((Math.random() * (max - min) + min)*100)/100;
+  Math.round((Math.random() * (max - min) + min) * 100) / 100;
 
-export const randInt = (min: number, max: number) => 
+export const randInt = (min: number, max: number) =>
   Math.floor(randNum(min, max));
-
 
 export const bruteForceClearInterval = () => {
   const highestId = window.setTimeout(() => {
@@ -97,4 +96,64 @@ export const bruteForceClearInterval = () => {
       window.clearInterval(i);
     }
   }, 0);
+};
+
+/**
+ * Stops users from scrolling the main body page, and saves the
+ * original scroll location. Great for overlays.
+ * @param topPos - The current window's scroll from the top.
+ */
+export const disallowScrolling = (topPos: number) => {
+  document.body.style.position = 'fixed';
+  document.body.style.overflowY = 'hidden';
+  document.body.style.top = `-${topPos}px`;
+};
+
+/**
+ * Allows users to scroll the main body page again, from their last
+ * saved window scroll position.
+ */
+export const allowScrolling = () => {
+  const topY = document.body.style.top;
+
+  document.body.style.position = '';
+  document.body.style.top = 'auto';
+  document.body.style.overflowY = 'initial';
+
+  // return to saved position, or top if it doesn't exist
+  window.scrollTo(0, -parseInt(topY || '0'));
+};
+
+/**
+ * Detects and returns a user's swipe direction, or if it was pressed.
+ * @param oldPos - The starting position of the user's tap.
+ * @param newPos - The position where the user last held their finger.
+ * @returns a string with either the user's swipe direction or if they
+ * simply pressed instead.
+ */
+export const detectSwipeDirection = (
+  oldPos: {x: number; y: number},
+  newPos: {x: number; y: number},
+): 'left' | 'right' | 'up' | 'down' | 'press' => {
+  const xDiff = oldPos.x - newPos.x;
+  const yDiff = oldPos.y - newPos.y;
+
+  // checking for pressing
+  if (xDiff > -15 && xDiff < 15 && yDiff > -15 && yDiff < 15) {
+    return 'press';
+  }
+  // find which difference is most significant
+  if (Math.abs(xDiff) > Math.abs(yDiff)) {
+    if (xDiff > 0) {
+      return 'left';
+    } else {
+      return 'right';
+    }
+  } else {
+    if (yDiff > 0) {
+      return 'up';
+    } else {
+      return 'down';
+    }
+  }
 };

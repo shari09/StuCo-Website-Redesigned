@@ -1,5 +1,11 @@
 /** @jsx jsx */
-import React, {useState, useEffect, useRef, ReactElement} from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  ReactElement,
+} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {getImageUrl} from '../utils/functions';
 
@@ -26,9 +32,19 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
 
   // Determine the orientation of the photo at the get go to cut
   // down on rerenders and loading wrong images
+  /**
+   * Determines the orientation of the current photo.
+   */
+  const determineOrientation = useCallback((): void => {
+    const h = originalDimensions.height;
+    const w = originalDimensions.width;
+
+    h > w ? setOrientation('portrait') : setOrientation('landscape');
+  }, [originalDimensions]);
+
   useEffect(() => {
     determineOrientation();
-  }, [photoId]);
+  }, [photoId, determineOrientation]);
 
   useEffect(() => {
     if (!mainImageRefDiv.current) return;
@@ -101,16 +117,6 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
   };
 
   /**
-   * Determines the orientation of the current photo.
-   */
-  const determineOrientation = (): void => {
-    const h = originalDimensions.height;
-    const w = originalDimensions.width;
-
-    h > w ? setOrientation('portrait') : setOrientation('landscape');
-  };
-
-  /**
    * Performs the various loading functions that are related to
    * this image loading.
    */
@@ -122,6 +128,7 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
   return (
     <div sx={mainImageContainerStyle} ref={mainImageRefDiv}>
       <img
+        id="main-photo"
         src={fetchMainImageUrl(photoId)}
         alt=""
         sx={mainImageStyle}

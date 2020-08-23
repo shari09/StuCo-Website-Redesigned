@@ -4,7 +4,8 @@ import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 
 export interface ViewerButtonProps {
-  imageSrc: string;
+  /** Image source, supports either an URL or a ReactElement (usually a react-icon) */
+  imageSrc: string | ReactElement;
   actionHandler: () => void;
   extraButtonStyling?: SxStyleProp;
 }
@@ -18,20 +19,24 @@ export const ViewerButton: React.FC<ViewerButtonProps> = ({
   const buttonContainerStyle: SxStyleProp = {
     position: 'relative',
 
-    py: '1%',
-    px: '1%',
-    mx: '5%',
+    mx: '3%',
 
-    width: ['30px', '40px', '45px', '50px'],
-    height: ['30px', '40px', '45px', '50px'],
+    width: ['50px', '45px', '50px', '55px'],
+    height: ['50px', '45px', '50px', '55px'],
 
     borderRadius: '50%',
 
     backgroundColor: theme.colors.background.darkest,
+    color: theme.colors.text.light,
     zIndex: 15, // draw buttons on top of overlay
+
+    display: 'flex',
+    alignItems: 'center',
     textAlign: 'center',
 
-    backgroundImage: 'url(' + imageSrc + ')',
+    // If imgsrc is a string it can simply be used as background image
+    backgroundImage:
+      typeof imageSrc === 'string' ? 'url(' + imageSrc + ')' : 'none',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
 
@@ -46,5 +51,9 @@ export const ViewerButton: React.FC<ViewerButtonProps> = ({
     ...extraButtonStyling,
   };
 
-  return <div sx={buttonContainerStyle} onClick={actionHandler}></div>;
+  return (
+    <div sx={buttonContainerStyle} onClick={actionHandler}>
+      {!(typeof imageSrc === 'string') ? imageSrc : undefined}
+    </div>
+  );
 };
