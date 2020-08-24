@@ -48,6 +48,7 @@ export const theme = {
     bodySmall: [11, 12, 16],
     bodyBig: [20, 24, 28],
     footer: [11, 12, 14, 16],
+    footerBig: [14, 16, 20, 24],
   },
   bodyPadding: {
     pt: '7%',

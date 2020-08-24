@@ -31,7 +31,7 @@ export const NavItem: React.FC<LinkProps> = ({
     },
     order: 2,
     px: 20,
-    py: 3,
+    py: [2, 2, 3],
     width: ['100%', '100%', 'auto'],
     textAlign: 'center',
   };
@@ -65,6 +65,16 @@ const Toggle: React.FC<ToggleProps> = ({toggle, onClick}) => {
 };
 
 // Moving routes out of Navigation so Footer can access them
+export interface NavRoutes {
+  events: string;
+  clubs: string;
+  calendar: string;
+  map: string;
+  gallery: string;
+  faq: string;
+  about: string;
+}
+
 export const routes = {
   //key is the route name, value is displayed text
   events: 'Events',

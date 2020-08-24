@@ -33,6 +33,7 @@ export const ViewerButton: React.FC<ViewerButtonProps> = ({
     display: 'flex',
     alignItems: 'center',
     textAlign: 'center',
+    justifyContent: 'center',
 
     // If imgsrc is a string it can simply be used as background image
     backgroundImage:

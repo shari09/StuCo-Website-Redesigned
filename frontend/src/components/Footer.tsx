@@ -9,8 +9,8 @@ import {
   FaInstagramSquare,
 } from 'react-icons/fa';
 
-// For the links on the footer
-import {routes, NavItem} from './Navigation';
+import {routes, NavItem, NavRoutes} from './Navigation';
+import {Resources} from './Resources';
 
 import {theme} from '../utils/theme';
 
@@ -141,11 +141,8 @@ const CopyrightItem: React.FC<CopyrightItemProps> = ({textStyle}) => {
   const copyrightTextStyle: SxStyleProp = {
     ...textStyle,
     my: 'auto',
-
     // Add space above copyright if rearranged
-    '@media only screen and (max-width: 500px)': {
-      mt: '1em',
-    },
+    mt: ['1em', 0],
   };
   const imageStyle: SxStyleProp = {mr: '0.5em', mb: '0.25em'};
 
@@ -161,6 +158,121 @@ const CopyrightItem: React.FC<CopyrightItemProps> = ({textStyle}) => {
         Source
       </a>
     </p>
+  );
+};
+
+//=====================================================================
+
+interface FooterRoutesProps {
+  routes: NavRoutes;
+  textStyle: SxStyleProp;
+}
+
+/**
+ * Gets all footer routes, splits them in half, and renders the
+ * routes in a formatted style.
+ * @return all routes in a container element.
+ */
+const FooterRoutes: React.FC<FooterRoutesProps> = ({
+  routes,
+  textStyle,
+}): ReactElement => {
+  // Split the routes in half to format links correctly
+  const half: number = Math.ceil(Object.keys(routes).length / 2);
+  const leftRoutes: string[][] = Object.entries(routes).slice(
+    0,
+    half,
+  ) as string[][];
+  const rightRoutes: string[][] = Object.entries(routes).slice(
+    half,
+  ) as string[][];
+
+  // Styles ---------------------------------------------------------
+  const mainWrapperStyle: SxStyleProp = {
+    px: '5%',
+  };
+  const headerWrapperStyle: SxStyleProp = {
+    width: '100%',
+    textAlign: 'right',
+    mb: '1em',
+  };
+  const headerTextStyle: SxStyleProp = {
+    fontFamily: theme.fonts.heading,
+    fontSize: theme.fontSizes.footerBig,
+    color: theme.colors.text.light,
+  };
+
+  const routesStyle: SxStyleProp = {
+    ...textStyle,
+
+    // Push to the right or left depending on mobile or not
+    ml: 'auto',
+    mr: 0,
+    width: '50%',
+  };
+  const routeContainerStyle: SxStyleProp = {
+    width: '100%',
+    margin: 'auto',
+
+    display: 'flex',
+    flexDirection: ['column', 'row'],
+  };
+  const listStyle: SxStyleProp = {
+    textAlign: 'right',
+
+    listStyleType: 'none',
+    pl: '10%',
+    pr: 0,
+    mr: 0,
+    my: 0,
+  };
+  // Functions -- ---------------------------------------------------
+  /**
+   * Convert a list of routes to a list of actual NavItem elements.
+   * @param routes - All the routes in this list of links.
+   * @returns a list of NavItem elements to the desired route.
+   */
+  const getRouteItems = (routes: string[][]): ReactElement[] => {
+    const navStyle: SxStyleProp = {
+      px: 0,
+      py: '2px',
+      mx: 0,
+
+      display: 'inline',
+      '&:hover': {
+        color: theme.colors.primary,
+        textDecoration: 'none',
+      },
+    };
+
+    return routes.map((route) => {
+      return (
+        <li key={route[1]}>
+          <NavItem route={route[0]} text={route[1]} extraStyling={navStyle} />
+        </li>
+      );
+    });
+  };
+
+  return (
+    <div sx={mainWrapperStyle}>
+      {/* the header*/}
+      <div sx={headerWrapperStyle}>
+        <h2 sx={headerTextStyle}>Navigation</h2>
+      </div>
+
+      {/* the actual routes */}
+      <div className="row" sx={routeContainerStyle}>
+        <div sx={routesStyle}>
+          {/* first column of links goes here */}
+          <ul sx={listStyle}>{getRouteItems(leftRoutes)}</ul>
+        </div>
+        <div sx={routesStyle}>
+          {/* second column of links goes here */}
+          <ul sx={listStyle}>{getRouteItems(rightRoutes)}</ul>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -187,124 +299,42 @@ export const Footer: React.FC = () => {
   const textStyle: SxStyleProp = {
     fontFamily: theme.fonts.body,
     fontSize: theme.fontSizes.footer,
-    whiteSpace: 'nowrap',
+    color: theme.colors.text.light,
+
+    whiteSpace: ['nowrap', 'break-spaces'],
+  };
+  const topFooterStyle: SxStyleProp = {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
   };
   const bottomFooterStyle: SxStyleProp = {
     // Rearrange the footer if the screen is small enough.
-    '@media only screen and (max-width: 500px)': {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      textAlign: 'center',
-    },
+    display: 'flex',
+    flexDirection: ['column', 'row'],
+    alignItems: ['center', null],
+    textAlign: ['center', null],
 
     width: '100%',
-    margin: 'auto',
+    mx: 'auto',
+    mt: '2em',
   };
   const socialMediaContainerStyle: SxStyleProp = {
-    left: '5%',
-    width: '50%',
+    // push down the social media
+    mt: 0,
+    left: [0, '5%'],
+    width: ['100%', '50%'],
+    // somehow this aligns the icons with the copyright text??
     bottom: '0.5em',
 
-    // Format for the rearrangement
-    '@media only screen and (max-width: 500px)': {
-      // Add space to seperate from links if rearranged
-      mt: '1em',
-      left: 0,
-      width: '100%',
-    },
+    alignItems: ['center', 'row-start'],
+    textAlign: ['center', 'left'],
   };
   const copyrightContainerStyle: SxStyleProp = {
-    right: '5%',
-    width: '50%',
-    textAlign: 'right',
-
-    // Format for the rearrangement
-    '@media only screen and (max-width: 500px)': {
-      right: 0,
-      width: '100%',
-      textAlign: 'center',
-      mb: '0.5em',
-    },
-  };
-
-  // Functions --
-  /**
-   * Gets all routes, splits them in half, and returns all the
-   * routes in a formatted style.
-   * @param routes - All the possible routes to go to.
-   * @return all routes in a container element.
-   */
-  const getAllFooterRoutes = (routes): ReactElement => {
-    // Split the routes in half to format links correctly
-    const half: number = Math.ceil(Object.keys(routes).length / 2);
-    const leftRoutes: string[][] = Object.entries(routes).slice(
-      0,
-      half,
-    ) as string[][];
-    const rightRoutes: string[][] = Object.entries(routes).slice(
-      half,
-    ) as string[][];
-
-    // Styles ---------------------------------------------------------
-    const leftRoutesStyle: SxStyleProp = {
-      ...textStyle,
-      textAlign: 'right',
-    };
-    const rightRoutesStyle: SxStyleProp = {
-      ...textStyle,
-    };
-    const routeContainerStyle: SxStyleProp = {
-      width: '100%',
-      margin: 'auto',
-    };
-    const leftListStyle: SxStyleProp = {listStyleType: 'none'};
-    const rightListStyle: SxStyleProp = {listStyleType: 'none', pl: 0};
-    //-----------------------------------------------------------------
-
-    return (
-      <div className="row" sx={routeContainerStyle}>
-        <div className="col">
-          <div sx={leftRoutesStyle}>
-            {/* first column of links goes here */}
-            <ul sx={leftListStyle}>{getRouteItems(leftRoutes)}</ul>
-          </div>
-        </div>
-        <div className="col">
-          <div sx={rightRoutesStyle}>
-            {/* second column of links goes here */}
-            <ul sx={rightListStyle}>{getRouteItems(rightRoutes)}</ul>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  /**
-   * Convert a list of routes to a list of actual NavItem elements.
-   * @param routes - All the routes in this list of links.
-   * @returns a list of NavItem elements to the desired route.
-   */
-  const getRouteItems = (routes: string[][]): ReactElement[] => {
-    const navStyle: SxStyleProp = {
-      px: 0,
-      mx: 0,
-      py: 1,
-
-      display: 'inline',
-      '&:hover': {
-        color: theme.colors.primary,
-        textDecoration: 'none',
-      },
-    };
-
-    return routes.map((route) => {
-      return (
-        <li key={route[1]}>
-          <NavItem route={route[0]} text={route[1]} extraStyling={navStyle} />
-        </li>
-      );
-    });
+    right: [0, '5%'],
+    width: ['100%', '50%'],
+    textAlign: ['center', 'right'],
+    mb: ['0.5em', 0],
   };
 
   // Return the footer code --
@@ -313,7 +343,14 @@ export const Footer: React.FC = () => {
     // names to name the divs. Kapeesh? Kapeesh.
     <div sx={footerStyle}>
       {/* top half of the footer */}
-      {getAllFooterRoutes(routes)}
+      <div sx={topFooterStyle}>
+        <div sx={{width: '35%', position: 'relative', ml: '15%'}}>
+          <FooterRoutes routes={routes} textStyle={textStyle} />
+        </div>
+        <div sx={{width: '35%', position: 'relative', mr: '15%'}}>
+          <Resources textStyling={textStyle} />
+        </div>
+      </div>
 
       {/* bottom half of the footer */}
       <div className="row" sx={bottomFooterStyle}>

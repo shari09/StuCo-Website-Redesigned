@@ -1,14 +1,22 @@
 /** @jsx jsx */
 import React, {useContext, useRef, useEffect, useState} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
-import {Heading} from '../components/Heading';
-import {Collapsable} from '../components/Collapsable';
-import {theme, FIRST_BREAKPOINT} from '../utils/theme';
-import {IInfoContext, InfoContext} from '../utils/contexts';
 import {BsThreeDots, BsSearch} from 'react-icons/bs';
 import {FaTimes} from 'react-icons/fa';
-import {getImageUrl, randNum, randInt} from '../utils/functions';
+
+import {Heading} from '../components/Heading';
+import {Collapsable} from '../components/Collapsable';
+
+import {theme, FIRST_BREAKPOINT} from '../utils/theme';
+import {IInfoContext, InfoContext} from '../utils/contexts';
+import {
+  getImageUrl,
+  disallowScrolling,
+  randNum,
+  randInt,
+} from '../utils/functions';
 import {Club} from '../utils/interfaces';
+
 import clubBackground from '../assets/clubBackground.png';
 import ResizeObserver from 'resize-observer-polyfill';
 import {ClubPopup} from '../components/ClubPopup';
@@ -259,6 +267,18 @@ export const Clubs: React.FC = () => {
     return <div sx={wrapper}>{triangles}</div>;
   };
 
+  const renderClubPopup = () => {
+    if (isPopup && popupClub) {
+      disallowScrolling(window.scrollY);
+      return (
+        <ClubPopup
+          closeHandler={() => setIsPopup(false)}
+          clubInfo={popupClub}
+        />
+      );
+    }
+  };
+
   //=================================================
   //styles
 
@@ -329,7 +349,7 @@ export const Clubs: React.FC = () => {
   };
 
   const headingStyle: SxStyleProp = {
-    display: 'inline', 
+    display: 'inline',
     mt: ['20%', 'auto'],
     mb: [0, 'auto'],
   };
@@ -345,7 +365,7 @@ export const Clubs: React.FC = () => {
       {getTransluteRects()}
 
       <Heading
-        text='Clubs'
+        text="Clubs"
         alignment={isFirstBreakpoint ? 'left' : 'center'}
         underline={false}
         extraStyling={headingStyle}
@@ -359,11 +379,11 @@ export const Clubs: React.FC = () => {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Club name"
         />
-        {query === ''
-         ? <BsSearch sx={iconStyle} />
-         : <FaTimes sx={iconStyle} onClick={() => setQuery('')}/>
-        }
-        
+        {query === '' ? (
+          <BsSearch sx={iconStyle} />
+        ) : (
+          <FaTimes sx={iconStyle} onClick={() => setQuery('')} />
+        )}
       </div>
 
       <div sx={lineStyle} />
@@ -375,12 +395,7 @@ export const Clubs: React.FC = () => {
 
       {isFirstBreakpoint ? getTriangleImages() : undefined}
 
-      {isPopup && popupClub ? (
-        <ClubPopup
-          closeHandler={() => setIsPopup(false)}
-          clubInfo={popupClub}
-        />
-      ) : undefined}
+      {renderClubPopup()}
     </div>
   );
 };

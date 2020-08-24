@@ -12,3 +12,5 @@ react-app-env.d.ts
 # bad bad authentication
 service-key.json
 
+# why store logs when you can just ignore them
+*.log
