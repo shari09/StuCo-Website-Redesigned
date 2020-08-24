@@ -31,12 +31,12 @@ export const Map: React.FC = () => {
     <div sx={backgroundStyle}>
       <div sx={divStyle}>
         <img
-          src="./assets/school-1st-floor-2.PNG" //you can change this to online once we have that set up
+          src="./assets/school-1st-floor-2.png" //you can change this to online once we have that set up
           alt="The school's first floor."
           sx={imageStyle}
         />
         <img
-          src="./assets/school-2nd-floor-2.PNG" //you can change this to online once we have that set up
+          src="./assets/school-2nd-floor-2.png" //you can change this to online once we have that set up
           alt="The school's second floor."
           sx={{
             ...imageStyle,

@@ -36,7 +36,6 @@ export const theme = {
   fonts: {
     heading: 'Rowdies',
     body: 'Open Sans',
-    time: 'Architects Daughter',
   },
   fontSizes: {
     heading: {

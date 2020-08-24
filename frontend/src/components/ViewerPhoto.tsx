@@ -80,8 +80,6 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
       width: orientation === 'landscape' ? '90%' : '60%',
       margin: 'auto',
     },
-
-    border: '1px solid black',
   };
   const mainImageStyle: SxStyleProp = {
     // positioning

@@ -271,6 +271,7 @@ export const Clubs: React.FC = () => {
     pb: '20vh',
     overflow: 'hidden',
     flexDirection: ['column', 'row'],
+    position: 'relative',
   };
 
   const clubListWrapper: SxStyleProp = {

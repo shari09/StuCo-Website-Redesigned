@@ -315,6 +315,8 @@ export const ClubPopup: React.FC<ClubPopupProps> = ({
     bottom: 0,
     backgroundColor: theme.colors.background.darkOverlay,
     opacity: 0.8,
+    zIndex: 15,
+    backdropFilter: 'blur(10px)',
   };
 
   const mainWrapperStyle: SxStyleProp = {

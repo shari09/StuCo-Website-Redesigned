@@ -74,8 +74,11 @@ exports.run = async (req, res) => {
   // res.set('Access-Control-Allow-Origin', 'https://rhhsstuco.ca');
   // res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
   // I'm sure this is fine and safe and definitely secure
-  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Origin', 'https://shari09.github.io');
+  // res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Credentials', 'true');
+
+  // console.log(res);
 
   await initAuth();
 

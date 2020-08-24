@@ -45,22 +45,23 @@ const Main: React.FC = () => {
     mx: 'auto',
     mt: '1em',
     position: ['static', 'absolute'],
-    backgroundColor: ['transparent', theme.colors.background.accent],
+    // backgroundColor: ['transparent', theme.colors.background.accent],
     color: theme.colors.text.light,
     textAlign: 'center',
-    fontFamily: theme.fonts.time,
+    fontFamily: theme.fonts.heading,
     fontSize: [20, 30],
     '&:hover': {
       textDecoration: 'none',
       color: theme.colors.text.light,
+      backgroundColor: theme.colors.background.overlay,
     },
     fontVariantCaps: 'titling-caps',
     px: 4,
     order: 1,
 
     //mobile
-    borderColor: theme.colors.background.accent,
-    borderWidth: 1,
+    borderColor: theme.colors.background.light,
+    borderWidth: [1, 2],
     borderStyle: 'solid',
     
   };

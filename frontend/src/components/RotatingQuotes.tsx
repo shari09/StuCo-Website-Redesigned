@@ -3,9 +3,10 @@ import React, {useState, useRef, useEffect, ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {CircleSpinner} from './CircleSpinner';
 import AboutUsSpeechBubble from '../assets/speech bubble.svg';
-import AboutUsSpeechBubbleMobile from '../assets/speechBubbleMobile.svg';
+import AboutUsSpeechBubbleMobile from '../assets/speechBubbleMobile.png';
 import {theme, FIRST_BREAKPOINT} from '../utils/theme';
 import {fadeIn} from '../utils/animation';
+import ResizeObserver from 'resize-observer-polyfill';
 
 interface Props {
   quoteSets: ShownBubbleProps[];
@@ -122,6 +123,22 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
   closing,
   extraStyling,
 }) => {
+  const [bubbleHeight, setBubbleHeight] = useState<number>(null);
+  const quoteWrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ro = new ResizeObserver(entries => {
+      entries.forEach(entry => {
+        const {height} = entry.target.getBoundingClientRect();
+        console.log(height);
+        setBubbleHeight(height);
+      });
+    });
+
+    ro.observe(quoteWrapperRef.current);
+    return () => ro.disconnect();
+  }, []);
+
   const imageWrapper: SxStyleProp = {
     borderRadius: '50%',
     overflow: 'hidden',
@@ -135,12 +152,6 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     animationName: 'fadeIn',
     '@keyframes fadeIn': fadeIn,
     animationDuration: '.5s',
-  };
-
-  //speech bubble ratio 1.7:1
-  const speechBubbleStyle: SxStyleProp = {
-    width: ['100%', imgSize * 2.5],
-    height: imgSize * 1.5,
   };
 
   const bubbleAndQuoteWrapperStyle: SxStyleProp = {
@@ -164,16 +175,17 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     bottom: 0,
     display: 'flex',
     flexDirection: 'column',
-    py: ['2em', 0],
+    pt: ['3em', '4em'],
+    px: ['2em', '4em'],
+    pb: '1em',
     justifyContent: 'space-between',
+    height: ['fit-content', 'auto'],
+    minHeight: ['30vh', 'auto'],
   };
 
   const quoteStyle: SxStyleProp = {
     width: '100%',
     lineHeight: '2em',
-    padding: '4em',
-    pb: [0, '4em'],
-    flex: ['none', 3],
     order: 0,
   };
 
@@ -181,12 +193,19 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     textAlign: 'right',
     width: '100%',
     px: '4em',
-    flex: ['none', 1.5],
     order: 1,
+    mt: ['3em', 'auto'],
+    mb: ['0.5em', '2em'],
   };
 
   const wrapperStyle: SxStyleProp = {
     // width: ['100%', 'auto'],
+  };
+
+  //speech bubble ratio 1.7:1
+  const speechBubbleStyle: SxStyleProp = {
+    width: ['100%', imgSize * 2.5],
+    height: [bubbleHeight, imgSize * 1.5],
   };
 
   return (
@@ -202,7 +221,7 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
             isFirstBreakpoint ? AboutUsSpeechBubble : AboutUsSpeechBubbleMobile
           }
         />
-        <div sx={quoteWrapperStyle}>
+        <div sx={quoteWrapperStyle} ref={quoteWrapperRef}>
           <p sx={quoteStyle}>{quote}</p>
           <p sx={closingStyle}>{closing}</p>
         </div>
@@ -216,12 +235,10 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
 export const RotatingQuotes: React.FC<Props> = ({
   quoteSets: originalQuoteSets,
 }) => {
-  const [quoteSets, setQuoteSets] = useState<ShownBubbleProps[]>(
-    originalQuoteSets,
-  );
+  const [quoteSets, setQuoteSets] = useState<ShownBubbleProps[]>(originalQuoteSets);
   const [timerId, setTimerId] = useState<number>();
 
-  const interval = 3000;
+  const interval = 7000;
   // const intervalAfterLock = interval / 3;
 
   useEffect(() => {

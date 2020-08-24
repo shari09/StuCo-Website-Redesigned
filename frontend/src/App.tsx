@@ -17,7 +17,9 @@ import {AboutUs} from './pages/AboutUs';
 
 import {IInfoContext, InfoContext} from './utils/contexts';
 
-const backendUrl = 'http://192.168.1.28:8080';
+// const backendUrl =
+//   'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
+  const backendUrl = 'http://192.168.1.28:8080';
 
 /**
  * Creates a timed delay for an unmounting component so that unmounting
@@ -61,6 +63,9 @@ const App: React.FC = () => {
     const res = await fetch(backendUrl, {
       method: 'GET',
       mode: 'cors',
+      headers: {
+        accept: 'application/json'
+      },
     });
     const data = await res.json();
     console.log(data);
@@ -87,9 +92,11 @@ const App: React.FC = () => {
     );
   }
 
+  console.log(process.env.PUBLIC_URL);
+
   return (
     <InfoContext.Provider value={info}>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <ScrollToTop />
         <Navigation />
         <Switch>
