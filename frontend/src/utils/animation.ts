@@ -42,6 +42,15 @@ export const fadeIn: SxStyleProp = {
   },
 };
 
+export const fadeInPartially: SxStyleProp = {
+  '0%': {
+    opacity: 0,
+  },
+  '100%': {
+    opacity: 0.5,
+  },
+};
+
 export const popIn: SxStyleProp = {
   '0%': {
     opacity: 0,

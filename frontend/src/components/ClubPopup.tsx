@@ -6,7 +6,7 @@ import {TranslucentRectangle} from './TranslucentRectangle';
 import {LoadingSquare} from './LoaderComponents';
 
 import {Club} from '../utils/interfaces';
-import {getImageUrl} from '../utils/functions';
+import {getImageUrl, allowScrolling} from '../utils/functions';
 import {theme} from '../utils/theme';
 import {popIn} from '../utils/animation';
 // yes shari in case you couldnt tell from the code and the comments
@@ -47,6 +47,32 @@ interface FormattedValue {
 }
 
 // ============================================================
+// Dimensions -- edit them all here!
+
+// The club descrption box
+const ClubDescriptionDimensions = {
+  top: ['27.5%', '22.5%', '17.5%', '15%'],
+  left: ['3%', '5%', '5%', '10%'],
+  width: ['40%', '35%', '30%', '25%'],
+  height: ['45%', '55%', '65%', '70%'],
+};
+
+// The bottom right club info box
+const ClubInfoItemDimensions = {
+  bottom: ['24%', '16%', '16%', '8%'],
+  right: ['2.5%', '10%', '12%', '20%'],
+  width: ['45%', '35%', '35%', '25%'],
+};
+
+// The background photo
+const ClubPhotoDimensions = {
+  top: ['32.5%', '27.5%', '22.5%', '20%'],
+  left: ['5%', '15%', '20%', '25%'],
+  width: ['90%', '70%', '60%', '50%'],
+  height: ['35%', '45%', '55%', '60%'],
+};
+
+// ============================================================
 
 // ============================================================
 // ClubDescriptionItem - for the sidebar with the club name and description
@@ -61,10 +87,10 @@ const ClubDescriptionItem: React.FC<ClubDescriptionItemProps> = ({
     // all hail absolute positioning -- because my sanity has
     // been gone for a very long time
     position: 'absolute',
-    width: ['40%', '35%', '30%', '30%', '25%'],
-    left: ['3%', '5%', '5%', '5%', '10%'],
-    height: ['40%', '50%', '60%', '60%', '70%'], // TODO: fix extreme resizing cases
-    top: ['30%', '25%', '20%', '20%', '15%'],
+    width: ClubDescriptionDimensions.width,
+    left: ClubDescriptionDimensions.left,
+    height: ClubDescriptionDimensions.height, // TODO: fix extreme resizing cases
+    top: ClubDescriptionDimensions.top,
 
     display: 'flex',
     flexDirection: 'column',
@@ -129,9 +155,9 @@ const ClubInfoItem: React.FC<ClubInfoItemProps> = ({
   // Styles necessary
   const wrapperStyle: SxStyleProp = {
     position: 'absolute', // all hail absolute positioning
-    bottom: ['24%', '16%', '16%', '8%', '8%'],
-    right: ['2.5%', '10%', '12%', '13%', '20%'],
-    width: ['45%', '35%', '35%', '35%', '25%'],
+    bottom: ClubInfoItemDimensions.bottom,
+    right: ClubInfoItemDimensions.right,
+    width: ClubInfoItemDimensions.width,
 
     // if we need a min height (results in no vertical centering if
     // text is too small)
@@ -328,7 +354,7 @@ export const ClubPopup: React.FC<ClubPopupProps> = ({
     right: 0,
     bottom: 0,
 
-    zIndex: 16, // draw over everything
+    zIndex: 17, // draw over everything
 
     '@keyframes popIn': popIn,
     animationName: 'popIn',
@@ -341,10 +367,10 @@ export const ClubPopup: React.FC<ClubPopupProps> = ({
   const photoContainerStyle: SxStyleProp = {
     position: 'absolute', // all hail absolute positioning
     margin: 'auto',
-    top: ['32.5%', '27.5%', '25%', '22.5%', '20%'],
-    left: ['5%', '15%', '15%', '20%', '25%'],
-    width: ['90%', '70%', '70%', '60%', '50%'],
-    height: ['35%', '45%', '50%', '55%', '60%'],
+    top: ClubPhotoDimensions.top,
+    left: ClubPhotoDimensions.left,
+    width: ClubPhotoDimensions.width,
+    height: ClubPhotoDimensions.height,
   };
 
   // All the club important contact information for the contact
@@ -379,6 +405,7 @@ export const ClubPopup: React.FC<ClubPopupProps> = ({
     // make sure the element that called e was the parent element
     // (ie. e.currentTarget, since e is binded to the parent element).
     if (e.target === e.currentTarget) {
+      allowScrolling();
       closeHandler();
     }
   };

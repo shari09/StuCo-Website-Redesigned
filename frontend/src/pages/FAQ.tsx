@@ -4,6 +4,7 @@ import {jsx, SxStyleProp} from 'theme-ui';
 
 import {Heading} from '../components/Heading';
 import {TranslucentRectangle} from '../components/TranslucentRectangle';
+import {ScrollToTopButton} from '../components/ScrollToTopButton';
 
 import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
@@ -71,7 +72,7 @@ const QuestionItem: React.FC<QuestionProp> = ({
     margin: 'auto',
   };
   const imageStyle = {
-    maxWidth: '100vw',
+    maxWidth: '90vw',
     display: 'inline-block',
     ...imageExtraStyling,
   };
@@ -228,7 +229,11 @@ export const FAQ: React.FC = (): ReactElement => {
   };
 
   return (
-    <div id="top" sx={wrapperStyle}>
+    <div sx={wrapperStyle}>
+      {/* initializing scroll to top button */}
+      <ScrollToTopButton />
+
+      {/* the faq */}
       <div sx={innerWrapperStyle}>
         <div sx={headingWrapperStyle}>
           <Heading text="FAQ" alignment="left" />

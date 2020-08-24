@@ -11,6 +11,7 @@ import {jsx, SxStyleProp} from 'theme-ui';
 import {Heading} from '../components/Heading';
 import {TranslucentRectangle} from '../components/TranslucentRectangle';
 import {LoadingSquare} from '../components/LoaderComponents';
+import {ScrollToTopButton} from '../components/ScrollToTopButton';
 
 import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
@@ -423,6 +424,7 @@ export const Events: React.FC = () => {
     // the main page div
 
     width: '100%',
+    maxWidth: '100%',
     minHeight: '100vh',
     backgroundColor: theme.colors.background.light,
   };
@@ -443,6 +445,13 @@ export const Events: React.FC = () => {
     maxWidth: '90%', // to make sure the page doesn't scroll to the right
     position: 'relative',
   };
+
+  // Get rid of horizontal scroll bar caused by hovering a picture
+  useEffect(() => {
+    document.body.style.overflowX = 'hidden';
+
+    return () => (document.body.style.overflowX = 'initial');
+  });
 
   /**
    * Retrieves all events in a formatted manner based on what number
@@ -472,6 +481,9 @@ export const Events: React.FC = () => {
 
   return (
     <div sx={wrapperStyle}>
+      {/* initializing scroll to top button */}
+      <ScrollToTopButton />
+
       <div sx={innerWrapperStyle}>
         <div sx={headingWrapperStyle}>
           <Heading text="Events" alignment="left" />

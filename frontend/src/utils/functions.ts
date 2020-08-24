@@ -98,7 +98,6 @@ export const bruteForceClearInterval = () => {
   }, 0);
 };
 
-
 export const hexToRgbArr = (hex) => {
   if (hex[0] === '#') hex = hex.slice(1);
   const rgb = [
@@ -109,14 +108,13 @@ export const hexToRgbArr = (hex) => {
   return rgb;
 };
 
-
 /**
  * Stops users from scrolling the main body page, and saves the
  * original scroll location. Great for overlays.
  * @param topPos - The current window's scroll from the top.
  */
 export const disallowScrolling = (topPos: number) => {
-  document.body.style.position = 'fixed';
+  document.body.style.position = 'sticky';
   document.body.style.overflowY = 'hidden';
   document.body.style.top = `-${topPos}px`;
 };

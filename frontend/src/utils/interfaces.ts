@@ -63,3 +63,8 @@ export interface AboutStuco {
   stucoTagline: string;
   stucoDescription: string;
 }
+
+export interface Resources {
+  resourceName: string;
+  resourceLink: string;
+}

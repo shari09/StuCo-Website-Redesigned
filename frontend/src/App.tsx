@@ -6,6 +6,8 @@ import {Footer} from './components/Footer';
 import {ScrollToTop} from './components/ScrollToTop';
 import {LoadingScreen} from './components/LoaderComponents';
 
+import {useUnmountingDelay} from './hooks/useUnmountingDelay';
+
 import {Home} from './pages/Home';
 import {Events} from './pages/Events';
 import {Clubs} from './pages/Clubs';
@@ -21,36 +23,6 @@ import {IInfoContext, InfoContext} from './utils/contexts';
 //   'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
   const backendUrl = 'http://192.168.1.28:8080';
 
-/**
- * Creates a timed delay for an unmounting component so that unmounting
- * animations and transitions are able to occur.
- * @param shouldBeMounted - Whether the component you are checking should
- * or should not be mounted.
- * @param delayTime - The total amount of time to delay the unmount,
- * in ms.
- * @returns a boolean, true if the component should finally be unmounted
- * (ie. the delay has finished), and false otherwise.
- */
-const useUnmountingDelay = (shouldBeMounted: boolean, delayTime: number) => {
-  const [shouldRender, setShouldRender] = useState<boolean>(true);
-
-  useEffect(() => {
-    let timerID: NodeJS.Timeout;
-
-    // Set a timer for a component once it should no longer be mounted.
-    if (!shouldBeMounted) {
-      timerID = setTimeout(() => setShouldRender(false), delayTime);
-    }
-
-    // Clear the old timer from memory
-    return () => {
-      clearTimeout(timerID);
-    };
-  }, [shouldBeMounted, delayTime, shouldRender]);
-
-  return shouldRender;
-};
-
 const App: React.FC = () => {
   const [info, setInfo] = useState<IInfoContext | undefined>();
   const [showLoading, setShowLoading] = useState<boolean>(true);
@@ -60,16 +32,22 @@ const App: React.FC = () => {
   const shouldRenderLoading = useUnmountingDelay(showLoading, unmountSpeed);
 
   const getData = async () => {
-    const res = await fetch(backendUrl, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        accept: 'application/json'
-      },
-    });
-    const data = await res.json();
-    console.log(data);
-    setInfo(data as IInfoContext);
+    let data: IInfoContext;
+
+    try {
+      const res = await fetch(backendUrl, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          accept: 'application/json'
+        },
+      });
+      data = await res.json();
+    } catch (e) {
+      console.log(e);
+    }
+
+    setInfo(data);
   };
 
   useEffect(() => {
