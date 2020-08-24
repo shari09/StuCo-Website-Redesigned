@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/StuCo-Website-Redesigned/static/css/main.6fdb4904.chunk.css",
-    "main.js": "/StuCo-Website-Redesigned/static/js/main.4bb0645b.chunk.js",
-    "main.js.map": "/StuCo-Website-Redesigned/static/js/main.4bb0645b.chunk.js.map",
+    "main.js": "/StuCo-Website-Redesigned/static/js/main.942707cf.chunk.js",
+    "main.js.map": "/StuCo-Website-Redesigned/static/js/main.942707cf.chunk.js.map",
     "runtime-main.js": "/StuCo-Website-Redesigned/static/js/runtime-main.25754182.js",
     "runtime-main.js.map": "/StuCo-Website-Redesigned/static/js/runtime-main.25754182.js.map",
     "static/js/2.04dc9758.chunk.js": "/StuCo-Website-Redesigned/static/js/2.04dc9758.chunk.js",
     "static/js/2.04dc9758.chunk.js.map": "/StuCo-Website-Redesigned/static/js/2.04dc9758.chunk.js.map",
     "index.html": "/StuCo-Website-Redesigned/index.html",
-    "precache-manifest.5b82dccb91fa08d9f7b1bab994670197.js": "/StuCo-Website-Redesigned/precache-manifest.5b82dccb91fa08d9f7b1bab994670197.js",
+    "precache-manifest.223758ac2e858dea844d804e66bf4951.js": "/StuCo-Website-Redesigned/precache-manifest.223758ac2e858dea844d804e66bf4951.js",
     "service-worker.js": "/StuCo-Website-Redesigned/service-worker.js",
     "static/css/main.6fdb4904.chunk.css.map": "/StuCo-Website-Redesigned/static/css/main.6fdb4904.chunk.css.map",
     "static/js/2.04dc9758.chunk.js.LICENSE.txt": "/StuCo-Website-Redesigned/static/js/2.04dc9758.chunk.js.LICENSE.txt",
@@ -22,6 +22,6 @@
     "static/js/runtime-main.25754182.js",
     "static/js/2.04dc9758.chunk.js",
     "static/css/main.6fdb4904.chunk.css",
-    "static/js/main.4bb0645b.chunk.js"
+    "static/js/main.942707cf.chunk.js"
   ]
 }
