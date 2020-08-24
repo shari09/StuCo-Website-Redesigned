@@ -17,6 +17,8 @@ import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
 import {Event} from '../utils/interfaces';
 import {getImageUrl} from '../utils/functions';
+import {useUnmountingDelay} from '../hooks/useUnmountingDelay';
+import {fadeOut, fadeIn} from '../utils/animation';
 
 // Interfaces --
 interface EventItemProps {
@@ -119,6 +121,7 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
 }) => {
   const [imgWidth, setImgWidth] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
+  const renderLoadingSquare = useUnmountingDelay(loading, 1000);
   const imageRef = useRef<HTMLDivElement>(null);
 
   // Get the width of the div that contains the image, so that we can
@@ -152,6 +155,10 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
     },
   };
   const imageStyle: SxStyleProp = {
+    display: loading ? 'none' : 'block',
+    '@keyframes fade-in': fadeIn,
+    animation: 'fade-in 1s linear',
+
     objectFit: 'cover',
     width: '100%',
     height: '100%',
@@ -183,16 +190,19 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
    * @returns either a loading square or nothing.
    */
   const displayLoadingSquare = (): ReactElement | void => {
-    if (loading) {
-      return <LoadingSquare />;
-    }
+    const loadingSquareStyle: SxStyleProp = {
+      '@keyframes fade-out': fadeOut,
+      animation: loading ? 'none' : 'fade-out 1s linear',
+    };
+
+    return <LoadingSquare extraStyling={loadingSquareStyle} />;
   };
 
   return (
     // yes shari i know that the header isnt exactly right but
     // ill fix that later i guess :)
     <div sx={wrapperStyle} ref={imageRef}>
-      {displayLoadingSquare()}
+      {renderLoadingSquare ? displayLoadingSquare() : undefined}
       <img
         src={getImageUrl(photoID, 5000, height)}
         alt=""
