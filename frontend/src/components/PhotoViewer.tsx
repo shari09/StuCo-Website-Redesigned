@@ -375,6 +375,8 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     height: ['35px', '30px', '35px', '40px'],
   };
   const bothButtonStyle: SxStyleProp = {
+    // rotate to look like an up or down arrow
+    transform: 'rotate(90deg)',
     position: 'fixed',
     mx: 'auto',
 
@@ -389,16 +391,12 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     '@media only screen and (max-width: 800px)': {
       top: '5%',
 
-      transform: 'rotate(90deg)', // rotate to look like an up arrow
-
       ...bothButtonStyle,
     },
   };
   const rightButtonStyle: SxStyleProp = {
     '@media only screen and (max-width: 800px)': {
       bottom: '5%',
-
-      transform: 'rotate(90deg)', // rotate to look like a down arrow
 
       ...bothButtonStyle,
     },

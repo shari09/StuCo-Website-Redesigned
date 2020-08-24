@@ -247,13 +247,23 @@ const EventButton: React.FC<EventButtonProps> = ({
     },
   };
 
-  return (
-    <div sx={wrapperStyle}>
-      <a href={buttonLink} sx={buttonStyle}>
-        {buttonText}
-      </a>
-    </div>
-  );
+  /**
+   * Renders the contents of the button, depending on whether
+   * a link was provided or not.
+   */
+  const renderButtonContents = () => {
+    if (buttonLink) {
+      return (
+        <a href={buttonLink} sx={buttonStyle}>
+          {buttonText}
+        </a>
+      );
+    }
+
+    return <span sx={buttonStyle}> {buttonText}</span>;
+  };
+
+  return <div sx={wrapperStyle}>{renderButtonContents()}</div>;
 };
 
 // ============================================================

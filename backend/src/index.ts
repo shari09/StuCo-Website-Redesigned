@@ -64,7 +64,7 @@ const getSheet = async (ranges: DataBlock[]) => {
 //=====================================================================
 
 //@ts-ignore
-exports.run = async (req, res) => {
+exports.run = async (req: http.IncomingMessage, res: http.ServerResponse) => {
   if (req.method !== 'GET') {
     res.status(405).send({error: 'something blew up D;'});
   }

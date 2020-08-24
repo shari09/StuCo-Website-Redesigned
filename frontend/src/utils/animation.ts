@@ -65,3 +65,12 @@ export const popIn: SxStyleProp = {
     transform: 'translate3d(0, 0, 0)',
   },
 };
+
+export const spin: SxStyleProp = {
+  '0%': {
+    transform: 'rotate(0deg)',
+  },
+  '100%': {
+    transform: 'rotate(359deg)',
+  },
+};

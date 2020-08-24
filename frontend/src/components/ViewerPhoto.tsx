@@ -68,16 +68,16 @@ export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
     display: 'inline-flex',
     alignItems: 'center',
 
+    mx: 'auto',
+    zIndex: 15, // to draw over the overlay
+
     // adjusting the size
     width: orientation === 'landscape' ? '80%' : '35%',
     height: '100%',
 
-    mx: 'auto',
-    zIndex: 15, // to draw over the overlay
-
     '@media only screen and (max-width: 800px)': {
-      height: orientation === 'landscape' ? '30%' : '60%',
-      width: orientation === 'landscape' ? '90%' : '60%',
+      height: orientation === 'landscape' ? '35%' : '75%',
+      width: '100%',
       margin: 'auto',
     },
   };

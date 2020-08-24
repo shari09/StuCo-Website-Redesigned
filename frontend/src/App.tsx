@@ -19,9 +19,7 @@ import {AboutUs} from './pages/AboutUs';
 
 import {IInfoContext, InfoContext} from './utils/contexts';
 
-// const backendUrl =
-//   'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
-  const backendUrl = 'http://192.168.1.28:8080';
+const backendUrl = 'http://192.168.1.10:8080';
 
 const App: React.FC = () => {
   const [info, setInfo] = useState<IInfoContext | undefined>();

@@ -1,14 +1,17 @@
 /** @jsx jsx */
-import React from 'react';
+import React, {useState} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 // while it's under construction
 import {FaWrench} from 'react-icons/fa';
 
+import {spin} from '../utils/animation';
 import {theme} from '../utils/theme';
 
 export interface CalendarProps {}
 
 export const Calendar: React.FC<CalendarProps> = () => {
+  const [spinAmount, setSpinAmount] = useState(1);
+
   // Styles for the page
   const wrapperStyle: SxStyleProp = {
     // the main page div
@@ -34,6 +37,35 @@ export const Calendar: React.FC<CalendarProps> = () => {
     textAlign: 'center',
   };
 
+  const handleClick = () => {
+    if (spinAmount < 9) {
+      setSpinAmount(spinAmount + 1);
+    }
+  };
+
+  const renderSpannerImage = () => {
+    return (
+      <FaWrench
+        size={50}
+        sx={{
+          position: 'relative',
+          maxWidth: [25, 50],
+          mb: '2%',
+          color: theme.colors.text.light,
+          '@keyframes spin': spin,
+
+          animation:
+            spinAmount === 0
+              ? 'none'
+              : 'spin ' +
+                (2.2 - 0.2 * spinAmount).toString() +
+                's linear infinite',
+        }}
+        onClick={handleClick}
+      />
+    );
+  };
+
   return (
     <div sx={wrapperStyle}>
       <div sx={innerWrapperStyle}>
@@ -43,12 +75,15 @@ export const Calendar: React.FC<CalendarProps> = () => {
             width="80%"
             height="600px"
           ></iframe>
-        </div>
-        <div sx={{mt: '5%', mx: 'auto', width: '90%'}}>
-          <FaWrench
-            size={50}
-            sx={{maxWidth: [25, 50], mb: '2%', color: theme.colors.text.light}}
-          />
+          <div
+            sx={{
+              mt: '5%',
+              mx: 'auto',
+              width: '90%',
+            }}
+          >
+            {renderSpannerImage()}
+          </div>
           <p
             sx={{
               fontFamily: theme.fonts.body,
