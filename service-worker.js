@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/StuCo-Website-Redesigned/precache-manifest.e9c821a8db31b4e93b549a60705313c0.js"
+  "/StuCo-Website-Redesigned/precache-manifest.501c0135f9b0422581230429d698e0be.js"
 );
 
 self.addEventListener('message', (event) => {
