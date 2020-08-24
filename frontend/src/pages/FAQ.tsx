@@ -1,11 +1,12 @@
 /** @jsx jsx */
-import React, {useContext, ReactElement} from 'react';
+import React, {useContext, ReactElement, useState} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 
 import {Heading} from '../components/Heading';
 import {TranslucentRectangle} from '../components/TranslucentRectangle';
 import {ScrollToTopButton} from '../components/ScrollToTopButton';
 
+import {fadeIn} from '../utils/animation';
 import {theme} from '../utils/theme';
 import {IInfoContext, InfoContext} from '../utils/contexts';
 import {FAQ as FAQInterface} from '../utils/interfaces';
@@ -19,6 +20,7 @@ export interface FAQProp {
 
 export interface QuestionProp {
   question: string;
+  loadHandler: () => void;
   extraStyling?: SxStyleProp;
   imageExtraStyling?: SxStyleProp; // for scaling
 }
@@ -34,6 +36,7 @@ export interface ResponseProp {
 // To hold the speech bubble and question
 const QuestionItem: React.FC<QuestionProp> = ({
   question,
+  loadHandler,
   extraStyling,
   imageExtraStyling,
 }): ReactElement => {
@@ -80,7 +83,12 @@ const QuestionItem: React.FC<QuestionProp> = ({
   return (
     <div sx={outerContainerDiv}>
       <div sx={innerWrapperDiv}>
-        <img src="./assets/speech_bubble.svg" alt="" sx={imageStyle} />
+        <img
+          src="./assets/speech_bubble.svg"
+          alt=""
+          sx={imageStyle}
+          onLoad={loadHandler}
+        />
         <div sx={textWrapperDiv}>
           <p sx={titleTextStyle}>{question}</p>
         </div>
@@ -136,8 +144,86 @@ const ResponseItem: React.FC<ResponseProp> = ({
 
 //=====================================================================
 
+interface FAQItemProps {
+  faqQuestion: FAQInterface;
+  questionNumber: number;
+}
+
+const FAQItem: React.FC<FAQItemProps> = ({
+  faqQuestion,
+  questionNumber,
+}): ReactElement => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  let styling: SxStyleProp;
+  let imageStyling: SxStyleProp | undefined;
+
+  if (questionNumber % 2 === 0) {
+    // Left side of the page
+    styling = {
+      ml: 0,
+      mr: 'auto',
+      textAlign: 'left',
+      left: '5%',
+    };
+  } else {
+    // Right side of the page
+    styling = {
+      ml: 'auto',
+      mr: 0,
+      textAlign: 'right',
+      right: '5%',
+    };
+    // For flipping the image
+    imageStyling = {transform: 'scaleX(-1)'};
+  }
+
+  // Styling the funky transparent rectangle
+  const rectStyling: SxStyleProp = {
+    maxWidth: '95vw',
+    backgroundColor:
+      questionNumber % 3 === 0
+        ? theme.colors.background.overlay
+        : 'transparent',
+  };
+  const wrapperDiv = {
+    width: '100%',
+
+    '@keyframes fade-in': fadeIn,
+    animation: isLoading ? 'none' : 'fade-in 1s linear',
+    display: isLoading ? 'none' : 'block',
+  };
+
+  /**
+   * Handles an image's load event by setting isLoading to false.
+   */
+  const handleLoad = () => {
+    setIsLoading(false);
+  };
+
+  return (
+    <li key={questionNumber} sx={{mb: '-2em'}}>
+      <div sx={wrapperDiv}>
+        <QuestionItem
+          question={faqQuestion.question}
+          loadHandler={handleLoad}
+          extraStyling={styling}
+          imageExtraStyling={imageStyling}
+        />
+        <ResponseItem
+          response={faqQuestion.answer}
+          textExtraStyling={styling}
+          rectExtraStyling={rectStyling}
+        />
+      </div>
+    </li>
+  );
+};
+
 //=====================================================================
-// The function that returns a FAQ object
+
+//=====================================================================
+// FAQ -- renders the FAQ page
 export const FAQ: React.FC = (): ReactElement => {
   const faqQuestions: FAQInterface[] = useContext<IInfoContext>(InfoContext)
     .faq;
@@ -179,52 +265,7 @@ export const FAQ: React.FC = (): ReactElement => {
     }
 
     return faqQuestions.map((question, i) => {
-      let styling: SxStyleProp;
-      let imageStyling: SxStyleProp | undefined;
-
-      if (i % 2 === 0) {
-        // Left side of the page
-        styling = {
-          ml: 0,
-          mr: 'auto',
-          textAlign: 'left',
-          left: '5%',
-        };
-      } else {
-        // Right side of the page
-        styling = {
-          ml: 'auto',
-          mr: 0,
-          textAlign: 'right',
-          right: '5%',
-        };
-        // For flipping the image
-        imageStyling = {transform: 'scaleX(-1)'};
-      }
-
-      // Styling the funky transparent rectangle
-      const rectStyling: SxStyleProp = {
-        maxWidth: '95vw',
-        backgroundColor:
-          i % 3 === 0 ? theme.colors.background.overlay : 'transparent',
-      };
-
-      return (
-        <li key={i} sx={{mb: '-2em'}}>
-          <div sx={{width: '100%'}}>
-            <QuestionItem
-              question={faqQuestions[i].question}
-              extraStyling={styling}
-              imageExtraStyling={imageStyling}
-            />
-            <ResponseItem
-              response={faqQuestions[i].answer}
-              textExtraStyling={styling}
-              rectExtraStyling={rectStyling}
-            />
-          </div>
-        </li>
-      );
+      return <FAQItem faqQuestion={question} questionNumber={i} />;
     });
   };
 

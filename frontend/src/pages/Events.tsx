@@ -43,7 +43,6 @@ interface EventPhotoProps {
 
 interface EventInfoItemProps {
   width: string;
-  startHeight: string;
   textLocation: 'left' | 'right';
   eventDetails: EventDetails;
 }
@@ -56,6 +55,7 @@ interface EventButtonProps {
 
 export interface EventDetails {
   description: string;
+  date: string;
   buttonText?: string;
   buttonLink?: string;
 }
@@ -70,7 +70,8 @@ const EventHeading: React.FC<EventHeadingProps> = ({
 }) => {
   const wrapperStyle: SxStyleProp = {
     position: 'relative',
-    my: '3%',
+    mt: '3%',
+    mb: '1%',
     py: '1%',
     width: ['95%', '90%', '80%'],
     height: 'auto',
@@ -270,7 +271,6 @@ const EventButton: React.FC<EventButtonProps> = ({
 // EventInfoItem -- for the description and button
 const EventInfoItem: React.FC<EventInfoItemProps> = ({
   width,
-  startHeight,
   textLocation,
   eventDetails,
 }) => {
@@ -282,7 +282,6 @@ const EventInfoItem: React.FC<EventInfoItemProps> = ({
 
     width: width,
     maxWidth: width,
-    top: startHeight,
 
     // Draw based on orientation
     ml: textLocation === 'left' ? 0 : 'auto',
@@ -301,6 +300,14 @@ const EventInfoItem: React.FC<EventInfoItemProps> = ({
 
     wordWrap: 'normal',
     lineHeight: 1.6,
+  };
+  const dateStyle: SxStyleProp = {
+    ...descriptionStyle,
+
+    color: theme.colors.secondary,
+    fontSize: theme.fontSizes.event.map((size) => size + 2),
+    fontWeight: 'bold',
+    pb: '1%',
   };
   const buttonContainerStyle: SxStyleProp = {
     display: 'flex',
@@ -328,6 +335,8 @@ const EventInfoItem: React.FC<EventInfoItemProps> = ({
 
   return (
     <div sx={textWrapperStyle}>
+      <p sx={dateStyle}>{eventDetails.date}</p>
+
       <p sx={descriptionStyle}>{eventDetails.description}</p>
       <div sx={buttonContainerStyle}>
         {/* yes shari, this will work with multiple buttons if needed */}
@@ -362,6 +371,7 @@ const EventItem: React.FC<EventItemProps> = ({
   // All text details for the current event
   const currentEventDetails: EventDetails = {
     description: event.description,
+    date: event.date,
     buttonText: event.buttonText,
     buttonLink: event.buttonLink,
   };
@@ -414,7 +424,6 @@ const EventItem: React.FC<EventItemProps> = ({
         <EventHeading text={event.eventName} textLocation={textLocation} />
         <EventInfoItem
           width={event.photoId ? '65%' : '90%'}
-          startHeight="20%"
           textLocation={textLocation}
           eventDetails={currentEventDetails}
         />
