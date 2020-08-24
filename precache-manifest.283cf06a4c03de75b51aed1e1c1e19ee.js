@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "a4174efa016eeac21259f4fa78ecb714",
+    "revision": "32fd3aaa6d7fa5a557d765f749ef878b",
     "url": "/StuCo-Website-Redesigned/index.html"
   },
   {
-    "revision": "8af6d118a211f0e8f9ff",
+    "revision": "552586dcaf193caf4bd5",
     "url": "/StuCo-Website-Redesigned/static/css/main.6fdb4904.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/StuCo-Website-Redesigned/static/js/2.bdbea16e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "8af6d118a211f0e8f9ff",
-    "url": "/StuCo-Website-Redesigned/static/js/main.8cc13061.chunk.js"
+    "revision": "552586dcaf193caf4bd5",
+    "url": "/StuCo-Website-Redesigned/static/js/main.9faa3c32.chunk.js"
   },
   {
     "revision": "3ba4872cef8817afb154",
