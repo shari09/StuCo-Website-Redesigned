@@ -1,8 +1,8 @@
 export interface Event {
   eventName: string;
   description: string;
-  photoId: string;
-  // photoUrl: string;
+  date: string;
+  photoId?: string;
   buttonLink?: string;
   buttonText?: string;
 }

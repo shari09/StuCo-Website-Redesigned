@@ -33,12 +33,65 @@ export const slideDown: SxStyleProp = {
   },
 };
 
+export const slideLeft: SxStyleProp = {
+  '0%': {
+    opacity: 0,
+    transform: 'translateX(-100%)',
+  },
+  '100%': {
+    opacity: 1,
+    transform: 'translateX(0)',
+  },
+};
+
+export const slideRight: SxStyleProp = {
+  '0%': {
+    opacity: 0,
+    transform: 'translateX(100%)',
+  },
+  '100%': {
+    opacity: 1,
+    transform: 'translateX(0)',
+  },
+};
+
+export const slideOutRight: SxStyleProp = {
+  '0%': {
+    opacity: 1,
+    transform: 'translateX(0)',
+  },
+  '100%': {
+    opacity: 0,
+    transform: 'translateX(100%)',
+  },
+};
+
+export const slideOutLeft: SxStyleProp = {
+  '0%': {
+    opacity: 1,
+    transform: 'translateX(0)',
+  },
+  '100%': {
+    opacity: 0,
+    transform: 'translateX(-100%)',
+  },
+};
+
 export const fadeIn: SxStyleProp = {
   '0%': {
     opacity: 0,
   },
   '100%': {
     opacity: 1,
+  },
+};
+
+export const fadeOut: SxStyleProp = {
+  '0%': {
+    opacity: 1,
+  },
+  '100%': {
+    opacity: 0,
   },
 };
 
