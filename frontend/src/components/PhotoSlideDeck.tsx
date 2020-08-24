@@ -1,9 +1,8 @@
 /** @jsx jsx */
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 import {slideUp, slideBackDown, fadeIn} from '../utils/animation';
-import {bruteForceClearInterval} from '../utils/functions';
 
 export interface Photo {
   url: string;
@@ -157,7 +156,7 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
       <div ref={wrapperRef} sx={{width: '100%', position: 'absolute'}}/>
       <div
         sx={wrapperStyle}
-        onMouseEnter={lockImage}
+        onMouseOver={lockImage}
         onMouseLeave={unlockImage}
         onFocus={lockImage}
         
@@ -196,29 +195,30 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
  */
 export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
   const [curPhoto, setCurPhoto] = useState<number>(0);
-  const [timerId, setTimerId] = useState<number>();
+  const timerId = useRef<number[]>([]);
 
   const interval = 3000;
   const intervalAfterLock = interval / 3;
+
   useEffect(() => {
     startRotation();
-    return bruteForceClearInterval;
+    return clearTimerIds;
   }, []);
 
-  const getPrevIdx = (curIdx: number) => {
+  const getPrevIdx = useMemo(() => (curIdx: number) => {
     let newIdx = curIdx - 1;
     if (newIdx < 0) newIdx = photos.length - 1;
     return newIdx;
-  };
+  }, [curPhoto]);
 
-  const getNextIdx = (curIdx: number) => {
+  const getNextIdx = useMemo(() => (curIdx: number) => {
     let newIdx = (curIdx + 1) % photos.length;
+    console.log(curIdx);
     return newIdx;
-  };
+  }, [curPhoto]);
 
   const lockImage = () => {
-    window.clearInterval(timerId);
-    // bruteForceClearInterval();
+    clearTimerIds();
   };
 
   /**
@@ -228,11 +228,7 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
     const id = window.setInterval(() => {
       setCurPhoto(getNextIdx);
     }, interval);
-    setTimerId((oldId) => {
-      window.clearInterval(oldId);
-      return id;
-    });
-    // bruteForceClearInterval();
+    timerId.current.push(id);
   };
 
   const unlockImage = () => {
@@ -243,9 +239,12 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
   };
 
   const resetTimer = () => {
-    window.clearInterval(timerId);
-    // bruteForceClearInterval();
+    clearTimerIds()
     startRotation();
+  };
+
+  const clearTimerIds = () => {
+    timerId.current.forEach(window.clearInterval);
   };
 
   const style: SxStyleProp = {

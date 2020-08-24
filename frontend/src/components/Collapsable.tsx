@@ -41,9 +41,7 @@ export const Collapsable: React.FC<Props> = ({
     collapsed,
   );
   const [childrenHeight, setChildrenHeight] = useState<number>(0);
-  // const [childWrapperWidth, setChildWrapperWidth] = useState<number>(0);
   const childrenRef = useRef<HTMLDivElement>(null);
-  const childWrapperRef = useRef<HTMLDivElement>(null);
   const prevHeight = useRef<number>(0);
 
   useEffect(() => {
@@ -58,7 +56,6 @@ export const Collapsable: React.FC<Props> = ({
       });
     });
     ro.observe(childrenRef.current);
-    // setChildWrapperWidth(childWrapperRef.current.getBoundingClientRect().width);
     return () => ro.disconnect();
   }, []);
 
@@ -72,7 +69,6 @@ export const Collapsable: React.FC<Props> = ({
     fill: theme.colors.text.light,
     height: 'auto',
     padding: '0.3em',
-    // width: ['auto', childWrapperWidth === 0 ? 'auto' : 'auto'],
     width: 'auto',
   };
 
@@ -99,10 +95,6 @@ export const Collapsable: React.FC<Props> = ({
   };
 
   const defaultTitleStyle: SxStyleProp = {
-    // borderBottomWidth: childrenCollapsed ? 0 : 1.5,
-    // transitionDuration: transitionTime,
-    // borderBottomColor: theme.colors.text.light,
-    // borderBottomStyle: 'dashed',
     width: 'auto',
 
     '&:hover': {
@@ -129,7 +121,6 @@ export const Collapsable: React.FC<Props> = ({
       </span>
       <div
         sx={{...childrenWrapperStyle, ...childrenStyle}}
-        ref={childWrapperRef}
       >
         <div ref={childrenRef} children={children} />
       </div>

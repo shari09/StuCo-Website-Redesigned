@@ -29,7 +29,7 @@ export const Resources: React.FC<ResourcesProps> = ({textStyling}) => {
   const headerWrapperStyle: SxStyleProp = {
     width: '100%',
     textAlign: 'left',
-    mb: '1em',
+    mb: '1.3em',
   };
   const headerTextStyle: SxStyleProp = {
     fontFamily: theme.fonts.heading,

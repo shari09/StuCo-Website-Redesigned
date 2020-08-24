@@ -90,13 +90,6 @@ export const randNum = (min: number, max: number) =>
 export const randInt = (min: number, max: number) =>
   Math.floor(randNum(min, max));
 
-export const bruteForceClearInterval = () => {
-  const highestId = window.setTimeout(() => {
-    for (let i = highestId; i >= 0; i--) {
-      window.clearInterval(i);
-    }
-  }, 0);
-};
 
 export const hexToRgbArr = (hex) => {
   if (hex[0] === '#') hex = hex.slice(1);

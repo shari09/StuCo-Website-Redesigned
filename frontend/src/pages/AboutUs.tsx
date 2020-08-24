@@ -2,7 +2,7 @@
 import React, {useContext, useState, useRef, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
-import {RotatingQuotes, ShownBubbleProps} from '../components/RotatingQuotes';
+import {RotatingQuotes, ShownBubbleProps, QuoteSet} from '../components/RotatingQuotes';
 import {InfoContext, IInfoContext} from '../utils/contexts';
 import BottomPageDecor from '../assets/BottomPageDecor.svg';
 import {getImageUrl} from '../utils/functions';
@@ -19,13 +19,13 @@ const Paragraph: React.FC = () => {
     color: theme.colors.text.light,
     fontSize: theme.fontSizes.heading.primary,
     fontFamily: theme.fonts.heading,
-    width: ['100%', '35vw'],
+    width: ['100%', '100%', '35vw'],
     lineHeight: '1.3em',
   };
 
   const lineStyle: SxStyleProp = {
     backgroundColor: theme.colors.secondary,
-    width: ['100%', '25vw'],
+    width: ['100%', '100%', '25vw'],
     borderRadius: 2,
     height: '.3em',
     my: '1em',
@@ -35,14 +35,14 @@ const Paragraph: React.FC = () => {
     color: theme.colors.text.light,
     fontFamily: theme.fonts.body,
     fontSize: theme.fontSizes.bodySmall,
-    width: ['100%', '45vw'],
+    width: ['100%', '100%', '45vw'],
     lineHeight: '2.2em',
   };
 
   const wrapperStyle: SxStyleProp = {
     display: 'inline-block',
-    mt: ['10vh', 0],
-    mb: ['5vh', 0],
+    mt: ['10vh', '10vh', 0],
+    mb: ['5vh', '5vh', 0],
   };
 
   return (
@@ -90,7 +90,7 @@ export const AboutUs: React.FC = () => {
     px: theme.bodyPadding.px,
     pt: '10%',
     display: 'flex',
-    flexDirection: ['column', 'row'],
+    flexDirection: ['column', 'column', 'row'],
     flexWrap: 'nowrap',
   };
 
@@ -106,7 +106,7 @@ export const AboutUs: React.FC = () => {
 
   const getQuoteSet = () => {
     return members.map((member) => {
-      const quoteSet: ShownBubbleProps = {
+      const quoteSet: QuoteSet = {
         quote: member.quote,
         closing: member.name + ' - ' + member.position,
         imageUrl: getImageUrl(member.photoId, 400, 400),

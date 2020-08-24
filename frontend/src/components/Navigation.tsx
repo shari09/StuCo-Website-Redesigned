@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React, {useState, useEffect, useRef} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 import {FaBars, FaTimes} from 'react-icons/fa';
@@ -89,8 +89,12 @@ export const routes = {
 export const Navigation: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(false);
   const [navItemsHeight, setNavItemsHeight] = useState<number>(null);
+  
   const navItemsRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
+  const curLocation = useRef<string>(useLocation().pathname);
+  const [transparent, setTransparent] = useState<boolean>(curLocation.current === '/');
+
 
   useEffect(() => {
     const scrollEvent = () => setToggle(false);
@@ -108,6 +112,19 @@ export const Navigation: React.FC = () => {
   }, [toggle]);
 
   useEffect(() => {
+    
+    const toggleColourSettings = () => {
+      if (curLocation.current !== '/') return;
+      const top = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = window.innerHeight;
+      setTransparent(top < height);
+    };
+    window.addEventListener('scroll', toggleColourSettings);
+    return () => window.removeEventListener('scroll', toggleColourSettings);
+  }, []);
+
+
+  useEffect(() => {
     const ro = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const {height} = entry.contentRect;
@@ -119,29 +136,52 @@ export const Navigation: React.FC = () => {
     return () => ro.disconnect();
   }, []);
 
-  const wrapperStyle: SxStyleProp = {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'space-between',
-    flexDirection: 'row' as 'row',
-    background: theme.colors.navbar,
-    alignItems: 'center',
-    position: 'fixed',
-    zIndex: 10,
-    boxShadow: '0 1px 5px ' + theme.colors.footer,
-    flexWrap: 'wrap',
-  };
-
   const getNavItems = () => {
+    const outlineWidth = 1.5;
+    const navItemsStyle: SxStyleProp = {
+      backgroundColor: [
+        theme.colors.navbar,
+        'transparent',
+      ],
+      opacity: [0.8, 1],
+      backdropFilter: ['blur(4px)', undefined],
+      '&:hover': {
+        cursor: 'pointer',
+        textDecoration: 'none',
+        color: theme.colors.text.light,
+        backgroundColor: transparent ? 'transparent' : theme.colors.footer,
+        outlineOffset: -outlineWidth,
+        outlineWidth: transparent ? outlineWidth : 0,
+        outlineColor: theme.colors.footer,
+        outlineStyle: 'solid',
+      },
+    };
+
+
     return Object.keys(routes).map((route) => {
       return (
         <NavItem
           route={route}
           text={routes[route].toUpperCase()}
           key={routes[route]}
+          extraStyling={navItemsStyle}
         />
       );
     });
+  };
+
+  const wrapperStyle: SxStyleProp = {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between',
+    flexDirection: 'row' as 'row',
+    background: transparent ? 'transparent' : theme.colors.navbar,
+    transitionDuration: '.5s',
+    alignItems: 'center',
+    position: 'fixed',
+    zIndex: 10,
+    boxShadow: '0 1px 5px ' + theme.colors.footer,
+    flexWrap: 'wrap',
   };
 
   const navItemsWrapper: SxStyleProp = {
@@ -157,6 +197,7 @@ export const Navigation: React.FC = () => {
     overflow: 'hidden',
     height: [toggle ? navItemsHeight : 0, toggle ? navItemsHeight : 0, 'auto'],
     zIndex: 0,
+    width: ['100%', '100%', 'auto'],
   };
 
   const logoStyle: SxStyleProp = {
@@ -165,7 +206,6 @@ export const Navigation: React.FC = () => {
     marginRight: 'auto',
     marginLeft: ['5%', '10%'],
     '&:hover': {
-      background: theme.colors.navbar,
       cursor: 'pointer',
     },
     height: '3.5rem',
@@ -182,7 +222,11 @@ export const Navigation: React.FC = () => {
         <div
           ref={navItemsRef}
           children={getNavItems()}
-          sx={{display: 'flex', flexWrap: 'wrap'}}
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            width: ['100%', '100%', 'auto'],
+          }}
         />
       </div>
     </div>

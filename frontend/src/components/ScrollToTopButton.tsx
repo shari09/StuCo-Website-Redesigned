@@ -3,7 +3,7 @@ import React, {ReactElement, useState, useEffect, useCallback} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {FaArrowUp} from 'react-icons/fa';
 
-import {useUnmountingDelay} from '../hooks/useUnmountingDelay';
+import {useUnmountingDelay} from '../utils/hooks';
 
 import {theme} from '../utils/theme';
 import {fadeInPartially} from '../utils/animation';

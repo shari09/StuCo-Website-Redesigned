@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {HashRouter as Router, Switch, Route} from 'react-router-dom';
+// import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 import {Navigation} from './components/Navigation';
 import {Footer} from './components/Footer';
 import {ScrollToTop} from './components/ScrollToTop';
 import {LoadingScreen} from './components/LoaderComponents';
 
-import {useUnmountingDelay} from './hooks/useUnmountingDelay';
+import {useUnmountingDelay} from './utils/hooks';
 
 import {Home} from './pages/Home';
 import {Events} from './pages/Events';
@@ -19,7 +20,9 @@ import {AboutUs} from './pages/AboutUs';
 
 import {IInfoContext, InfoContext} from './utils/contexts';
 
-const backendUrl = 'http://192.168.1.10:8080';
+// const backendUrl =
+//   'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
+  const backendUrl = 'http://192.168.1.28:8080';
 
 const App: React.FC = () => {
   const [info, setInfo] = useState<IInfoContext | undefined>();
@@ -60,9 +63,6 @@ const App: React.FC = () => {
   }, [info]);
 
   if (shouldRenderLoading) {
-    // yes shari we can technically take this out but
-    // i want an indication of loading that isn't just
-    // a white screen :))
     return (
       <LoadingScreen isMounted={showLoading} unmountSpeed={unmountSpeed} />
     );

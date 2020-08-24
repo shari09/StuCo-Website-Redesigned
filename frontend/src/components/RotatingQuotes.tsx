@@ -2,14 +2,20 @@
 import React, {useState, useRef, useEffect, ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {CircleSpinner} from './CircleSpinner';
-import AboutUsSpeechBubble from '../assets/speech bubble.svg';
+import AboutUsSpeechBubble from '../assets/speech bubble.png';
 import AboutUsSpeechBubbleMobile from '../assets/speechBubbleMobile.png';
-import {theme, FIRST_BREAKPOINT} from '../utils/theme';
+import {theme, SECOND_BREAKPOINT} from '../utils/theme';
 import {fadeIn} from '../utils/animation';
 import ResizeObserver from 'resize-observer-polyfill';
 
 interface Props {
-  quoteSets: ShownBubbleProps[];
+  quoteSets: QuoteSet[];
+}
+
+export interface QuoteSet {
+  imageUrl: string;
+  quote: string;
+  closing: string;
 }
 
 export interface ShownBubbleProps {
@@ -17,27 +23,35 @@ export interface ShownBubbleProps {
   quote: string;
   closing: string;
   extraStyling?: SxStyleProp;
+  lockImage: () => void;
+  unlockImage: () => void;
 }
 
 interface GrayBubbleProps {
   imageUrl: string;
-  onClick: () => void;
   size: number | string;
+  onClick: () => void;
 }
 
 const vmax = Math.max(window.innerWidth, window.innerHeight);
-const isFirstBreakpoint = window.innerWidth > FIRST_BREAKPOINT;
-const imgSize = isFirstBreakpoint ? vmax * 0.17 : window.innerWidth * 0.4;
+const isSecondBreakpoint = window.innerWidth > SECOND_BREAKPOINT;
+const imgSize = isSecondBreakpoint ? vmax * 0.17 : window.innerWidth * 0.4;
 
 const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
   const [loading, setLoading] = useState<boolean>(true);
+  const [sizeInNum, setSizeInNum] = useState<number>(null);
   const sizeRef = useRef<number | string>(size);
+  const imgRef = useRef<HTMLImageElement>(null);
   const marginRef = useRef({
     mt: Math.random() * 10 + 1,
     ml: Math.random() * 10 + 1,
     mr: Math.random() * 10 + 1,
     mb: Math.random() * 10 + 1,
   });
+
+  useEffect(() => {
+    setSizeInNum(imgRef.current.clientHeight);
+  }, []);
 
   const wrapperStyle: SxStyleProp = {
     overflow: 'hidden',
@@ -64,14 +78,7 @@ const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
     objectFit: 'cover',
     width: sizeRef.current,
     height: sizeRef.current,
-  };
-
-  /**
-   * Handles when an image finishes loading by setting the loading
-   * state to false.
-   */
-  const handleLoading = () => {
-    setLoading(false);
+    transitionDuration: '.2s',
   };
 
   /**
@@ -79,37 +86,39 @@ const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
    * the image's load status.
    * @returns either a loading spinner, or nothing.
    */
-  const displayLoadSpinner = (): ReactElement | void => {
-    if (loading) {
-      const spinnerWrapper: SxStyleProp = {
-        position: 'absolute', // don't skew the circles
-        width: '100%',
-        height: '100%',
+  const displayLoadSpinner = (): JSX.Element => {
+    const spinnerWrapper: SxStyleProp = {
+      position: 'absolute', // don't skew the circles
+      width: '100%',
+      height: '100%',
 
-        textAlign: 'center',
-        display: 'flex',
-        alignItems: 'center',
-      };
-      return (
-        <div sx={spinnerWrapper}>
-          <div sx={{display: 'inline', margin: 'auto'}}>
-            {/* hardcoded size means the spinner will be the same size
-            despite circle size, but for now this'll do */}
-            <CircleSpinner
-              height={30}
-              width={30}
-              color={theme.colors.text.light}
-            />
-          </div>
+      textAlign: 'center',
+      display: 'flex',
+      alignItems: 'center',
+    };
+    return (
+      <div sx={spinnerWrapper}>
+        <div sx={{display: 'inline', margin: 'auto'}}>
+          <CircleSpinner
+            height={sizeInNum}
+            width={sizeInNum}
+            color={theme.colors.text.light}
+          />
         </div>
-      );
-    }
+      </div>
+    );
   };
 
   return (
     <div sx={wrapperStyle} onClick={onClick}>
-      {displayLoadSpinner()}
-      <img src={imageUrl} alt="" sx={imageStyle} onLoad={handleLoading} />
+      {loading ? displayLoadSpinner() : undefined}
+      <img
+        src={imageUrl}
+        alt=""
+        ref={imgRef}
+        sx={imageStyle}
+        onLoad={() => setLoading(false)}
+      />
       <div sx={overlayStyle} />
     </div>
   );
@@ -122,13 +131,15 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
   quote,
   closing,
   extraStyling,
+  lockImage,
+  unlockImage,
 }) => {
   const [bubbleHeight, setBubbleHeight] = useState<number>(null);
   const quoteWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ro = new ResizeObserver(entries => {
-      entries.forEach(entry => {
+    const ro = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
         const {height} = entry.target.getBoundingClientRect();
         console.log(height);
         setBubbleHeight(height);
@@ -143,6 +154,10 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     borderRadius: '50%',
     overflow: 'hidden',
     display: 'inline-block',
+    '&:hover': {
+      transform: 'scale(1.15)',
+    },
+    transition: '.2s',
   };
 
   const imageStyle: SxStyleProp = {
@@ -156,7 +171,8 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
 
   const bubbleAndQuoteWrapperStyle: SxStyleProp = {
     transform: [
-      `translate3d(0, -${imgSize * 0.45}px, 0)`,
+      `translate3d(0, -${imgSize * 0.35}px, 0)`,
+      `translate3d(0, -${imgSize * 0.2}px, 0)`,
       `translate3d(-${imgSize * 2.25}px, -${imgSize * 0.45}px, 0)`,
     ],
     textAlign: 'center',
@@ -164,7 +180,7 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     fontSize: theme.fontSizes.bodySmall,
     color: theme.colors.text.darkSlate,
     position: 'relative',
-    zIndex: 2,
+    zIndex: 4,
   };
 
   const quoteWrapperStyle: SxStyleProp = {
@@ -179,8 +195,8 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     px: ['2em', '4em'],
     pb: '1em',
     justifyContent: 'space-between',
-    height: ['fit-content', 'auto'],
-    minHeight: ['30vh', 'auto'],
+    height: 'fit-content',
+    minHeight: ['30vh', '40vh', imgSize * 1.5],
   };
 
   const quoteStyle: SxStyleProp = {
@@ -194,8 +210,8 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
     width: '100%',
     px: '4em',
     order: 1,
-    mt: ['3em', 'auto'],
-    mb: ['0.5em', '2em'],
+    mt: ['3em', '3em', 'auto'],
+    mb: ['0.5em', '2em', '2em'],
   };
 
   const wrapperStyle: SxStyleProp = {
@@ -204,21 +220,28 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
 
   //speech bubble ratio 1.7:1
   const speechBubbleStyle: SxStyleProp = {
-    width: ['100%', imgSize * 2.5],
-    height: [bubbleHeight, imgSize * 1.5],
+    width: ['100%', '100%', imgSize * 2.5],
+    height: bubbleHeight,
   };
 
   return (
     <div sx={{...wrapperStyle, ...extraStyling}}>
       <div sx={imageWrapper}>
-        <img src={imageUrl} alt="" sx={imageStyle} key={imageUrl} />
+        <img
+          src={imageUrl}
+          alt=""
+          sx={imageStyle}
+          key={imageUrl}
+          onMouseOver={lockImage}
+          onMouseLeave={unlockImage}
+        />
       </div>
       <div sx={bubbleAndQuoteWrapperStyle}>
         <img
           sx={speechBubbleStyle}
           alt=""
           src={
-            isFirstBreakpoint ? AboutUsSpeechBubble : AboutUsSpeechBubbleMobile
+            isSecondBreakpoint ? AboutUsSpeechBubble : AboutUsSpeechBubbleMobile
           }
         />
         <div sx={quoteWrapperStyle} ref={quoteWrapperRef}>
@@ -235,32 +258,46 @@ const ShownBubble: React.FC<ShownBubbleProps> = ({
 export const RotatingQuotes: React.FC<Props> = ({
   quoteSets: originalQuoteSets,
 }) => {
-  const [quoteSets, setQuoteSets] = useState<ShownBubbleProps[]>(originalQuoteSets);
-  const [timerId, setTimerId] = useState<number>();
+  const [quoteSets, setQuoteSets] = useState<QuoteSet[]>(originalQuoteSets);
+  const timerIds = useRef<number[]>([]);
 
-  const interval = 7000;
-  // const intervalAfterLock = interval / 3;
+  const interval = 5000;
+  const intervalAfterLock = interval / 3;
 
   useEffect(() => {
     startRotation();
-    return () => window.clearInterval(timerId);
+    return clearTimerIds;
   }, []);
 
+  const clearTimerIds = () => timerIds.current.forEach(window.clearInterval);
+
   const startRotation = () => {
+    clearTimerIds();
     const id = window.setInterval(() => {
       setQuoteSets((oldSet) => {
         oldSet.unshift(oldSet.pop());
         return [...oldSet];
       });
     }, interval);
-    setTimerId((oldId) => {
-      window.clearInterval(oldId);
-      return id;
-    });
+    timerIds.current.push(id);
+  };
+
+  const lockImage = () => {
+    clearTimerIds();
+  };
+
+  const unlockImage = () => {
+    window.setTimeout(() => {
+      setQuoteSets((oldSet) => {
+        oldSet.unshift(oldSet.pop());
+        return [...oldSet];
+      });
+      startRotation();
+    }, intervalAfterLock);
   };
 
   const resetTimer = () => {
-    window.clearInterval(timerId);
+    clearTimerIds();
     startRotation();
   };
 
@@ -290,19 +327,19 @@ export const RotatingQuotes: React.FC<Props> = ({
     display: 'flex',
     ml: '5%',
     flex: 2,
-    flexDirection: ['column', 'row'],
-    textAlign: ['right', 'left'],
+    flexDirection: ['column', 'column', 'row'],
+    textAlign: ['right', 'right', 'left'],
   };
 
   const shownBubbleStyle: SxStyleProp = {
-    mt: [0, '25vh'],
+    mt: [0, 0, '25vh'],
   };
 
   const grayBubbleWrapper: SxStyleProp = {
-    position: ['static', 'absolute'],
+    position: ['static', 'static', 'absolute'],
     right: 0,
-    width: ['100%', vmax * 0.25],
-    textAlign: ['center', 'left'],
+    width: ['100%', '100%', vmax * 0.25],
+    textAlign: ['center', 'center', 'left'],
   };
 
   //index 0 will always be the main photo
@@ -314,6 +351,8 @@ export const RotatingQuotes: React.FC<Props> = ({
         imageUrl={quoteSets[0].imageUrl}
         quote={quoteSets[0].quote}
         closing={quoteSets[0].closing}
+        lockImage={lockImage}
+        unlockImage={unlockImage}
       />
       <div sx={grayBubbleWrapper}>{getGrayBubbles()}</div>
     </div>

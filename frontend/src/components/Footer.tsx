@@ -194,7 +194,7 @@ const FooterRoutes: React.FC<FooterRoutesProps> = ({
   const headerWrapperStyle: SxStyleProp = {
     width: '100%',
     textAlign: 'right',
-    mb: '1em',
+    mb: '1.3em',
   };
   const headerTextStyle: SxStyleProp = {
     fontFamily: theme.fonts.heading,
@@ -285,7 +285,7 @@ export const Footer: React.FC = () => {
   const footerStyle: SxStyleProp = {
     color: theme.colors.text.light,
     backgroundColor: theme.colors.footer,
-    pt: '2em',
+    pt: '3.5em',
     position: 'relative',
 
     zIndex: 1,

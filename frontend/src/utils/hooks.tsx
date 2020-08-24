@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 
 /**
  * Creates a timed delay for an unmounting component so that unmounting
@@ -17,20 +17,31 @@ export const useUnmountingDelay = (
   const [shouldRender, setShouldRender] = useState<boolean>(shouldBeMounted);
 
   useEffect(() => {
-    let timerID: NodeJS.Timeout;
+    let timerID: number;
 
     if (shouldBeMounted) {
       setShouldRender(true);
     } else {
       // Set a timer for a component once it should no longer be mounted.
-      timerID = setTimeout(() => setShouldRender(false), delayTime);
+      timerID = window.setTimeout(() => setShouldRender(false), delayTime);
     }
 
     // Clear the old timer from memory
     return () => {
-      clearTimeout(timerID);
+      window.clearTimeout(timerID);
     };
   }, [shouldBeMounted, delayTime, shouldRender]);
 
   return shouldRender;
+};
+
+
+
+export const usePrevious = (value: any) => {
+  const ref = useRef(null);
+  
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
 };
