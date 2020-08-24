@@ -1,27 +1,27 @@
 {
   "files": {
     "main.css": "/StuCo-Website-Redesigned/static/css/main.6fdb4904.chunk.css",
-    "main.js": "/StuCo-Website-Redesigned/static/js/main.32e3159c.chunk.js",
-    "main.js.map": "/StuCo-Website-Redesigned/static/js/main.32e3159c.chunk.js.map",
+    "main.js": "/StuCo-Website-Redesigned/static/js/main.385ef0ec.chunk.js",
+    "main.js.map": "/StuCo-Website-Redesigned/static/js/main.385ef0ec.chunk.js.map",
     "runtime-main.js": "/StuCo-Website-Redesigned/static/js/runtime-main.25754182.js",
     "runtime-main.js.map": "/StuCo-Website-Redesigned/static/js/runtime-main.25754182.js.map",
-    "static/js/2.04dc9758.chunk.js": "/StuCo-Website-Redesigned/static/js/2.04dc9758.chunk.js",
-    "static/js/2.04dc9758.chunk.js.map": "/StuCo-Website-Redesigned/static/js/2.04dc9758.chunk.js.map",
+    "static/js/2.fefd907c.chunk.js": "/StuCo-Website-Redesigned/static/js/2.fefd907c.chunk.js",
+    "static/js/2.fefd907c.chunk.js.map": "/StuCo-Website-Redesigned/static/js/2.fefd907c.chunk.js.map",
     "index.html": "/StuCo-Website-Redesigned/index.html",
-    "precache-manifest.d2bb45eb2e73cd42a544864d6cde7f8e.js": "/StuCo-Website-Redesigned/precache-manifest.d2bb45eb2e73cd42a544864d6cde7f8e.js",
+    "precache-manifest.006b57c37463c16e63ec7679cc70de4e.js": "/StuCo-Website-Redesigned/precache-manifest.006b57c37463c16e63ec7679cc70de4e.js",
     "service-worker.js": "/StuCo-Website-Redesigned/service-worker.js",
     "static/css/main.6fdb4904.chunk.css.map": "/StuCo-Website-Redesigned/static/css/main.6fdb4904.chunk.css.map",
-    "static/js/2.04dc9758.chunk.js.LICENSE.txt": "/StuCo-Website-Redesigned/static/js/2.04dc9758.chunk.js.LICENSE.txt",
+    "static/js/2.fefd907c.chunk.js.LICENSE.txt": "/StuCo-Website-Redesigned/static/js/2.fefd907c.chunk.js.LICENSE.txt",
     "static/media/BottomPageDecor.svg": "/StuCo-Website-Redesigned/static/media/BottomPageDecor.12fcb1cf.svg",
     "static/media/clubBackground.png": "/StuCo-Website-Redesigned/static/media/clubBackground.fdd1f9d6.png",
     "static/media/logo.svg": "/StuCo-Website-Redesigned/static/media/logo.244fe6ef.svg",
     "static/media/speech bubble.svg": "/StuCo-Website-Redesigned/static/media/speech bubble.4c8ab52f.svg",
-    "static/media/speechBubbleMobile.svg": "/StuCo-Website-Redesigned/static/media/speechBubbleMobile.b2f1e424.svg"
+    "static/media/speechBubbleMobile.png": "/StuCo-Website-Redesigned/static/media/speechBubbleMobile.f47118d6.png"
   },
   "entrypoints": [
     "static/js/runtime-main.25754182.js",
-    "static/js/2.04dc9758.chunk.js",
+    "static/js/2.fefd907c.chunk.js",
     "static/css/main.6fdb4904.chunk.css",
-    "static/js/main.32e3159c.chunk.js"
+    "static/js/main.385ef0ec.chunk.js"
   ]
 }
