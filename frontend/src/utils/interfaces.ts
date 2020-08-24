@@ -68,3 +68,8 @@ export interface Resources {
   resourceName: string;
   resourceLink: string;
 }
+
+export interface LabelledPhotos {
+  photoLabel: string;
+  photoId: string;
+}

@@ -11,6 +11,7 @@ export interface LoadingSquareProps {
   loaderWidth?: number;
   loaderHeight?: number;
   loaderColor?: string;
+  isTransparent?: boolean;
   extraStyling?: SxStyleProp;
 }
 
@@ -27,16 +28,17 @@ export interface LoadingScreenProps {
  * @returns a square with a loader.
  */
 export const LoadingSquare: React.FC<LoadingSquareProps> = ({
-  extraStyling,
-  loaderColor,
-  loaderWidth,
   loaderHeight,
+  loaderWidth,
+  loaderColor,
+  isTransparent,
+  extraStyling,
 }) => {
   const loadingSquareStyle: SxStyleProp = {
     position: 'absolute',
     width: '100%',
     height: '100%',
-    backgroundColor: theme.colors.background.dark,
+    backgroundColor: isTransparent ? 'transparent' : theme.colors.background.dark,
 
     display: 'flex',
     alignItems: ' center',
