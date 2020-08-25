@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1796aceefe030d4e020c513838451c21",
+    "revision": "d2b069a9610ffa6e5cda04df240a8189",
     "url": "/StuCo-Website-Redesigned/index.html"
   },
   {
-    "revision": "d53212a19f0d5b774bf0",
+    "revision": "ad65844b5ab73edbf8c0",
     "url": "/StuCo-Website-Redesigned/static/css/main.6fdb4904.chunk.css"
   },
   {
-    "revision": "1dec088677c10eec7c73",
-    "url": "/StuCo-Website-Redesigned/static/js/2.b6a9206d.chunk.js"
+    "revision": "002a29ab748531841d47",
+    "url": "/StuCo-Website-Redesigned/static/js/2.7b4f49c8.chunk.js"
   },
   {
     "revision": "c64c486544348f10a6d6c716950bc223",
-    "url": "/StuCo-Website-Redesigned/static/js/2.b6a9206d.chunk.js.LICENSE.txt"
+    "url": "/StuCo-Website-Redesigned/static/js/2.7b4f49c8.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "d53212a19f0d5b774bf0",
-    "url": "/StuCo-Website-Redesigned/static/js/main.9424e0c2.chunk.js"
+    "revision": "ad65844b5ab73edbf8c0",
+    "url": "/StuCo-Website-Redesigned/static/js/main.7b0143a5.chunk.js"
   },
   {
     "revision": "3ba4872cef8817afb154",
