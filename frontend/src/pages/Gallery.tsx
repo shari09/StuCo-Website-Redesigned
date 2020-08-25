@@ -13,10 +13,11 @@ import PhotoViewer, {Photo} from '../components/PhotoViewer';
 import {CircleSpinner} from '../components/CircleSpinner';
 
 import {theme} from '../utils/theme';
-import {IInfoContext, InfoContext} from '../utils/contexts';
+import {IInfoContext, InfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
 import {getImageUrl, splitArray, disallowScrolling} from '../utils/functions';
 // todo: minor, but make naming consistant i guess
 import {Photo as PhotoInfo} from '../utils/interfaces';
+import { useToggleNavColour } from '../utils/hooks';
 
 // note: all the images are in their widthScale:heightScale ratio
 /** The width scale for the column photo width. */
@@ -120,6 +121,9 @@ export const Gallery: React.FC = (): ReactElement => {
   const referenceDiv = useRef<HTMLDivElement>(null);
   const [viewIndex, setViewIndex] = useState<number>(0);
   const [showViewer, setShowViewer] = useState<boolean>(false);
+
+  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
+  useEffect(() => setTransparent(false), []);
 
   // Set width and height to the left column's width
   useEffect(() => {

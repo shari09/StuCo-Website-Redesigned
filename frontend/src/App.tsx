@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo, useContext, useRef} from 'react';
 import {HashRouter as Router, Switch, Route} from 'react-router-dom';
 // import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
@@ -18,16 +18,22 @@ import {Gallery} from './pages/Gallery';
 import {FAQ} from './pages/FAQ';
 import {AboutUs} from './pages/AboutUs';
 
-import {IInfoContext, InfoContext} from './utils/contexts';
+import {
+  IInfoContext,
+  InfoContext,
+  TransparentCtx,
+  ITransparentCtx,
+  SetTransparentCtx,
+  ISetTransparentCtx,
+} from './utils/contexts';
 
 // const backendUrl =
 //   'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
-  const backendUrl = 'http://192.168.1.28:8080';
+const backendUrl = 'http://192.168.1.28:8080';
 
-const App: React.FC = () => {
+const Main: React.FC = React.memo(() => {
   const [info, setInfo] = useState<IInfoContext | undefined>();
   const [showLoading, setShowLoading] = useState<boolean>(true);
-
   /** Speed to unmount the loading screen, in ms. */
   const unmountSpeed = 500;
   const shouldRenderLoading = useUnmountingDelay(showLoading, unmountSpeed);
@@ -40,7 +46,7 @@ const App: React.FC = () => {
         method: 'GET',
         mode: 'cors',
         headers: {
-          accept: 'application/json'
+          accept: 'application/json',
         },
       });
       data = await res.json();
@@ -71,39 +77,72 @@ const App: React.FC = () => {
   console.log(process.env.PUBLIC_URL);
 
   return (
-    <InfoContext.Provider value={info}>
-      <Router basename={process.env.PUBLIC_URL}>
-        <ScrollToTop />
-        <Navigation />
-        <Switch>
-          <Route path="/events">
-            <Events />
-          </Route>
-          <Route path="/clubs">
-            <Clubs />
-          </Route>
-          <Route path="/calendar">
-            <Calendar />
-          </Route>
-          <Route path="/map">
-            <Map />
-          </Route>
-          <Route path="/gallery">
-            <Gallery />
-          </Route>
-          <Route path="/faq">
-            <FAQ />
-          </Route>
-          <Route path="/about">
-            <AboutUs />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-        <Footer />
-      </Router>
-    </InfoContext.Provider>
+      <InfoContext.Provider value={info}>
+        <Router>
+          <ScrollToTop />
+          <Navigation />
+          <Switch>
+            <Route path="/events">
+              <Events />
+            </Route>
+            <Route path="/clubs">
+              <Clubs />
+            </Route>
+            <Route path="/calendar">
+              <Calendar />
+            </Route>
+            <Route path="/map">
+              <Map />
+            </Route>
+            <Route path="/gallery">
+              <Gallery />
+            </Route>
+            <Route path="/faq">
+              <FAQ />
+            </Route>
+            <Route path="/about">
+              <AboutUs />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+          <Footer />
+        </Router>
+      </InfoContext.Provider>
+  );
+});
+
+const App: React.FC = () => {
+  const [transparent, setTransparent] = useState<boolean>(true);
+  
+
+  //why is this split in two?
+  //so it won't force a re-render on places that used setTransparent
+  //if transparent changed but setTransparent didn't change
+  const transparentCtx: ITransparentCtx = {
+    transparent: transparent,
+  };
+
+  const setTransparentCtx: ISetTransparentCtx = {
+    setTransparent: setTransparent,
+  };
+
+  //why do I have to wrap it around so many times?
+  //don't ask me why, it's so this thing won't re-render
+  //each time I use setTransparent
+  const MemoMain: JSX.Element = useMemo(() => {
+    return (
+      <SetTransparentCtx.Provider value={setTransparentCtx}>
+        <Main />
+      </SetTransparentCtx.Provider>
+    );
+  }, []);
+
+  return (
+    <TransparentCtx.Provider value={transparentCtx}>
+      {MemoMain}
+    </TransparentCtx.Provider>
   );
 };
 

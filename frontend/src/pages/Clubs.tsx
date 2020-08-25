@@ -8,7 +8,7 @@ import {Heading} from '../components/Heading';
 import {Collapsable} from '../components/Collapsable';
 
 import {theme, FIRST_BREAKPOINT} from '../utils/theme';
-import {IInfoContext, InfoContext} from '../utils/contexts';
+import {IInfoContext, InfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
 import {
   getImageUrl,
   disallowScrolling,
@@ -20,6 +20,7 @@ import {Club} from '../utils/interfaces';
 import clubBackground from '../assets/clubBackground.png';
 import ResizeObserver from 'resize-observer-polyfill';
 import {ClubPopup} from '../components/ClubPopup';
+import { useToggleNavColour } from '../utils/hooks';
 
 //x1, y1 - top middle
 //x2, y2 - bottom left
@@ -60,6 +61,9 @@ export const Clubs: React.FC = () => {
   const bgRectWidth = useRef<number[]>([]);
   const bgTriangleProp = useRef<BgTriangleProp[]>([]);
 
+  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
+  useEffect(() => setTransparent(false), []);
+  
   useEffect(() => {
     const ro = new ResizeObserver((entries) => {
       entries.forEach((entry) => {

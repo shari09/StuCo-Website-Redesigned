@@ -1,5 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useContext} from 'react';
 import {withRouter} from 'react-router-dom';
+import { ITransparentCtx, TransparentCtx } from '../utils/contexts';
 
 export const ScrollToTop = withRouter(() => {
   useEffect(() => {

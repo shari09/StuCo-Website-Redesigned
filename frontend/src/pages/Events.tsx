@@ -14,10 +14,10 @@ import {LoadingSquare} from '../components/LoaderComponents';
 import {ScrollToTopButton} from '../components/ScrollToTopButton';
 
 import {theme} from '../utils/theme';
-import {IInfoContext, InfoContext} from '../utils/contexts';
+import {IInfoContext, InfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
 import {Event} from '../utils/interfaces';
 import {getImageUrl} from '../utils/functions';
-import {useUnmountingDelay} from '../hooks/useUnmountingDelay';
+import {useUnmountingDelay} from '../utils/hooks';
 import {fadeOut, fadeIn} from '../utils/animation';
 
 // Interfaces --
@@ -447,7 +447,8 @@ const EventItem: React.FC<EventItemProps> = ({
 // Events -- renders the page of all events.
 export const Events: React.FC = () => {
   const eventInfo: Event[] = useContext<IInfoContext>(InfoContext).events;
-
+  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
+  useEffect(() => setTransparent(false), []);
   // Styles for the page
   const wrapperStyle: SxStyleProp = {
     // the main page div

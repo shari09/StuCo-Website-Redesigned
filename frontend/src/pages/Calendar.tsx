@@ -1,17 +1,26 @@
 /** @jsx jsx */
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 // while it's under construction
 import {FaWrench} from 'react-icons/fa';
 
 import {spin} from '../utils/animation';
 import {theme} from '../utils/theme';
+import { ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx } from '../utils/contexts';
+import { useToggleNavColour } from '../utils/hooks';
 
 export interface CalendarProps {}
 
 export const Calendar: React.FC<CalendarProps> = () => {
   const [spinAmount, setSpinAmount] = useState(1);
+  
+  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
+  const toggleNavUnsub = useToggleNavColour(window.innerHeight/5);
 
+  useEffect(() => {
+    setTransparent(true);
+    return toggleNavUnsub;
+  }, []);
   // Styles for the page
   const wrapperStyle: SxStyleProp = {
     // the main page div

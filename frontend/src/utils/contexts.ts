@@ -43,3 +43,21 @@ export const InfoContext = createContext<IInfoContext>({
   clubHighlights: [],
   labelledPhotos: [],
 });
+
+export interface ITransparentCtx {
+  transparent: boolean;
+}
+
+export interface ISetTransparentCtx {
+  setTransparent: React.Dispatch<React.SetStateAction<boolean>>|undefined;
+  // setTransparent: (transparent: boolean) => void | undefined;
+}
+
+export const TransparentCtx = createContext<ITransparentCtx>({
+  transparent: true,
+});
+
+export const SetTransparentCtx = createContext<ISetTransparentCtx>({
+  setTransparent: undefined,
+});
+

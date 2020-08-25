@@ -1,17 +1,25 @@
 /** @jsx jsx */
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 
 import {LoadingSquare} from '../components/LoaderComponents';
 
 import {theme} from '../utils/theme';
 import {LabelledPhotos} from '../utils/interfaces';
-import {InfoContext, IInfoContext} from '../utils/contexts';
+import {InfoContext, IInfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
+import { useToggleNavColour } from '../utils/hooks';
 
 export const Map: React.FC = () => {
   const [loadingFirstImage, setLoadingFirstImage] = useState<boolean>(true);
   const [loadingSecondImage, setLoadingSecondImage] = useState<boolean>(true);
+  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
+  const toggleNavUnsub = useToggleNavColour(window.innerHeight/3);
 
+  useEffect(() => {
+    setTransparent(true);
+    return toggleNavUnsub;
+  }, []);
+  
   const allLabelledPhotos: LabelledPhotos[] = useContext<IInfoContext>(
     InfoContext,
   ).labelledPhotos;

@@ -213,7 +213,6 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
 
   const getNextIdx = useMemo(() => (curIdx: number) => {
     let newIdx = (curIdx + 1) % photos.length;
-    console.log(curIdx);
     return newIdx;
   }, [curPhoto]);
 
@@ -232,10 +231,11 @@ export const PhotoSlideDeck: React.FC<Props> = ({photos, photoDimension}) => {
   };
 
   const unlockImage = () => {
-    window.setTimeout(() => {
+    const id = window.setTimeout(() => {
       setCurPhoto(getNextIdx);
       startRotation();
     }, intervalAfterLock);
+    timerId.current.push(id);
   };
 
   const resetTimer = () => {

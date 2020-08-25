@@ -29,9 +29,10 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
       return;
     }
     setFormattedTime(getFormattedTime(timer));
-    window.setTimeout(() => {
+    const id = window.setTimeout(() => {
       setTimer(timer - 1000);
     }, 1000);
+    return () => window.clearTimeout(id);
   }, [timer, date]);
 
   const getFormattedTime = (timeInMilli: number) => {

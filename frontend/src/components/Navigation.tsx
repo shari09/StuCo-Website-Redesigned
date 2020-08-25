@@ -1,11 +1,12 @@
 /** @jsx jsx */
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 import {FaBars, FaTimes} from 'react-icons/fa';
 import logo from '../assets/logo.svg';
 import ResizeObserver from 'resize-observer-polyfill';
+import { TransparentCtx, ITransparentCtx } from '../utils/contexts';
 
 //TODO: mmmake diferent colorus
 interface LinkProps {
@@ -89,13 +90,11 @@ export const routes = {
 export const Navigation: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(false);
   const [navItemsHeight, setNavItemsHeight] = useState<number>(null);
-  
+
   const navItemsRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
-  const curLocation = useRef<string>(useLocation().pathname);
-  const [transparent, setTransparent] = useState<boolean>(curLocation.current === '/');
-
-
+  const {transparent} = useContext<ITransparentCtx>(TransparentCtx);
+  console.log('nav', transparent);
   useEffect(() => {
     const scrollEvent = () => setToggle(false);
     const clickEvent = (e) => {
@@ -112,19 +111,6 @@ export const Navigation: React.FC = () => {
   }, [toggle]);
 
   useEffect(() => {
-    
-    const toggleColourSettings = () => {
-      if (curLocation.current !== '/') return;
-      const top = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = window.innerHeight;
-      setTransparent(top < height);
-    };
-    window.addEventListener('scroll', toggleColourSettings);
-    return () => window.removeEventListener('scroll', toggleColourSettings);
-  }, []);
-
-
-  useEffect(() => {
     const ro = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const {height} = entry.contentRect;
@@ -139,12 +125,6 @@ export const Navigation: React.FC = () => {
   const getNavItems = () => {
     const outlineWidth = 1.5;
     const navItemsStyle: SxStyleProp = {
-      backgroundColor: [
-        theme.colors.navbar,
-        'transparent',
-      ],
-      opacity: [0.8, 1],
-      backdropFilter: ['blur(4px)', undefined],
       '&:hover': {
         cursor: 'pointer',
         textDecoration: 'none',
@@ -156,7 +136,6 @@ export const Navigation: React.FC = () => {
         outlineStyle: 'solid',
       },
     };
-
 
     return Object.keys(routes).map((route) => {
       return (
@@ -170,13 +149,19 @@ export const Navigation: React.FC = () => {
     });
   };
 
+  const transparentStyle: SxStyleProp = {
+    backgroundColor: [theme.colors.navbar, 'transparent'],
+    opacity: [0.8, 1],
+    backdropFilter: ['blur(4px)', undefined],
+  };
+
   const wrapperStyle: SxStyleProp = {
     display: 'flex',
     width: '100%',
     justifyContent: 'space-between',
     flexDirection: 'row' as 'row',
     background: transparent ? 'transparent' : theme.colors.navbar,
-    transitionDuration: '.5s',
+    transition: 'background-color .5s ease',
     alignItems: 'center',
     position: 'fixed',
     zIndex: 10,
@@ -213,7 +198,10 @@ export const Navigation: React.FC = () => {
   };
 
   return (
-    <div sx={wrapperStyle} ref={navRef}>
+    <div
+      sx={transparent ? {...wrapperStyle, ...transparentStyle} : wrapperStyle}
+      ref={navRef}
+    >
       <Link to="/" sx={logoStyle}>
         <img src={logo} alt="" sx={logoStyle} />
       </Link>

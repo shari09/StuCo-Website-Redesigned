@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, {useContext, ReactElement, useState} from 'react';
+import React, {useContext, ReactElement, useState, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 
 import {Heading} from '../components/Heading';
@@ -8,8 +8,9 @@ import {ScrollToTopButton} from '../components/ScrollToTopButton';
 
 import {fadeIn} from '../utils/animation';
 import {theme} from '../utils/theme';
-import {IInfoContext, InfoContext} from '../utils/contexts';
+import {IInfoContext, InfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
 import {FAQ as FAQInterface} from '../utils/interfaces';
+import { useToggleNavColour } from '../utils/hooks';
 
 // Interfaces --
 export interface FAQProp {
@@ -227,6 +228,9 @@ const FAQItem: React.FC<FAQItemProps> = ({
 export const FAQ: React.FC = (): ReactElement => {
   const faqQuestions: FAQInterface[] = useContext<IInfoContext>(InfoContext)
     .faq;
+
+  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
+  useEffect(() => setTransparent(false), []);
 
   // Custom styles!!! --
   const wrapperStyle: SxStyleProp = {

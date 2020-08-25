@@ -2,11 +2,13 @@
 import React, {useContext, useState, useRef, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
-import {RotatingQuotes, ShownBubbleProps, QuoteSet} from '../components/RotatingQuotes';
-import {InfoContext, IInfoContext} from '../utils/contexts';
+import {RotatingQuotes, QuoteSet} from '../components/RotatingQuotes';
+import {InfoContext, IInfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
 import BottomPageDecor from '../assets/BottomPageDecor.svg';
 import {getImageUrl} from '../utils/functions';
 import ResizeObserver from 'resize-observer-polyfill';
+import { fadeIn } from '../utils/animation';
+import { useToggleNavColour } from '../utils/hooks';
 
 const Paragraph: React.FC = () => {
   const {aboutStuco} = useContext<IInfoContext>(InfoContext);
@@ -61,6 +63,14 @@ export const AboutUs: React.FC = () => {
   const [height, setHeight] = useState<number>(0);
   const bodyRef = useRef<HTMLDivElement>(null);
   const decorRef = useRef<HTMLDivElement>(null);
+
+  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
+  const toggleNavUnsub = useToggleNavColour(window.innerHeight/5);
+
+  useEffect(() => {
+    setTransparent(true);
+    return toggleNavUnsub;
+  }, []);
 
   const translateScale = 0.4;
 

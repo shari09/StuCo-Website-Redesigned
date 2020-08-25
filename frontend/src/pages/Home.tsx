@@ -6,34 +6,43 @@ import {MdControlPoint} from 'react-icons/md';
 import {GiClick} from 'react-icons/gi';
 import ResizeObserver from 'resize-observer-polyfill';
 import {theme, FIRST_BREAKPOINT} from '../utils/theme';
-import {InfoContext, IInfoContext} from '../utils/contexts';
+import {
+  InfoContext,
+  IInfoContext,
+  ITransparentCtx,
+  TransparentCtx,
+  ISetTransparentCtx,
+  SetTransparentCtx,
+} from '../utils/contexts';
 import {CountDownTimer} from '../components/CountDownTimer';
 import {Heading} from '../components/Heading';
 import {Collapsable} from '../components/Collapsable';
 import {PhotoSlideDeck, Photo} from '../components/PhotoSlideDeck';
 import {getImageUrl, hexToRgbArr} from '../utils/functions';
 import {RandomDot} from '../utils/RandomDot';
+import {useToggleNavColour} from '../utils/hooks';
 
 /**
  * The home screen, big parallax background plus the timer
  */
 const Main: React.FC = () => {
   const countdownEvent = useContext<IInfoContext>(InfoContext).countdown[0];
+  const {} = useContext<ITransparentCtx>(TransparentCtx);
 
   if (!countdownEvent) {
     return <div />;
   }
 
-  // const bgTint = 
+  // const bgTint =
 
   const style: SxStyleProp = {
     width: '100%',
     height: '100vh',
     backgroundSize: 'cover',
     backgroundImage:
-      `linear-gradient(rgba(${hexToRgbArr(theme.colors.navbar)}, 0.8),`
-      + `rgba(${hexToRgbArr(theme.colors.navbar)}, 0.4)),`
-      + `url("./assets/home-background.png") `,
+      `linear-gradient(rgba(${hexToRgbArr(theme.colors.navbar)}, 0.8),` +
+      `rgba(${hexToRgbArr(theme.colors.navbar)}, 0.4)),` +
+      `url("./assets/home-background.png") `,
     display: 'flex',
     flexDirection: 'column',
   };
@@ -63,7 +72,6 @@ const Main: React.FC = () => {
     borderColor: theme.colors.background.light,
     borderWidth: [1, 2],
     borderStyle: 'solid',
-    
   };
 
   return (
@@ -141,13 +149,11 @@ const BackgroundWithDots: React.FC = (props) => {
     display: 'flex',
   };
 
-
   return (
     <div sx={style} ref={componentRef}>
-      {window.innerWidth > FIRST_BREAKPOINT 
+      {window.innerWidth > FIRST_BREAKPOINT
         ? randomDots.map((dot) => dot.getComponent()).slice(0, numDots)
-        : undefined
-      }
+        : undefined}
       {props.children}
     </div>
   );
@@ -176,7 +182,7 @@ const UpcomingBoard: React.FC = () => {
     const descriptionStyle: SxStyleProp = {
       textAlign: 'left',
       pl: '1em',
-      fontSize: theme.fontSizes.body.map(n => n+2),
+      fontSize: theme.fontSizes.body.map((n) => n + 2),
       py: '0.5em',
     };
 
@@ -205,14 +211,20 @@ const UpcomingBoard: React.FC = () => {
               {event.name}
               {/* <GiClick sx={iconStyle} /> */}
             </a>
-          ) : event.name}
+          ) : (
+            event.name
+          )}
         </React.Fragment>
       );
 
       if (!event.description)
         return <Collapsable title={title} titleStyle={style} />;
       return (
-        <Collapsable title={title} titleStyle={style} childrenStyle={{ml: ['20%', '15em']}}>
+        <Collapsable
+          title={title}
+          titleStyle={style}
+          childrenStyle={{ml: ['20%', '15em']}}
+        >
           <div sx={descriptionStyle}>{event.description}</div>
         </Collapsable>
       );
@@ -295,7 +307,7 @@ const Recent: React.FC = () => {
   //photos are 1.5:1 aspect ratio
   const photoDimension = {
     width: width * scale,
-    height: width * scale / 1.5,
+    height: (width * scale) / 1.5,
   };
 
   const line: SxStyleProp = {
@@ -318,6 +330,14 @@ const Recent: React.FC = () => {
 //=============================================================
 
 export const Home: React.FC = () => {
+  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
+  const toggleNavUnsub = useToggleNavColour(window.innerHeight);
+  console.log('mount');
+  useEffect(() => {
+    setTransparent(true);
+    return toggleNavUnsub;
+  }, []);
+
   return (
     <div>
       <Main />
