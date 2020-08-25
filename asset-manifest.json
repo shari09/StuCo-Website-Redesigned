@@ -1,27 +1,27 @@
 {
   "files": {
-    "main.css": "/StuCo-Website-Redesigned/static/css/main.6fdb4904.chunk.css",
-    "main.js": "/StuCo-Website-Redesigned/static/js/main.7b0143a5.chunk.js",
-    "main.js.map": "/StuCo-Website-Redesigned/static/js/main.7b0143a5.chunk.js.map",
-    "runtime-main.js": "/StuCo-Website-Redesigned/static/js/runtime-main.25754182.js",
-    "runtime-main.js.map": "/StuCo-Website-Redesigned/static/js/runtime-main.25754182.js.map",
-    "static/js/2.7b4f49c8.chunk.js": "/StuCo-Website-Redesigned/static/js/2.7b4f49c8.chunk.js",
-    "static/js/2.7b4f49c8.chunk.js.map": "/StuCo-Website-Redesigned/static/js/2.7b4f49c8.chunk.js.map",
-    "index.html": "/StuCo-Website-Redesigned/index.html",
-    "precache-manifest.729a3db606a42bf3c67afda39da7303d.js": "/StuCo-Website-Redesigned/precache-manifest.729a3db606a42bf3c67afda39da7303d.js",
-    "service-worker.js": "/StuCo-Website-Redesigned/service-worker.js",
-    "static/css/main.6fdb4904.chunk.css.map": "/StuCo-Website-Redesigned/static/css/main.6fdb4904.chunk.css.map",
-    "static/js/2.7b4f49c8.chunk.js.LICENSE.txt": "/StuCo-Website-Redesigned/static/js/2.7b4f49c8.chunk.js.LICENSE.txt",
-    "static/media/BottomPageDecor.svg": "/StuCo-Website-Redesigned/static/media/BottomPageDecor.12fcb1cf.svg",
-    "static/media/clubBackground.png": "/StuCo-Website-Redesigned/static/media/clubBackground.fdd1f9d6.png",
-    "static/media/logo.svg": "/StuCo-Website-Redesigned/static/media/logo.244fe6ef.svg",
-    "static/media/speech bubble.png": "/StuCo-Website-Redesigned/static/media/speech bubble.576d30b9.png",
-    "static/media/speechBubbleMobile.png": "/StuCo-Website-Redesigned/static/media/speechBubbleMobile.f47118d6.png"
+    "main.css": "/static/css/main.6fdb4904.chunk.css",
+    "main.js": "/static/js/main.bee2e6de.chunk.js",
+    "main.js.map": "/static/js/main.bee2e6de.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.35c48b4d.js",
+    "runtime-main.js.map": "/static/js/runtime-main.35c48b4d.js.map",
+    "static/js/2.7b4f49c8.chunk.js": "/static/js/2.7b4f49c8.chunk.js",
+    "static/js/2.7b4f49c8.chunk.js.map": "/static/js/2.7b4f49c8.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.51a9411c2e7ad3736171a34b61eea558.js": "/precache-manifest.51a9411c2e7ad3736171a34b61eea558.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.6fdb4904.chunk.css.map": "/static/css/main.6fdb4904.chunk.css.map",
+    "static/js/2.7b4f49c8.chunk.js.LICENSE.txt": "/static/js/2.7b4f49c8.chunk.js.LICENSE.txt",
+    "static/media/BottomPageDecor.svg": "/static/media/BottomPageDecor.12fcb1cf.svg",
+    "static/media/clubBackground.png": "/static/media/clubBackground.fdd1f9d6.png",
+    "static/media/logo.svg": "/static/media/logo.244fe6ef.svg",
+    "static/media/speech bubble.png": "/static/media/speech bubble.576d30b9.png",
+    "static/media/speechBubbleMobile.png": "/static/media/speechBubbleMobile.f47118d6.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.25754182.js",
+    "static/js/runtime-main.35c48b4d.js",
     "static/js/2.7b4f49c8.chunk.js",
     "static/css/main.6fdb4904.chunk.css",
-    "static/js/main.7b0143a5.chunk.js"
+    "static/js/main.bee2e6de.chunk.js"
   ]
 }
