@@ -116,7 +116,6 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
     '&:hover img': {
       width: [wrapperWidth, photoDimension.width * popupScale],
       height: [photoDimension.height * popupScale],
-      transitionDuration: '.5s',
     },
     backgroundColor: 'transparent',
     transitionDuration: '.5s',
@@ -147,7 +146,7 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
     animationName: 'fadeIn',
     animationDuration: '1s',
     animationTimingFunction: 'linear',
-    // transitionDuration: '.3s',
+    transitionDuration: '.5s',
   };
 
   return (

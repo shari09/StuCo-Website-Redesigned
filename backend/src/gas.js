@@ -154,14 +154,16 @@ function getPhotos() {
   });
 
   //writes back the properties
-  const range = sheet.getRange('A1:D1');
-  range.setValues([['photoName', 'photoId', 'width', 'height']]);
+  const range = sheet.getRange('A1:E1');
+  range.setValues([['photoName', 'photoId', 'width', 'height', 'orientation']]);
 
   let rowNum = 2;
 
   files.forEach(file => {
-    const range = sheet.getRange(rowNum, 1, 1, 4);
-    range.setValues([[file.originalFilename, file.id, file.imageMediaMetadata.width, file.imageMediaMetadata.height]]);
+    const range = sheet.getRange(rowNum, 1, 1, 5);
+    const width = file.imageMediaMetadata.width;
+    const height = file.imageMediaMetadata.height;
+    range.setValues([[file.originalFilename, file.id, width, height, width > height ? 'landscape' : 'portrait']]);
     rowNum++;
   });
   

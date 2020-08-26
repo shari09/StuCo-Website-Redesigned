@@ -11,8 +11,6 @@ import {theme, FIRST_BREAKPOINT} from '../utils/theme';
 import {
   IInfoContext,
   InfoContext,
-  ITransparentCtx,
-  TransparentCtx,
   ISetTransparentCtx,
   SetTransparentCtx,
 } from '../utils/contexts';
@@ -27,7 +25,6 @@ import {Club} from '../utils/interfaces';
 import clubBackground from '../assets/clubBackground.png';
 import ResizeObserver from 'resize-observer-polyfill';
 import {ClubPopup} from '../components/ClubPopup';
-import {useToggleNavColour} from '../utils/hooks';
 
 //x1, y1 - top middle
 //x2, y2 - bottom left
@@ -113,8 +110,11 @@ export const Clubs: React.FC = () => {
       });
     };
 
+    //remember to change this if you rename
+    const other = 'Other';
+
     return Object.keys(categories)
-      .sort((a, b) => (a === 'Other' ? 1 : (b === 'Other' ? -1 : a.localeCompare(b)))) //remember to change this if you rename
+      .sort((a, b) => (a === other ? 1 : (b === other ? -1 : a.localeCompare(b)))) 
       .map((category, index) => {
         const titleStyle: SxStyleProp = {
           color: theme.colors.text.darkGray,
@@ -387,8 +387,6 @@ export const Clubs: React.FC = () => {
     '&:hover': {
       textDecoration: 'none',
       cursor: 'pointer',
-      // opacity: 0.8,
-      // borderColor: '#007bff',
       borderColor: theme.colors.navbar,
       color: theme.colors.navbar,
     },

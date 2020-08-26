@@ -57,6 +57,7 @@ export interface Photo {
   photoId: string;
   width: string;
   height: string;
+  orientation: 'portrait' | 'landscape';
 }
 
 export interface AboutStuco {

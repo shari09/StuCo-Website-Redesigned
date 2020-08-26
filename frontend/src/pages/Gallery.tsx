@@ -5,25 +5,32 @@ import React, {
   useEffect,
   useState,
   ReactElement,
+  useMemo,
 } from 'react';
-import {jsx, SxStyleProp, Flex} from 'theme-ui';
+import {jsx, SxStyleProp} from 'theme-ui';
 
 import {Heading} from '../components/Heading';
 import PhotoViewer, {Photo} from '../components/PhotoViewer';
 import {CircleSpinner} from '../components/CircleSpinner';
 
 import {theme} from '../utils/theme';
-import {IInfoContext, InfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
-import {getImageUrl, splitArray, disallowScrolling} from '../utils/functions';
+import {
+  IInfoContext,
+  InfoContext,
+  ISetTransparentCtx,
+  SetTransparentCtx,
+} from '../utils/contexts';
+import {getImageUrl, disallowScrolling} from '../utils/functions';
 // todo: minor, but make naming consistant i guess
 import {Photo as PhotoInfo} from '../utils/interfaces';
-import { useToggleNavColour } from '../utils/hooks';
+import ResizeObserver from 'resize-observer-polyfill';
 
-// note: all the images are in their widthScale:heightScale ratio
-/** The width scale for the column photo width. */
-const widthScale: number = 1;
-/** The height scale for the column photo height. */
-const heightScale: number = 1.25;
+//the max width will be < 700 cuz this tries to fit as many images as possible
+//while still maintaining a min width of whatever imgMinWidth is
+const imgMinWidth = 350; 
+//scaled in relation to width
+const portraitHeightScale = 1.5;
+const landscapeHeightScale = 0.65;
 
 // Interfaces --
 export interface GalleryPhotoProps {
@@ -45,11 +52,10 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
 
   // Styles --
   const photoStyle: SxStyleProp = {
-    maxWidth: '100%',
-    mx: 'auto',
+    width: '100%',
+    height: '100%',
+    margin: 0,
     objectFit: 'cover',
-    width: photo.newPhotoDimensions.width,
-    height: photo.newPhotoDimensions.height,
 
     display: loading ? 'none' : 'block',
 
@@ -59,53 +65,30 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
   };
 
   // Functions --
-  /**
-   * Does the cleanup once the image is loaded.
-   */
-  const finishLoading = () => {
-    setLoading(false);
-  };
-
-  /**
-   * Initializes the photo viewer.
-   */
-  const displayViewer = (): void => {
+  const displayViewer = () => {
+    disallowScrolling(window.scrollY);
     initializeDisplay(photo.photoNum);
   };
 
-  /**
-   * Performs specified click actions upon a click event. This includes
-   * disabling the scrolling and displaying the viewer.
-   */
-  const handleClickEvent = () => {
-    disallowScrolling(window.scrollY);
-    displayViewer();
-  };
-
-  /**
-   * Returns a formatted loading spinner
-   */
-  const displayLoadSpinner = (): ReactElement | void => {
-    if (loading) {
-      return (
-        <div sx={{display: 'inline-block', my: '50%'}}>
-          <CircleSpinner />
-        </div>
-      );
-    }
+  const getSpinner = (): JSX.Element => {
+    return (
+      <div sx={{display: 'inline-block', my: '50%'}}>
+        <CircleSpinner  />
+      </div>
+    );
   };
 
   return (
-    <div>
-      {displayLoadSpinner()}
+    <React.Fragment>
+      {loading ? getSpinner() : undefined}
       <img
         src={photo.photoUrl}
         alt=""
-        onClick={handleClickEvent}
-        onLoad={finishLoading}
+        onClick={displayViewer}
+        onLoad={() => setLoading(false)}
         sx={{...photoStyle, ...extraPhotoStyle}}
       />
-    </div>
+    </React.Fragment>
   );
 };
 
@@ -114,154 +97,87 @@ export const Gallery: React.FC = (): ReactElement => {
   const galleryPhotos: PhotoInfo[] = useContext<IInfoContext>(InfoContext)
     .gallery;
 
-  // the width and height are both used for the column photos
-  const [width, setWidth] = useState<number>(0);
-  const [height, setHeight] = useState<number>(0);
-  /** Used to find the size for the column photos. */
-  const referenceDiv = useRef<HTMLDivElement>(null);
   const [viewIndex, setViewIndex] = useState<number>(0);
   const [showViewer, setShowViewer] = useState<boolean>(false);
+  const [numColumns, setNumColumns] = useState<number>(
+    Math.floor(window.innerWidth / imgMinWidth),
+  );
+  //the image width as it changes based on window resize
+  const imageWrapperRef = useRef<HTMLDivElement>(null);
+  const [imageWidth, setImageWidth] = useState<number>(imgMinWidth);
 
+  //navbar transparency
   const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
   useEffect(() => setTransparent(false), []);
 
-  // Set width and height to the left column's width
+  //calculate the number of columns that can be displayed based on
+  //the window width
   useEffect(() => {
-    if (!referenceDiv.current) return;
+    const calculateNumCols = () => {
+      if (Math.floor(window.innerWidth / imgMinWidth) === numColumns) return;
+      setNumColumns(Math.floor(window.innerWidth / imgMinWidth));
+    };
+    window.addEventListener('resize', calculateNumCols);
+    return () => window.removeEventListener('resize', calculateNumCols);
+  }, [window.innerWidth]);
 
-    setWidth(
-      Math.round(
-        referenceDiv.current.getBoundingClientRect().width * widthScale,
-      ),
-    );
-    setHeight(
-      Math.round(
-        referenceDiv.current.getBoundingClientRect().width * heightScale,
-      ),
-    );
-  }, [referenceDiv]);
+  //to handle the image resizing as the window resizes
+  useEffect(() => {
+    const ro = new ResizeObserver((entries) => {
+      const {width} = entries[0].contentRect;
+      setImageWidth(width);
+    });
+    ro.observe(imageWrapperRef.current);
+    return ro.disconnect;
+  }, []);
 
-  /*
-  yes shari, this long explanation is definitely necessary
+  //the number of columns are controlled via the flex box max-height property
+  //they are forced to wrap around once the max height is reached
+  const galleryHeight = useMemo(() => {
+    //buffer out in case one image doesn't fit after dividing
+    const heightBuffer = imageWidth * landscapeHeightScale;
+    const totalHeight = galleryPhotos.reduce((acc, cur) => {
+      const height =
+        cur.orientation === 'portrait'
+          ? imageWidth * portraitHeightScale
+          : imageWidth * landscapeHeightScale;
+      return height + acc;
+    }, 0);
+    return Math.ceil(totalHeight / numColumns) + heightBuffer;
+  }, [numColumns, imageWidth]);
 
-  We take the galleryPhotos in PhotoInfo interface format and convert
-  each array of 'photos' into our custom Photo interface, which
-  contains a proper url, number, and both original and requested
-  dimensions for future use.
+  //get all the photo preview displays
+  const getGalleryPhotos = () => {
+    return galleryPhotos.map((photo, curIdx) => {
+      const photoData: Photo = {
+        photoUrl: getImageUrl(photo.photoId, imgMinWidth*2, 1000),
+        photoNum: curIdx,
+      };
 
-  Consecutive pictures are ordered column down, so if we had 9
-  images, the order would become:
-    1 4 7
-    2 5 8
-    3 6 9
-  but that shouldn't matter because gallery should really only have a
-  random assortment of images anyways, so we don't need to preserve
-  order... right?
-
-  We use galleryPhotos as all photos, as we need the id for the
-  photo to get resized version.
-  //TODO: maybe we can provide photoViewer the resized images...
-  */
-  let currentImageNumber = -1; // this seems scuffed
-  const [leftPhotos, centerPhotos, rightPhotos]: Photo[][] = splitArray<
-    PhotoInfo
-  >(galleryPhotos, 3).map((photoGroup) => {
-    return photoGroup.map((photo) => {
-      currentImageNumber++;
-      return {
-        photoUrl: getImageUrl(photo.photoId, 1000, height),
-        photoNum: currentImageNumber,
-        originalPhotoDimensions: {
-          width: parseInt(photo.width),
-          height: parseInt(photo.height),
-        },
-        newPhotoDimensions: {
-          width: width,
-          height: height,
+      const photoContainerStyle: SxStyleProp = {
+        margin: '2px',
+        width: Math.floor(100 / numColumns).toString() + '%', //width based on window width
+        //height based on width
+        height:
+          photo.orientation === 'portrait'
+            ? imageWidth * portraitHeightScale
+            : imageWidth * landscapeHeightScale,
+        transition: '.2s',
+        '&:hover': {
+          opacity: 0.6,
+          cursor: 'pointer',
         },
       };
-    });
-  });
 
-  // Styles related to the photos and the galleries --
-  const extraPhotoStyle: SxStyleProp = {};
-  const photoColumnContainerStyle: SxStyleProp = {
-    '@media only screen and (max-width: 500px)': {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      textAlign: 'center',
-    },
-  };
-  const allGalleryStyle: SxStyleProp = {
-    textAlign: 'center',
-    maxWidth: '32%',
-    width: '32%',
-    position: 'relative',
-
-    // Pushing away the footer
-    mb: '5em',
-
-    '@media only screen and (max-width: 500px)': {
-      width: '95%',
-      maxWidth: '95%',
-
-      my: 0,
-      left: 'auto',
-      right: 'auto',
-      mx: 'auto',
-    },
-  };
-  const leftGalleryStyle: SxStyleProp = {
-    left: '2%',
-
-    ml: 0,
-    mr: 'auto',
-  };
-  const rightGalleryStyle: SxStyleProp = {
-    right: '2%',
-
-    mr: 0,
-    ml: 'auto',
-  };
-  const centerGalleryStyle: SxStyleProp = {
-    position: 'relative',
-    mt: '-5em',
-  };
-
-  /**
-   * Retrieves a column of photos and returns the formatted column.
-   * @param photoColumn - the list of photos in this column.
-   * @param extraPhotoStyle - any extra styling for the
-   * photos in this column.
-   * @returns the formatted column of photos.
-   */
-  const getGalleryColumn = (
-    photoColumn: Photo[],
-    extraPhotoStyle: SxStyleProp,
-  ): ReactElement[] => {
-    if (!photoColumn) return [<div key="0"></div>];
-
-    const photoContainerStyle: SxStyleProp = {
-      // Space the images
-      mb: '5%',
-      width: '100%',
-
-      // fade and move animations here so both border and image have it
-      transition: '.2s',
-      '&:hover': {
-        opacity: 0.6,
-        cursor: 'pointer',
-      },
-    };
-
-    return photoColumn.map((photo) => {
       return (
-        <div sx={photoContainerStyle} key={photo.photoNum}>
+        <div
+          sx={photoContainerStyle}
+          key={photoData.photoNum}
+          ref={imageWrapperRef}
+        >
           <GalleryPhoto
-            photo={photo}
-            extraPhotoStyle={extraPhotoStyle}
-            initializeDisplay={startDisplay}
+            photo={photoData}
+            initializeDisplay={initializeDisplay} 
           />
         </div>
       );
@@ -273,34 +189,23 @@ export const Gallery: React.FC = (): ReactElement => {
    * Initializes the photo viewer.
    * @param startIndex - the photo index which the viewer should begin at.
    */
-  const startDisplay = (startIndex: number) => {
+  const initializeDisplay = (startIndex: number) => {
     setViewIndex(startIndex);
-
-    toggleViewer();
-  };
-
-  /**
-   * Toggles the show viewer state on or off.
-   */
-  const toggleViewer = () => {
-    setShowViewer(!showViewer);
+    setShowViewer(true);
   };
 
   /**
    * Actually displays the photo viewer, if it should be shown.
-   * @returns the photo viewer at the right image if it should be shown,
-   * or nothing otherwise.
+   * @returns the photo viewer at the right image
    */
-  const displayViewer = (): ReactElement | void => {
-    if (showViewer) {
-      return (
-        <PhotoViewer
-          photos={galleryPhotos}
-          startIndex={viewIndex}
-          closeHandler={toggleViewer}
-        />
-      );
-    }
+  const getViewer = (): ReactElement | void => {
+    return (
+      <PhotoViewer
+        photos={galleryPhotos}
+        startIndex={viewIndex}
+        closeHandler={() => setShowViewer(false)}
+      />
+    );
   };
 
   // The rest of the custom styles needed for this page --
@@ -316,51 +221,44 @@ export const Gallery: React.FC = (): ReactElement => {
     // the div that contains everything
 
     top: '20vh',
-    position: 'relative',
     width: '100%',
     maxWidth: '100%',
     px: '5%',
     mb: '14em', // pushing away the footer
+    display: 'flex',
+    flexDirection: 'column',
   };
   const headingWrapperStyle: SxStyleProp = {
     // the header div
-
+    mt: '13vh',
     maxWidth: '90%', // to make sure the page doesn't scroll to the right
-    position: 'relative',
     mb: '8em',
+  };
+
+  // Styles related to the photos and the galleries --
+
+  const photoColumnContainerStyle: SxStyleProp = {
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    flexWrap: 'wrap',
+    maxHeight: galleryHeight,
+    overflow: 'hidden', //just in case something goes wrong
   };
 
   // Returning the formatted page
   // yes shari i know even more grid classnames but its finee
   return (
     <div sx={wrapperStyle}>
-      {displayViewer()}
+      {showViewer ? getViewer() : undefined}
       <div sx={innerWrapperStyle}>
         <div sx={headingWrapperStyle}>
           <Heading text="Gallery" alignment="left" />
         </div>
-        {/* yes shari i could use flexbox here to achieve the same
-        effect and stay on your good side just bear with me for
-        now ok :)) */}
         <div className="row" sx={photoColumnContainerStyle}>
-          {/* We only need one div to be reference div since
-          all images are same size anyways. */}
-          <div
-            className="col"
-            ref={referenceDiv}
-            sx={{...leftGalleryStyle, ...allGalleryStyle}}
-          >
-            {/* first column of photos */}
-            {getGalleryColumn(leftPhotos, extraPhotoStyle)}
-          </div>
-          <div className="col" sx={{...centerGalleryStyle, ...allGalleryStyle}}>
-            {/* second column of photos */}
-            {getGalleryColumn(centerPhotos, extraPhotoStyle)}
-          </div>
-          <div className="col" sx={{...rightGalleryStyle, ...allGalleryStyle}}>
-            {/* you won't believe... third column of photos! */}
-            {getGalleryColumn(rightPhotos, extraPhotoStyle)}
-          </div>
+          {getGalleryPhotos()}
         </div>
       </div>
     </div>

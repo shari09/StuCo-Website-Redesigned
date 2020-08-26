@@ -31,16 +31,16 @@ export interface Photo {
   photoNum: number;
 
   /** The photo dimensions provided in the spreadsheet. */
-  originalPhotoDimensions?: {
-    width: number;
-    height: number;
-  };
+  // originalPhotoDimensions?: {
+  //   width: number;
+  //   height: number;
+  // };
 
-  /** The new requested dimensions for this photo. */
-  newPhotoDimensions?: {
-    width: number;
-    height: number;
-  };
+  // /** The new requested dimensions for this photo. */
+  // newPhotoDimensions?: {
+  //   width: number;
+  //   height: number;
+  // };
 }
 
 export interface PhotoViewerProps {
@@ -434,10 +434,7 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
         <ViewerPhoto
           photoId={photos[index].photoId}
           loadHandler={handleLoadingState}
-          originalDimensions={{
-            width: parseInt(photos[index].width),
-            height: parseInt(photos[index].height),
-          }}
+          orientation={photos[index].orientation}
         />
 
         <ViewerButton

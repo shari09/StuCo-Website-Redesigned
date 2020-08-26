@@ -2,7 +2,6 @@
 import React, {
   useState,
   useEffect,
-  useCallback,
   useRef,
   ReactElement,
 } from 'react';
@@ -12,11 +11,7 @@ import {getImageUrl} from '../utils/functions';
 export interface ViewerPhotoProps {
   photoId: string;
   loadHandler: () => void;
-  // With the new provided dimensions, it is now easier to get
-  // the orientation of the current photo by simply comparing the
-  // original dimensions.
-  /** The original dimensions of the photo. These dimensions must be present. */
-  originalDimensions: {width: number; height: number};
+  orientation: string;
 }
 
 //=====================================================================
@@ -24,27 +19,10 @@ export interface ViewerPhotoProps {
 export const ViewerPhoto: React.FC<ViewerPhotoProps> = ({
   photoId,
   loadHandler,
-  originalDimensions,
+  orientation,
 }): ReactElement => {
   const [mainImageLimit, setMainImageLimit] = useState<number>(0);
-  const [orientation, setOrientation] = useState<string>(null);
   const mainImageRefDiv = useRef<HTMLDivElement>(null);
-
-  // Determine the orientation of the photo at the get go to cut
-  // down on rerenders and loading wrong images
-  /**
-   * Determines the orientation of the current photo.
-   */
-  const determineOrientation = useCallback((): void => {
-    const h = originalDimensions.height;
-    const w = originalDimensions.width;
-
-    h > w ? setOrientation('portrait') : setOrientation('landscape');
-  }, [originalDimensions]);
-
-  useEffect(() => {
-    determineOrientation();
-  }, [photoId, determineOrientation]);
 
   useEffect(() => {
     if (!mainImageRefDiv.current) return;
