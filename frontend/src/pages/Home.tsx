@@ -175,7 +175,7 @@ const UpcomingBoard: React.FC = () => {
    */
   const getEventsList = () => {
     const style: SxStyleProp = {
-      fontSize: theme.fontSizes.bodyBig,
+      fontSize: theme.fontSizes.bodyLarge,
       fontFamily: theme.fonts.body,
     };
 
@@ -236,7 +236,7 @@ const UpcomingBoard: React.FC = () => {
    */
   const getPlaceHolder = () => {
     const style: SxStyleProp = {
-      fontSize: theme.fontSizes.bodyBig,
+      fontSize: theme.fontSizes.bodyLarge,
       textAlign: 'center',
       color: theme.colors.text.light,
       py: 5,

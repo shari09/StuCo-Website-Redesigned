@@ -48,8 +48,8 @@ export const ScrollToTopButton: React.FC = () => {
       height: ['40px', '50px', '60px'],
       borderRadius: '50%',
 
-      '@keyframes fadeIn': fadeInPartially,
-      animationName: 'fadeIn',
+      '@keyframes fadeInPartially': fadeInPartially,
+      animationName: 'fadeInPartially',
       animationDuration: '0.5s',
 
       display: 'flex',

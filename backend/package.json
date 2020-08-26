@@ -5,9 +5,10 @@
     "googleapis": "^58.0.0"
   },
   "scripts": {
-    "start": "tsc -p . && node dist/test.js",
-    "watch": "tsc -w",
-    "test": "cd dist/ && functions-framework --target=run"
+    "start": "cd dist/ && functions-framework --target=run",
+    "compile": "tsc -p . && node dist/test.js",
+    "watch": "tsc -w"
+    
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.6.0"

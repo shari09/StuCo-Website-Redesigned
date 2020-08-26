@@ -147,7 +147,7 @@ const CenterImage: React.FC<CenterPhotoProps> = ({
     animationName: 'fadeIn',
     animationDuration: '1s',
     animationTimingFunction: 'linear',
-    transitionDuration: '.3s',
+    // transitionDuration: '.3s',
   };
 
   return (

@@ -248,9 +248,8 @@ export const Gallery: React.FC = (): ReactElement => {
       width: '100%',
 
       // fade and move animations here so both border and image have it
-      transition: 'transform .2s, .2s ease',
+      transition: '.2s',
       '&:hover': {
-        transform: 'scale(1.02)',
         opacity: 0.6,
         cursor: 'pointer',
       },

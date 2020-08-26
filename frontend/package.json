@@ -1,6 +1,7 @@
 {
   "name": "stuco-website-redesigned",
   "//homepage": "https://shari09.github.io/StuCo-Website-Redesigned",
+  "homepage": "https://www.rhhsstuco.ca",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -34,7 +35,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build && echo \"www.rhhsstuco.ca\" > build/CNAME",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {

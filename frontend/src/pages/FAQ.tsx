@@ -191,7 +191,7 @@ const FAQItem: React.FC<FAQItemProps> = ({
     width: '100%',
 
     '@keyframes fade-in': fadeIn,
-    animation: isLoading ? 'none' : 'fade-in 1s linear',
+    animation: isLoading ? 'none' : 'fade-in .2s linear',
     display: isLoading ? 'none' : 'block',
   };
 

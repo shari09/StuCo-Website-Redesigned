@@ -94,7 +94,7 @@ export const Navigation: React.FC = () => {
   const navItemsRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const {transparent} = useContext<ITransparentCtx>(TransparentCtx);
-  console.log('nav', transparent);
+
   useEffect(() => {
     const scrollEvent = () => setToggle(false);
     const clickEvent = (e) => {
@@ -150,8 +150,7 @@ export const Navigation: React.FC = () => {
   };
 
   const transparentStyle: SxStyleProp = {
-    backgroundColor: [theme.colors.navbar, 'transparent'],
-    opacity: [0.8, 1],
+    backgroundColor: [theme.colors.navbar+'CC', 'transparent'],
     backdropFilter: ['blur(4px)', undefined],
   };
 
@@ -178,7 +177,7 @@ export const Navigation: React.FC = () => {
       toggle ? 'translateY(0)' : 'translateY(-100%)',
       'translateY(0)',
     ],
-    transition: '.5s',
+    transition: '.7s',
     overflow: 'hidden',
     height: [toggle ? navItemsHeight : 0, toggle ? navItemsHeight : 0, 'auto'],
     zIndex: 0,

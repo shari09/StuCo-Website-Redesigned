@@ -8,7 +8,14 @@ import {Heading} from '../components/Heading';
 import {Collapsable} from '../components/Collapsable';
 
 import {theme, FIRST_BREAKPOINT} from '../utils/theme';
-import {IInfoContext, InfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
+import {
+  IInfoContext,
+  InfoContext,
+  ITransparentCtx,
+  TransparentCtx,
+  ISetTransparentCtx,
+  SetTransparentCtx,
+} from '../utils/contexts';
 import {
   getImageUrl,
   disallowScrolling,
@@ -20,7 +27,7 @@ import {Club} from '../utils/interfaces';
 import clubBackground from '../assets/clubBackground.png';
 import ResizeObserver from 'resize-observer-polyfill';
 import {ClubPopup} from '../components/ClubPopup';
-import { useToggleNavColour } from '../utils/hooks';
+import {useToggleNavColour} from '../utils/hooks';
 
 //x1, y1 - top middle
 //x2, y2 - bottom left
@@ -63,7 +70,7 @@ export const Clubs: React.FC = () => {
 
   const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
   useEffect(() => setTransparent(false), []);
-  
+
   useEffect(() => {
     const ro = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
@@ -106,48 +113,50 @@ export const Clubs: React.FC = () => {
       });
     };
 
-    return Object.keys(categories).map((category, index) => {
-      const titleStyle: SxStyleProp = {
-        color: theme.colors.text.darkGray,
-        borderColor: theme.colors.text.darkGray,
-        fontSize: theme.fontSizes.bodyBig,
-        fontFamily: theme.fonts.body,
-        '&:hover': {
+    return Object.keys(categories)
+      .sort((a, b) => (a === 'Other' ? 1 : (b === 'Other' ? -1 : a.localeCompare(b)))) //remember to change this if you rename
+      .map((category, index) => {
+        const titleStyle: SxStyleProp = {
           color: theme.colors.text.darkGray,
-          cursor: 'pointer',
-        },
-      };
-      const childrenStyle: SxStyleProp = {
-        color: theme.colors.text.darkSlate,
-        borderColor: theme.colors.text.darkSlate,
-        ml: '80%',
-        pl: '1em',
-        fontSize: theme.fontSizes.bodySmall,
-        width: '100%',
-        '&:hover': {
-          cursor: 'pointer',
-        },
-      };
-      const titleWrapper: SxStyleProp = {
-        textAlign: 'right',
-      };
-      const titleComponent = (
-        <div sx={titleWrapper}>
-          {category} <BsThreeDots />
-        </div>
-      );
+          borderColor: theme.colors.text.darkGray,
+          fontSize: theme.fontSizes.bodyLarge,
+          fontFamily: theme.fonts.body,
+          '&:hover': {
+            color: theme.colors.text.darkGray,
+            cursor: 'pointer',
+          },
+        };
+        const childrenStyle: SxStyleProp = {
+          color: theme.colors.text.darkSlate,
+          borderColor: theme.colors.text.darkSlate,
+          ml: '80%',
+          pl: '1em',
+          fontSize: theme.fontSizes.bodySmall,
+          width: '100%',
+          '&:hover': {
+            cursor: 'pointer',
+          },
+        };
+        const titleWrapper: SxStyleProp = {
+          textAlign: 'right',
+        };
+        const titleComponent = (
+          <div sx={titleWrapper}>
+            {category} <BsThreeDots />
+          </div>
+        );
 
-      return (
-        <Collapsable
-          title={titleComponent}
-          titleStyle={titleStyle}
-          childrenStyle={childrenStyle}
-          collapsed={index === 0 ? false : true}
-        >
-          {getClubs(category)}
-        </Collapsable>
-      );
-    });
+        return (
+          <Collapsable
+            title={titleComponent}
+            titleStyle={titleStyle}
+            childrenStyle={childrenStyle}
+            collapsed={index === 0 ? false : true}
+          >
+            {getClubs(category)}
+          </Collapsable>
+        );
+      });
   };
 
   //=================================================
@@ -168,7 +177,7 @@ export const Clubs: React.FC = () => {
     const style: SxStyleProp = {
       color: theme.colors.text.darkGray,
       borderColor: theme.colors.text.darkGray,
-      fontSize: theme.fontSizes.bodyBig,
+      fontSize: theme.fontSizes.bodyLarge,
       fontFamily: theme.fonts.body,
       padding: '0.3em',
       zIndex: 2,
@@ -342,7 +351,7 @@ export const Clubs: React.FC = () => {
   const searchBoxWrapperStyle: SxStyleProp = {
     position: 'relative',
     width: ['100%', '40%', '20%'],
-    ml: [0, 'auto'],
+    ml: 0,
     mt: ['2em', 'auto'],
     mb: ['1em', 'auto'],
     fontSize: theme.fontSizes.bodySmall.map((n) => n + 5),
@@ -351,12 +360,38 @@ export const Clubs: React.FC = () => {
     position: 'absolute',
     right: '0.5em',
     top: '0.5em',
+    '&:hover': {
+      cursor: 'pointer',
+    },
   };
 
   const headingStyle: SxStyleProp = {
     display: 'inline',
     mt: ['20%', 'auto'],
     mb: [0, 'auto'],
+  };
+
+  const clubAppButton: SxStyleProp = {
+    color: theme.colors.primary,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: theme.colors.primary,
+    fontFamily: theme.fonts.body,
+    fontSize: [16, 20],
+    textAlign: 'center',
+    my: 'auto',
+    ml: [0, 'auto'],
+    mr: [0, '2em'],
+    px: '1em',
+    py: '0.3em',
+    '&:hover': {
+      textDecoration: 'none',
+      cursor: 'pointer',
+      // opacity: 0.8,
+      // borderColor: '#007bff',
+      borderColor: theme.colors.navbar,
+      color: theme.colors.navbar,
+    },
   };
 
   //==============================================================
@@ -375,6 +410,10 @@ export const Clubs: React.FC = () => {
         underline={false}
         extraStyling={headingStyle}
       />
+      {/* a rare hard-coded club app cuz i dont feel like making it not hardcoded for now */}
+      <a sx={clubAppButton} href="https://forms.gle/65KmNA17PayScrqH6">
+        Club application
+      </a>
 
       <div sx={searchBoxWrapperStyle}>
         <input

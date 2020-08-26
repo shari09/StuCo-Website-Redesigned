@@ -42,7 +42,7 @@ export const ViewerButton: React.FC<ViewerButtonProps> = ({
     backgroundSize: 'cover',
 
     // small fade animation while hovering
-    transition: 'transform .2s, .5s ease',
+    transition: '.2s ease',
     '&:hover': {
       transform: 'scale(1.2)',
       cursor: 'pointer',
