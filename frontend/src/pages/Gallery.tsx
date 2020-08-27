@@ -25,6 +25,7 @@ import {getImageUrl, disallowScrolling} from '../utils/functions';
 import {Photo as PhotoInfo} from '../utils/interfaces';
 import ResizeObserver from 'resize-observer-polyfill';
 
+
 //the max width will be < 700 cuz this tries to fit as many images as possible
 //while still maintaining a min width of whatever imgMinWidth is
 const imgMinWidth = 350; 
@@ -32,7 +33,7 @@ const imgMinWidth = 350;
 const portraitHeightScale = 1.5;
 const landscapeHeightScale = 0.65;
 
-// Interfaces --
+
 export interface GalleryPhotoProps {
   photo: Photo;
   initializeDisplay: (index: number) => void;
@@ -50,7 +51,6 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
 }): ReactElement => {
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Styles --
   const photoStyle: SxStyleProp = {
     width: '100%',
     height: '100%',
@@ -64,7 +64,6 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
     },
   };
 
-  // Functions --
   const displayViewer = () => {
     disallowScrolling(window.scrollY);
     initializeDisplay(photo.photoNum);
@@ -128,7 +127,7 @@ export const Gallery: React.FC = (): ReactElement => {
       setImageWidth(width);
     });
     ro.observe(imageWrapperRef.current);
-    return ro.disconnect;
+    return () => ro.disconnect();
   }, []);
 
   //the number of columns are controlled via the flex box max-height property
@@ -208,18 +207,18 @@ export const Gallery: React.FC = (): ReactElement => {
     );
   };
 
-  // The rest of the custom styles needed for this page --
-  const wrapperStyle: SxStyleProp = {
-    // the main page div
+  //-----------------------------------------------------
+  // Styles
 
+  const wrapperStyle: SxStyleProp = {
     width: '100%',
     maxWidth: '100%',
     minHeight: '100vh',
     backgroundColor: theme.colors.background.light,
   };
-  const innerWrapperStyle: SxStyleProp = {
-    // the div that contains everything
 
+
+  const innerWrapperStyle: SxStyleProp = {
     top: '20vh',
     width: '100%',
     maxWidth: '100%',
@@ -228,14 +227,13 @@ export const Gallery: React.FC = (): ReactElement => {
     display: 'flex',
     flexDirection: 'column',
   };
+
+
   const headingWrapperStyle: SxStyleProp = {
-    // the header div
     mt: '13vh',
     maxWidth: '90%', // to make sure the page doesn't scroll to the right
     mb: '8em',
   };
-
-  // Styles related to the photos and the galleries --
 
   const photoColumnContainerStyle: SxStyleProp = {
     display: 'flex',

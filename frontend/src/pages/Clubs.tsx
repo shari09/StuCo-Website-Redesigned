@@ -245,9 +245,7 @@ export const Clubs: React.FC = () => {
       return style;
     };
 
-    const triangles = Array.from(
-      new Array(Math.floor(height / 250)).keys(),
-    ).map((i) => {
+    const triangles = Array.from(new Array(Math.floor(height / 250)).keys()).map((i) => {
       if (!bgTriangleProp.current[i]) {
         bgTriangleProp.current.push(
           new BgTriangleProp(
