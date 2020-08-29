@@ -39,6 +39,7 @@ export const theme = {
   fontSizes: {
     heading: {
       primary: [30, 40],
+      small: [20, 30],
       event: [14, 16, 24, 30, 40],
     },
     body: [13, 14, 16, 20, 24, 28, 32],

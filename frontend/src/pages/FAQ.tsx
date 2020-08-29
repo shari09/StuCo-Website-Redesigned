@@ -1,6 +1,8 @@
 /** @jsx jsx */
 import React, {useContext, ReactElement, useState, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
+import {BsSearch, BsQuestionSquare} from 'react-icons/bs';
+import {FaTimes} from 'react-icons/fa';
 
 import {Heading} from '../components/Heading';
 import {TranslucentRectangle} from '../components/TranslucentRectangle';
@@ -8,9 +10,13 @@ import {ScrollToTopButton} from '../components/ScrollToTopButton';
 
 import {fadeIn} from '../utils/animation';
 import {theme} from '../utils/theme';
-import {IInfoContext, InfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
+import {
+  IInfoContext,
+  InfoContext,
+  ISetTransparentCtx,
+  SetTransparentCtx,
+} from '../utils/contexts';
 import {FAQ as FAQInterface} from '../utils/interfaces';
-import { useToggleNavColour } from '../utils/hooks';
 
 // Interfaces --
 export interface FAQProp {
@@ -32,7 +38,6 @@ export interface ResponseProp {
   rectExtraStyling?: SxStyleProp;
 }
 
-//TODO: yes shari i will add padding later
 //=====================================================================
 // To hold the speech bubble and question
 const QuestionItem: React.FC<QuestionProp> = ({
@@ -223,36 +228,24 @@ const FAQItem: React.FC<FAQItemProps> = ({
 
 //=====================================================================
 
-//=====================================================================
-// FAQ -- renders the FAQ page
-export const FAQ: React.FC = (): ReactElement => {
-  const faqQuestions: FAQInterface[] = useContext<IInfoContext>(InfoContext)
-    .faq;
+interface FAQcategoryItemProps {
+  faqQuestions: FAQInterface[];
+  category: string;
+  extraWrapperStyling?: SxStyleProp;
+}
 
-  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
-  useEffect(() => setTransparent(false), []);
-
-  // Custom styles!!! --
+const FAQcategoryItem: React.FC<FAQcategoryItemProps> = ({
+  faqQuestions,
+  category,
+  extraWrapperStyling,
+}) => {
   const wrapperStyle: SxStyleProp = {
-    // the main page div
-
+    mb: '8em',
     width: '100%',
-    minHeight: '100vh',
-    backgroundColor: theme.colors.background.light,
-  };
-  const innerWrapperStyle: SxStyleProp = {
-    // the div that contains everything
 
-    top: '20vh',
-    position: 'relative',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    mb: '14em', // pushing away the footer
+    ...extraWrapperStyling,
   };
   const headingWrapperStyle: SxStyleProp = {
-    // the header div
-
     left: '5%',
     maxWidth: '90%', // to make sure the page doesn't scroll to the right
     position: 'relative',
@@ -275,24 +268,234 @@ export const FAQ: React.FC = (): ReactElement => {
 
   return (
     <div sx={wrapperStyle}>
+      <div sx={headingWrapperStyle}>
+        <Heading
+          text={category}
+          alignment="center"
+          size="small"
+          underline={false}
+        />
+      </div>
+      <div
+        sx={{
+          flex: 'initial',
+        }}
+      >
+        <ul sx={{listStyleType: 'none', px: 0, py: 0, mx: 0, my: 0}}>
+          {/* // Getting the list of question-response stuff */}
+          {getFaqItems(faqQuestions)}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+//=====================================================================
+// FAQ -- renders the FAQ page
+interface sortedFaqQuestions {
+  [index: string]: FAQInterface[];
+}
+
+const sortIntoFAQCategories = (allFaq: FAQInterface[]): sortedFaqQuestions => {
+  const sortedQuestions = {};
+
+  // actually sort the questions
+  allFaq.forEach((question) => {
+    if (sortedQuestions.hasOwnProperty(question.category)) {
+      sortedQuestions[question.category].push(question);
+    } else {
+      sortedQuestions[question.category] = [question];
+    }
+  });
+
+  return sortedQuestions;
+};
+
+export const FAQ: React.FC = (): ReactElement => {
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // is this bad memory usage? idk man lol
+  const allFaqQuestions = useContext<IInfoContext>(InfoContext).faq;
+  const sortedFaqQuestions: sortedFaqQuestions = sortIntoFAQCategories(
+    allFaqQuestions,
+  );
+
+  const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
+  useEffect(() => setTransparent(false), []);
+
+  // Styles -----------------------------------------------------------
+  const wrapperStyle: SxStyleProp = {
+    // the main page div
+
+    width: '100%',
+    minHeight: '100vh',
+    backgroundColor: theme.colors.background.light,
+  };
+  const innerWrapperStyle: SxStyleProp = {
+    // the div that contains everything
+
+    top: '20vh',
+    position: 'relative',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    mb: '6em', // push away footer
+  };
+  const headerWrapperStyle: SxStyleProp = {
+    // the header div
+
+    left: '5%',
+    mb: '3em',
+    maxWidth: '90%', // to make sure the page doesn't scroll to the right
+
+    position: 'relative',
+    display: 'flex',
+    flexDirection: ['column', 'row'],
+  };
+  const headingStyle: SxStyleProp = {
+    width: ['100%', '50%'],
+    mb: ['1em', 0],
+  };
+
+  // this is just the clubs search box but touched up a bit lol
+  // thanks shari
+  const searchBoxStyle: SxStyleProp = {
+    height: '1.3em',
+    borderRadius: 15,
+    borderColor: theme.colors.navbar,
+    borderWidth: 1,
+
+    width: '100%',
+    py: '1em',
+    px: '0.5em',
+    mr: 0,
+    ml: 'auto',
+
+    fontFamily: theme.fonts.body,
+    '&:focus': {
+      borderWidth: 1.5,
+      outline: 'none',
+    },
+  };
+  const searchBoxWrapperStyle: SxStyleProp = {
+    position: 'relative',
+    width: ['100%', '50%', '40%'],
+    my: 'auto',
+    ml: 'auto',
+    mr: 0,
+    fontSize: theme.fontSizes.bodySmall.map((n) => n + 5),
+  };
+  const iconStyle: SxStyleProp = {
+    position: 'absolute',
+    right: '0.5em',
+    top: '0.5em',
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  };
+
+  // Functions --------------------------------------------------------
+  /**
+   * Returns a formatted list of faq category items using the
+   * questions' categories.
+   * @param sortedFaqQuestions - The object with sorted faq questions.
+   */
+  const getAllFaqCategories = (sortedFaqQuestions: sortedFaqQuestions) => {
+    /*
+    Sort the names of the categories, and if it's other, make sure its
+    the last one. Otherwise, sort based on reverse alphanumeric value.
+    Then, use each category name to map the list of property names into
+    FAQ category items, and we're good.
+    */
+    const other = 'other'; // if you change other name, change this
+
+    return Object.keys(sortedFaqQuestions)
+      .sort((a, b) => (a === other ? 1 : b === other ? -1 : a.localeCompare(b)))
+      .map((category) => {
+        return (
+          <FAQcategoryItem
+            key={category}
+            faqQuestions={sortedFaqQuestions[category]}
+            category={category.toUpperCase()}
+          />
+        );
+      });
+  };
+
+  // Querying ---------------------------------------------------------
+  /**
+   * Searches every question and keywords for a certain query and
+   * returns any that have the query in the question or keywords, or is
+   * part of the category being searched for.
+   * @param query - The string to be searched for.
+   */
+  const getSearchResults = (query: string) => {
+    return allFaqQuestions.filter((question) => {
+      if (!question.question) return false;
+
+      return (
+        question.question.toLowerCase().includes(query.toLowerCase()) ||
+        question.category.toLowerCase().includes(query.toLowerCase()) ||
+        (question.keywords &&
+          question.keywords.toLowerCase().includes(query.toLowerCase()))
+      );
+    });
+  };
+
+  /**
+   * Fetches and displays all relevant questions that either have
+   * the query string in the title, is part of a category that
+   * has the query string in it, or has keywords that include the
+   * query string.
+   * @param query - The string to be searched for.
+   */
+  const displaySearchResults = (query: string) => {
+    const questions = getSearchResults(query);
+
+    return (
+      <FAQcategoryItem
+        faqQuestions={questions}
+        category={questions.length > 0 ? 'SEARCH RESULTS' : 'NO RESULTS FOUND'}
+        extraWrapperStyling={{mb: '10em'}}
+      />
+    );
+  };
+  // The return code --------------------------------------------------
+  return (
+    <div sx={wrapperStyle}>
       {/* initializing scroll to top button */}
       <ScrollToTopButton />
 
       {/* the faq */}
       <div sx={innerWrapperStyle}>
-        <div sx={headingWrapperStyle}>
-          <Heading text="FAQ" alignment="left" />
+        <div sx={headerWrapperStyle}>
+          <div sx={headingStyle}>
+            <Heading
+              text="FAQ"
+              alignment="left"
+              extraStyling={{width: ['100%', '200%']}}
+            />
+          </div>
+
+          <div sx={searchBoxWrapperStyle}>
+            <input
+              sx={searchBoxStyle}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Question Keywords"
+            />
+            {searchQuery === '' ? (
+              <BsSearch sx={iconStyle} />
+            ) : (
+              <FaTimes sx={iconStyle} onClick={() => setSearchQuery('')} />
+            )}
+          </div>
         </div>
-        <div
-          sx={{
-            flex: 'initial',
-          }}
-        >
-          <ul sx={{listStyleType: 'none', px: 0, py: 0, mx: 0, my: 0}}>
-            {/* // Getting the list of question-response stuff */}
-            {getFaqItems(faqQuestions)}
-          </ul>
-        </div>
+
+        {searchQuery === ''
+          ? getAllFaqCategories(sortedFaqQuestions)
+          : displaySearchResults(searchQuery)}
       </div>
     </div>
   );

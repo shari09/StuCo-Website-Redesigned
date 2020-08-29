@@ -6,6 +6,7 @@ import {theme} from '../utils/theme';
 export interface HeadingProps {
   text: string;
   alignment: 'left' | 'center';
+  size?: 'normal' | 'small';
   underline?: boolean;
   extraStyling?: SxStyleProp;
 }
@@ -16,6 +17,7 @@ export interface HeadingProps {
 export const Heading: React.FC<HeadingProps> = ({
   text,
   alignment,
+  size = 'normal',
   underline = true,
   extraStyling,
 }) => {
@@ -25,7 +27,10 @@ export const Heading: React.FC<HeadingProps> = ({
 
   const textStyle: SxStyleProp = {
     fontFamily: theme.fonts.heading,
-    fontSize: theme.fontSizes.heading.primary,
+    fontSize:
+      size === 'normal'
+        ? theme.fontSizes.heading.primary
+        : theme.fontSizes.heading.small,
     color: theme.colors.primary,
     fontWeight: 'normal',
   };
