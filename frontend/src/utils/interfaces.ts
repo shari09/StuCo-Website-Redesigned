@@ -50,6 +50,8 @@ export interface ClubHighlight {
 export interface FAQ {
   question: string;
   answer: string;
+  category: string;
+  keywords?: string;
 }
 
 export interface Photo {
