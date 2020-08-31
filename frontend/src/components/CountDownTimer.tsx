@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 
@@ -14,7 +14,7 @@ interface FormattedTime {
   seconds: number;
 }
 
-interface TimeUnitI {
+interface ITimeUnit {
   number: number;
   text: string;
 }
@@ -22,6 +22,8 @@ interface TimeUnitI {
 export const CountDownTimer: React.FC<Props> = ({date}) => {
   const [timer, setTimer] = useState<number>();
   const [formattedTime, setFormattedTime] = useState<FormattedTime>();
+  const [timerWidth, setTimerWidth] = useState<number>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!timer) {
@@ -34,6 +36,11 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
     }, 1000);
     return () => window.clearTimeout(id);
   }, [timer, date]);
+
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    setTimerWidth(wrapperRef.current.getBoundingClientRect().width);
+  }, [wrapperRef.current]);
 
   const getFormattedTime = (timeInMilli: number) => {
     const days = Math.floor(timeInMilli / (24 * 60 * 60 * 1000));
@@ -73,6 +80,8 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
     },
     px: 20,
     py: [1, 2],
+    width: ['auto', 'auto', timerWidth],
+    
 
     //mobile
     display: ['flex', 'inline'],
@@ -82,7 +91,7 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
     mt: ['20%', 0],
   };
 
-  const TimeUnit: React.FC<TimeUnitI> = ({number, text}) => {
+  const TimeUnit: React.FC<ITimeUnit> = ({number, text}) => {
     const seconds = 'sec';
     const numDigit = number < 100 ? 2 : 3;
     const textSize = text === seconds ? 15 : 20;
@@ -98,7 +107,7 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
   };
 
   return (
-    <div sx={style}>
+    <div sx={style} ref={wrapperRef}>
       <TimeUnit number={formattedTime.days} text="days" />
       <TimeUnit number={formattedTime.hours} text="hrs" />
       <TimeUnit number={formattedTime.minutes} text="mins" />

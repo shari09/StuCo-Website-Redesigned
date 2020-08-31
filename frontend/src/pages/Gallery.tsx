@@ -91,7 +91,7 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
   );
 };
 
-// Gallery element -- displays the actual gallery page
+//==============================================================================
 export const Gallery: React.FC = (): ReactElement => {
   const galleryPhotos: PhotoInfo[] = useContext<IInfoContext>(InfoContext)
     .gallery;
@@ -134,7 +134,7 @@ export const Gallery: React.FC = (): ReactElement => {
   //they are forced to wrap around once the max height is reached
   const galleryHeight = useMemo(() => {
     //buffer out in case one image doesn't fit after dividing
-    const heightBuffer = imageWidth * landscapeHeightScale;
+    const heightBuffer = imageWidth * portraitHeightScale;
     const totalHeight = galleryPhotos.reduce((acc, cur) => {
       const height =
         cur.orientation === 'portrait'
@@ -246,8 +246,6 @@ export const Gallery: React.FC = (): ReactElement => {
     overflow: 'hidden', //just in case something goes wrong
   };
 
-  // Returning the formatted page
-  // yes shari i know even more grid classnames but its finee
   return (
     <div sx={wrapperStyle}>
       {showViewer ? getViewer() : undefined}

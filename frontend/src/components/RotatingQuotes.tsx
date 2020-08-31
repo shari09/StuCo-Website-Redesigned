@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, {useState, useRef, useEffect, ReactElement} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {CircleSpinner} from './CircleSpinner';
 import AboutUsSpeechBubble from '../assets/speech bubble.png';
