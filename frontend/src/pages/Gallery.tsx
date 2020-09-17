@@ -12,6 +12,7 @@ import {jsx, SxStyleProp} from 'theme-ui';
 import {Heading} from '../components/Heading';
 import PhotoViewer, {Photo} from '../components/PhotoViewer';
 import {CircleSpinner} from '../components/CircleSpinner';
+import {ScrollToTopButton} from '../components/ScrollToTopButton';
 
 import {theme} from '../utils/theme';
 import {
@@ -25,14 +26,12 @@ import {getImageUrl, disallowScrolling} from '../utils/functions';
 import {Photo as PhotoInfo} from '../utils/interfaces';
 import ResizeObserver from 'resize-observer-polyfill';
 
-
 //the max width will be < 700 cuz this tries to fit as many images as possible
 //while still maintaining a min width of whatever imgMinWidth is
-const imgMinWidth = 350; 
+const imgMinWidth = 350;
 //scaled in relation to width
 const portraitHeightScale = 1.5;
 const landscapeHeightScale = 0.65;
-
 
 export interface GalleryPhotoProps {
   photo: Photo;
@@ -72,7 +71,7 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
   const getSpinner = (): JSX.Element => {
     return (
       <div sx={{display: 'inline-block', my: '50%'}}>
-        <CircleSpinner  />
+        <CircleSpinner />
       </div>
     );
   };
@@ -149,7 +148,7 @@ export const Gallery: React.FC = (): ReactElement => {
   const getGalleryPhotos = () => {
     return galleryPhotos.map((photo, curIdx) => {
       const photoData: Photo = {
-        photoUrl: getImageUrl(photo.photoId, imgMinWidth*2, 1000),
+        photoUrl: getImageUrl(photo.photoId, imgMinWidth * 2, 1000),
         photoNum: curIdx,
       };
 
@@ -176,7 +175,7 @@ export const Gallery: React.FC = (): ReactElement => {
         >
           <GalleryPhoto
             photo={photoData}
-            initializeDisplay={initializeDisplay} 
+            initializeDisplay={initializeDisplay}
           />
         </div>
       );
@@ -217,7 +216,6 @@ export const Gallery: React.FC = (): ReactElement => {
     backgroundColor: theme.colors.background.light,
   };
 
-
   const innerWrapperStyle: SxStyleProp = {
     top: '20vh',
     width: '100%',
@@ -227,7 +225,6 @@ export const Gallery: React.FC = (): ReactElement => {
     display: 'flex',
     flexDirection: 'column',
   };
-
 
   const headingWrapperStyle: SxStyleProp = {
     mt: '13vh',
@@ -250,6 +247,8 @@ export const Gallery: React.FC = (): ReactElement => {
   // yes shari i know even more grid classnames but its finee
   return (
     <div sx={wrapperStyle}>
+      <ScrollToTopButton />
+
       {showViewer ? getViewer() : undefined}
       <div sx={innerWrapperStyle}>
         <div sx={headingWrapperStyle}>

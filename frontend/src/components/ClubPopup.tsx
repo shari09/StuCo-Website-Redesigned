@@ -261,11 +261,12 @@ const ClubPhoto: React.FC<ClubPhotoProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
 
   // Image styles --
-
   const photoStyle: SxStyleProp = {
     objectFit: 'cover',
     width: '100%',
     height: '100%',
+
+    backgroundColor: theme.colors.navbar + '88',
   };
   const rectStyle: SxStyleProp = {
     position: 'absolute',
@@ -290,20 +291,39 @@ const ClubPhoto: React.FC<ClubPhotoProps> = ({
   const displayLoadingSquare = (): ReactElement | void => {
     if (loading) {
       return (
-        <LoadingSquare extraStyling={{backgroundColor: theme.colors.navbar}} />
+        <LoadingSquare
+          extraStyling={{backgroundColor: theme.colors.navbar + '88'}}
+        />
       );
+    }
+  };
+
+  /**
+   * Determines whether to display a club photo or a translucent div,
+   * depending on whether photoId is present.
+   * @returns either a club photo or a translucent div for background.
+   */
+  const displayClubPhoto = (): ReactElement => {
+    if (photoId) {
+      return (
+        <React.Fragment>
+          {displayLoadingSquare()}
+          <img
+            src={getImageUrl(photoId, width, 5000)}
+            alt=""
+            sx={photoStyle}
+            onLoad={handleLoading}
+          />
+        </React.Fragment>
+      );
+    } else {
+      return <div sx={photoStyle}></div>;
     }
   };
 
   return (
     <React.Fragment>
-      {displayLoadingSquare()}
-      <img
-        src={getImageUrl(photoId, width, 5000)}
-        alt=""
-        sx={photoStyle}
-        onLoad={handleLoading}
-      />
+      {displayClubPhoto()}
       <TranslucentRectangle
         lengthX="100%"
         lengthY="100%"

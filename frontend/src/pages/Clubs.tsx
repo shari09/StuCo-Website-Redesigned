@@ -114,7 +114,7 @@ export const Clubs: React.FC = () => {
     const other = 'Other';
 
     return Object.keys(categories)
-      .sort((a, b) => (a === other ? 1 : (b === other ? -1 : a.localeCompare(b)))) 
+      .sort((a, b) => (a === other ? 1 : b === other ? -1 : a.localeCompare(b)))
       .map((category, index) => {
         const titleStyle: SxStyleProp = {
           color: theme.colors.text.darkGray,
@@ -245,7 +245,9 @@ export const Clubs: React.FC = () => {
       return style;
     };
 
-    const triangles = Array.from(new Array(Math.floor(height / 250)).keys()).map((i) => {
+    const triangles = Array.from(
+      new Array(Math.floor(height / 250)).keys(),
+    ).map((i) => {
       if (!bgTriangleProp.current[i]) {
         bgTriangleProp.current.push(
           new BgTriangleProp(
@@ -401,7 +403,7 @@ export const Clubs: React.FC = () => {
       {getTransluteRects()}
 
       <Heading
-        text="Clubs"
+        text="2019-2020 Clubs"
         alignment={isFirstBreakpoint ? 'left' : 'center'}
         underline={false}
         extraStyling={headingStyle}
