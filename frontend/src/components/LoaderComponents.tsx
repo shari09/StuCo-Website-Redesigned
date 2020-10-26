@@ -20,6 +20,8 @@ export interface LoadingScreenProps {
   isMounted: boolean;
   /** How fast this component should unmount, in ms. */
   unmountSpeed: number;
+  /** The loading text to be displayed. */
+  loadingText?: string;
 }
 
 /**
@@ -67,6 +69,7 @@ export const LoadingSquare: React.FC<LoadingSquareProps> = ({
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   isMounted,
   unmountSpeed,
+  loadingText = "Loading Site Content...",
 }) => {
   const wrapperStyle: SxStyleProp = {
     width: '100vw',
@@ -105,7 +108,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
       }}
     >
       <div sx={topDivStyle}>
-        <h1 sx={titleTextStyle}>Loading Site Content...</h1>
+        <h1 sx={titleTextStyle}>{loadingText}</h1>
       </div>
 
       <div sx={bottomDivStyle}>

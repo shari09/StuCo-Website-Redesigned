@@ -33,8 +33,6 @@ const Main: React.FC = () => {
     return <div />;
   }
 
-  // const bgTint =
-
   const style: SxStyleProp = {
     width: '100%',
     height: '100vh',

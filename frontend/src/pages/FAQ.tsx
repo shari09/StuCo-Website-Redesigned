@@ -189,7 +189,7 @@ const FAQItem: React.FC<FAQItemProps> = ({
     maxWidth: '95vw',
     backgroundColor:
       questionNumber % 3 === 0
-        ? theme.colors.background.overlay
+        ? theme.colors.background.faqOverlay
         : 'transparent',
   };
   const wrapperDiv = {

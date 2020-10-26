@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React, {useState, useEffect, useRef, useContext} from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {theme} from '../utils/theme';
 import {FaBars, FaTimes} from 'react-icons/fa';

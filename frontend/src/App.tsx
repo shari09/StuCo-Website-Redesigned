@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import {jsx} from 'theme-ui';
 import React, {useEffect, useState, useMemo} from 'react';
 import {HashRouter as Router, Switch, Route} from 'react-router-dom';
 // import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
@@ -26,10 +28,12 @@ import {
   SetTransparentCtx,
   ISetTransparentCtx,
 } from './utils/contexts';
+import { theme } from './utils/theme';
 
 // const backendUrl =
 //   'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
-const backendUrl = 'http://192.168.1.28:8080';
+const backendUrl = 'http://localhost:8080';
+console.log(backendUrl);
 
 const Main: React.FC = React.memo(() => {
   const [info, setInfo] = useState<IInfoContext | undefined>();
@@ -70,7 +74,11 @@ const Main: React.FC = React.memo(() => {
 
   if (shouldRenderLoading) {
     return (
-      <LoadingScreen isMounted={showLoading} unmountSpeed={unmountSpeed} />
+      <LoadingScreen
+        isMounted={showLoading}
+        unmountSpeed={unmountSpeed}
+        loadingText={"Loading spooky content..."}
+      />
     );
   }
 
@@ -134,7 +142,10 @@ const App: React.FC = () => {
   const MemoMain: JSX.Element = useMemo(() => {
     return (
       <SetTransparentCtx.Provider value={setTransparentCtx}>
-        <Main />
+        <div sx={{bg: theme.colors.background.light}}>
+          <Main />
+        </div>
+        
       </SetTransparentCtx.Provider>
     );
   }, []);

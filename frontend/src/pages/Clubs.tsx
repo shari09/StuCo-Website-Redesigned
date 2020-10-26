@@ -114,7 +114,7 @@ export const Clubs: React.FC = () => {
     const other = 'Other';
 
     return Object.keys(categories)
-      .sort((a, b) => (a === other ? 1 : b === other ? -1 : a.localeCompare(b)))
+      .sort((a, b) => (a === other ? 1 : (b === other ? -1 : a.localeCompare(b)))) 
       .map((category, index) => {
         const titleStyle: SxStyleProp = {
           color: theme.colors.text.darkGray,
@@ -151,7 +151,8 @@ export const Clubs: React.FC = () => {
             title={titleComponent}
             titleStyle={titleStyle}
             childrenStyle={childrenStyle}
-            collapsed={index === 0 ? false : true}
+            collapsed={true}
+            collapseTime={0.002}
           >
             {getClubs(category)}
           </Collapsable>
@@ -245,9 +246,7 @@ export const Clubs: React.FC = () => {
       return style;
     };
 
-    const triangles = Array.from(
-      new Array(Math.floor(height / 250)).keys(),
-    ).map((i) => {
+    const triangles = Array.from(new Array(Math.floor(height / 250)).keys()).map((i) => {
       if (!bgTriangleProp.current[i]) {
         bgTriangleProp.current.push(
           new BgTriangleProp(
@@ -346,6 +345,7 @@ export const Clubs: React.FC = () => {
       borderWidth: 1.5,
       outline: 'none',
     },
+    bg: theme.colors.background.light,
   };
 
   const searchBoxWrapperStyle: SxStyleProp = {

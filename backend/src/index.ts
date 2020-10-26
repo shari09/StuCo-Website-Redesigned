@@ -93,7 +93,7 @@ exports.run = async (req: http.IncomingMessage, res: http.ServerResponse) => {
 
   await initAuth();
   
-  console.log('sldfkjsldjfdslf')
+  // console.log('sldfkjsldjfdslf');
   const metaData = await getMetaData();
   const rawData = await getSheet(metaData);
 

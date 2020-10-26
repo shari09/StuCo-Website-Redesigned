@@ -76,7 +76,7 @@ const GrayImage: React.FC<GrayImageProps> = ({
 
   return (
     <div sx={wrapperStyle} onClick={onClick}>
-      <img sx={style} src={url} />
+      <img sx={style} alt="Grayed-out recent" src={url} />
       <div sx={overlay} />
     </div>
   );
