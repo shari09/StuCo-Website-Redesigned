@@ -1,17 +1,19 @@
 /** @jsx jsx */
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect, ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 
 import {LoadingSquare} from '../components/LoaderComponents';
 
 import {theme} from '../utils/theme';
 import {LabelledPhotos} from '../utils/interfaces';
-import {InfoContext, IInfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
+import {InfoContext, IInfoContext, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
 import { useToggleNavColour } from '../utils/hooks';
 
 export const Map: React.FC = () => {
   const [loadingFirstImage, setLoadingFirstImage] = useState<boolean>(true);
   const [loadingSecondImage, setLoadingSecondImage] = useState<boolean>(true);
+  const [showRealMap, setShowRealMap] = useState<boolean>(false);
+
   const {setTransparent} = useContext<ISetTransparentCtx>(SetTransparentCtx);
   const toggleNavUnsub = useToggleNavColour(window.innerHeight/3);
 
@@ -26,10 +28,16 @@ export const Map: React.FC = () => {
 
   // filter out and find the first and second floor photo
   const firstFloorPhoto = `https://drive.google.com/uc?export=view&id=${
-    allLabelledPhotos.find((a) => a.photoLabel === 'School First Floor').photoId
+    // allLabelledPhotos.find((a) => a.photoLabel === 'School First Floor').photoId
+    allLabelledPhotos.find((a) => a.photoLabel === (showRealMap ?
+    'School First Floor' : 'Halloweek first floor'))
+    .photoId
   }`;
   const secondFloorPhoto = `https://drive.google.com/uc?export=view&id=${
-    allLabelledPhotos.find((a) => a.photoLabel === 'School Second Floor')
+    // allLabelledPhotos.find((a) => a.photoLabel === 'School Second Floor')
+    // .photoId
+    allLabelledPhotos.find((a) => a.photoLabel === (showRealMap ?
+      'School Second Floor' : 'Halloweek second floor'))
       .photoId
   }`;
 
@@ -42,7 +50,7 @@ export const Map: React.FC = () => {
   };
   const divStyle: SxStyleProp = {
     position: 'relative',
-    top: '10vh',
+    top: '15vh',
     width: '100%',
 
     display: 'flex',
@@ -54,7 +62,7 @@ export const Map: React.FC = () => {
   const imageDivStyle: SxStyleProp = {
     position: 'relative',
     // push image up
-    mt: '10%',
+    mt: '5%',
 
     // center the image
     ml: 'auto',
@@ -69,6 +77,30 @@ export const Map: React.FC = () => {
     // leave this to preserve aspect ratio
     height: 'auto',
   };
+  const clubAppButton: SxStyleProp = {
+    color: theme.colors.background.light,
+    
+    borderWidth: 4,
+    borderStyle: 'solid',
+    borderColor: theme.colors.background.light,
+    borderRadius: "8px",
+
+    fontFamily: theme.fonts.body,
+    fontSize: [16, 20],
+    textAlign: 'center',
+    my: 'auto',
+    ml: [0, 'auto'],
+    mr: [0, '2em'],
+    px: '1em',
+    py: '0.3em',
+
+    transition: 'border-color 0.5s ease, color 0.5s ease',
+    '&:hover': {
+      cursor: 'pointer',
+      borderColor: theme.colors.text.light,
+      color: theme.colors.text.light,
+    },
+  };
 
   /**
    * Handles an image loading by setting the specified isLoading
@@ -82,9 +114,75 @@ export const Map: React.FC = () => {
     setLoadingFunction(false);
   };
 
+  /**
+   * Handles the map toggle by resetting loading states and toggling
+   * the map to display.
+   */
+  const handleToggle = () => {
+    setLoadingFirstImage(true);
+    setLoadingSecondImage(true);
+
+    setShowRealMap(!showRealMap);
+  }
+
+  const displayLore = (): ReactElement => {
+    return (
+      <div sx={{
+        width: "100%",
+        mt: '1em',
+        backgroundColor: theme.colors.text.darkSlate
+      }}>
+        <div sx={{
+          width: '90%',
+          ml: 'auto',
+          mr: 'auto',
+          my: '2.5%',
+          fontSize: theme.fontSizes.bodySmall,
+        }}>
+          <p sx={{color: theme.colors.text.light}}> 
+            RHHS HQ, situated on an undisclosed moon orbiting Neptune, 
+            is one of the world's best research institutes. In fact, 
+            they (along with the crew) 
+            recently moved their main facilities to said moon so that they can
+            truly claim to be "the best research institute in the world", and
+            technically not be wrong (thanks, semantics).
+          </p>
+          <p sx={{color: theme.colors.text.light}}> 
+            The HQ contains everything that an isolated external outpost
+            would need to function and do research, like laboratories,
+            specimen rooms, a large medBay, social media, and dorms. 
+            RHHS HQ boasts the first greenhouse
+            on a secluded moon (something a few crewmates have
+            strongly proposed establishing), and state-of-the-art communications
+            and electrical equipment, allowing crew to not have 4
+            tasks in electrical (unlike that dinky ship we also have). This
+            will likely help reduce electrical-room-related trauma within the crew.
+            It also possesses lounge and relaxation facilities, as well
+            as storage units that no one uses, and a large navigation facility
+            that, frankly, no one really knows the purpose of.
+          </p>
+          <p sx={{color: theme.colors.background.light}}>
+            Unfortunately, some shapeshifting moon inhabitants have
+            blended in with the crew and wish to take over our whiteboard
+            tables and cool furniture. It is up to the crew to root out these
+            "Impostors" and secure this essential base, so that it may
+            once again be used as a center of knowledge, and a
+            starting point for future adventures.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div sx={backgroundStyle}>
       <div sx={divStyle}>
+        <div sx={clubAppButton} onClick={() => handleToggle()}>
+          {showRealMap ? "Freeplay" : "Exit Freeplay"}
+        </div>
+
+        {showRealMap ? undefined : displayLore()}
+
         <div sx={imageDivStyle}>
           {loadingFirstImage ? (
             <LoadingSquare isTransparent={true} />
@@ -94,6 +192,7 @@ export const Map: React.FC = () => {
             alt="The school's first floor."
             sx={imageStyle}
             onLoad={() => handleLoad(setLoadingFirstImage)}
+            onError={() => handleLoad(setLoadingFirstImage)}
           />
         </div>
 
@@ -107,6 +206,7 @@ export const Map: React.FC = () => {
             alt="The school's second floor."
             sx={imageStyle}
             onLoad={() => handleLoad(setLoadingSecondImage)}
+            onError={() => handleLoad(setLoadingSecondImage)}
           />
         </div>
       </div>

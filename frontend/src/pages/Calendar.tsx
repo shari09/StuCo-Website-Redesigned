@@ -6,7 +6,7 @@ import {FaWrench} from 'react-icons/fa';
 
 import {spin} from '../utils/animation';
 import {theme} from '../utils/theme';
-import { ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx } from '../utils/contexts';
+import { ISetTransparentCtx, SetTransparentCtx } from '../utils/contexts';
 import { useToggleNavColour } from '../utils/hooks';
 
 export interface CalendarProps {}
@@ -20,7 +20,7 @@ export const Calendar: React.FC<CalendarProps> = () => {
   useEffect(() => {
     setTransparent(true);
     return toggleNavUnsub;
-  }, []);
+  }, [setTransparent, toggleNavUnsub]);
   // Styles for the page
   const wrapperStyle: SxStyleProp = {
     // the main page div
@@ -80,6 +80,7 @@ export const Calendar: React.FC<CalendarProps> = () => {
       <div sx={innerWrapperStyle}>
         <div sx={iframeContainerStyle}>
           <iframe
+            title="RHHS School Calendar"
             src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23FFFFFF&src=gapps.yrdsb.ca_3kml71rdv1af34phpclvo9ps50%40group.calendar.google.com&color=%23333333&ctz=America%2FToronto"
             width="80%"
             height="600px"
@@ -101,7 +102,7 @@ export const Calendar: React.FC<CalendarProps> = () => {
             }}
           >
             A more lively calendar is under development! For now, though, enjoy
-            this embedded one! (should be good enough for before school...)
+            this embedded one!
           </p>
         </div>
       </div>

@@ -14,7 +14,14 @@ import {LoadingSquare} from '../components/LoaderComponents';
 import {ScrollToTopButton} from '../components/ScrollToTopButton';
 
 import {theme} from '../utils/theme';
-import {IInfoContext, InfoContext, ITransparentCtx, TransparentCtx, ISetTransparentCtx, SetTransparentCtx} from '../utils/contexts';
+import {
+  IInfoContext,
+  InfoContext,
+  ITransparentCtx,
+  TransparentCtx,
+  ISetTransparentCtx,
+  SetTransparentCtx,
+} from '../utils/contexts';
 import {Event} from '../utils/interfaces';
 import {getImageUrl} from '../utils/functions';
 import {useUnmountingDelay} from '../utils/hooks';
@@ -147,12 +154,6 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
     maxHeight: '100%', // make sure the image doesn't break the page
 
     zIndex: 5, // draw over the title
-
-    transition: 'transform .2s, .5s ease',
-    '&:hover': {
-      transform: 'scale(1.025)',
-      opacity: 0.95,
-    },
   };
   const imageStyle: SxStyleProp = {
     display: loading ? 'none' : 'block',

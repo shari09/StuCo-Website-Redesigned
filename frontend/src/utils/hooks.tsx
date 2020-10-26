@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef, useContext, useCallback} from 'react';
+import {useState, useEffect, useRef, useContext} from 'react';
 import { ISetTransparentCtx, SetTransparentCtx } from './contexts';
 
 /**

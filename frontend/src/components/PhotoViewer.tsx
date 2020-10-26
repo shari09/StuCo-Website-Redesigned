@@ -139,12 +139,12 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     if (touchLocations.length === 1 && touchLocations[0]) {
       // If the tap starts at the picture, just ignore.
       // (for adjusting zoom level, perhaps).
-      if ((event.target as Element).id != 'main-photo') {
+      if ((event.target as Element).id !== 'main-photo') {
         xTouchLoc.current = touchLocations[0].clientX;
         yTouchLoc.current = touchLocations[0].clientY;
       }
 
-      /* 
+    /* 
     If you put a second finger down, there will be a very small
     amount of time where an event with only one touch property 
     propegates before the proper 2 touch property event propegates,

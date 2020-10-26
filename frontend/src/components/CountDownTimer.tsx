@@ -27,7 +27,7 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
 
   useEffect(() => {
     if (!timer) {
-      setTimer(date.getTime() - new Date().getTime());
+      setTimer(date.getTime() - new Date().getTime() + date.getTimezoneOffset()*60*1000);
       return;
     }
     setFormattedTime(getFormattedTime(timer));
@@ -52,10 +52,10 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
     const seconds = Math.floor(timeInMilli / 1000);
 
     return {
-      days: days,
-      hours: hours,
-      minutes: minutes,
-      seconds: seconds,
+      days: days >= 0 ? days : 0,
+      hours: hours >= 0 ? hours : 0,
+      minutes: minutes >= 0 ? minutes : 0,
+      seconds: seconds >= 0 ? seconds : 0,
     };
   };
 
@@ -82,7 +82,6 @@ export const CountDownTimer: React.FC<Props> = ({date}) => {
     py: [1, 2],
     width: ['auto', 'auto', timerWidth],
     
-
     //mobile
     display: ['flex', 'inline'],
     flexDirection: 'column',

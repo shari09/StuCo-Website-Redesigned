@@ -151,7 +151,8 @@ export const Clubs: React.FC = () => {
             title={titleComponent}
             titleStyle={titleStyle}
             childrenStyle={childrenStyle}
-            collapsed={index === 0 ? false : true}
+            collapsed={true}
+            collapseTime={0.002}
           >
             {getClubs(category)}
           </Collapsable>
@@ -344,6 +345,7 @@ export const Clubs: React.FC = () => {
       borderWidth: 1.5,
       outline: 'none',
     },
+    bg: theme.colors.background.light,
   };
 
   const searchBoxWrapperStyle: SxStyleProp = {
@@ -401,7 +403,7 @@ export const Clubs: React.FC = () => {
       {getTransluteRects()}
 
       <Heading
-        text="Clubs"
+        text="2019-2020 Clubs"
         alignment={isFirstBreakpoint ? 'left' : 'center'}
         underline={false}
         extraStyling={headingStyle}

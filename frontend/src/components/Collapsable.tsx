@@ -9,6 +9,7 @@ interface Props {
   titleStyle?: SxStyleProp;
   childrenStyle?: SxStyleProp;
   collapsed?: boolean;
+  collapseTime?: number;
 }
 
 /**
@@ -36,6 +37,7 @@ export const Collapsable: React.FC<Props> = ({
   titleStyle,
   collapsed = true,
   childrenStyle,
+  collapseTime = 0.01,
 }) => {
   const [childrenCollapsed, setChildrenCollapsed] = useState<boolean>(
     collapsed,
@@ -81,7 +83,7 @@ export const Collapsable: React.FC<Props> = ({
     return diff;
   };
 
-  const transitionTime = `${getHeightDiff() * 0.01}s`;
+  const transitionTime = `${getHeightDiff() * collapseTime}s`;
 
   const childrenWrapperStyle: SxStyleProp = {
     ml: '20%',
