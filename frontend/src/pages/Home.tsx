@@ -86,7 +86,7 @@ const Main: React.FC = () => {
 
 /**
  * The green board that has dots in the background
- * sketchiest code
+ * 
  */
 const BackgroundWithDots: React.FC = (props) => {
   const [randomDots, setRandomDots] = useState<RandomDot[]>([]);
@@ -175,6 +175,9 @@ const UpcomingBoard: React.FC = () => {
     const style: SxStyleProp = {
       fontSize: theme.fontSizes.bodyLarge,
       fontFamily: theme.fonts.body,
+      ml: '5vw',
+      display: 'flex', 
+      flexDirection: 'row',
     };
 
     const descriptionStyle: SxStyleProp = {
@@ -195,6 +198,8 @@ const UpcomingBoard: React.FC = () => {
 
       const linkStyle: SxStyleProp = {
         color: theme.colors.text.light,
+        maxWidth: '100%',
+        textOverflow: 'wrap',
         '&:hover': {
           textDecoration: 'none',
           color: theme.colors.footer,
@@ -203,14 +208,14 @@ const UpcomingBoard: React.FC = () => {
 
       const title = (
         <React.Fragment>
-          <MdControlPoint sx={{mr: '1em'}} />
+          <MdControlPoint sx={{mr: '1em',}} />
           {event.link ? (
             <a href={event.link} sx={linkStyle}>
-              {event.name}
+              <p sx={{whiteSpace: 'initial'}}>{event.name}</p>
               {/* <GiClick sx={iconStyle} /> */}
             </a>
           ) : (
-            event.name
+            <p sx={{whiteSpace: 'initial', display: 'inline'}}>{event.name}</p>
           )}
         </React.Fragment>
       );

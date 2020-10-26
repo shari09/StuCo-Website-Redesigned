@@ -94,6 +94,8 @@ export const Collapsable: React.FC<Props> = ({
     overflowY: 'hidden',
     height: childrenCollapsed ? 0 : childrenHeight,
     transitionDuration: transitionTime,
+    whiteSpace: 'initial'
+    
   };
 
   const defaultTitleStyle: SxStyleProp = {

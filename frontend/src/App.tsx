@@ -46,6 +46,7 @@ const Main: React.FC = React.memo(() => {
     let data: IInfoContext;
 
     try {
+      
       const res = await fetch(backendUrl, {
         method: 'GET',
         mode: 'cors',
