@@ -66,24 +66,24 @@ exports.run = async (req: http.IncomingMessage, res: http.ServerResponse) => {
   
   // console.log('origin', req.get('origin'));
   // console.log(req.get('referer'));
-  
+  console.log('slkdjflsjfd');
   if (req.method !== 'GET') {
     res.status(405).send({error: 'something blew up D;'});
     return;
   }
-  if (req.get('origin') !== 'https://www.rhhsstuco.ca') {
+  // if (req.get('origin') !== 'https://www.rhhsstuco.ca') {
   // if (req.get('origin') !== 'http://192.168.1.28:3000') {
-    res.status(403).end('who are u O.o');
-    return;
-  }
+  //   res.status(403).end('who are u O.o');
+  //   return;
+  // }
 
   res.set('Access-Control-Allow-Methods', 'GET');
   res.set('Access-Control-Allow-Headers', 'Authorization');
   res.set('Access-Control-Max-Age', '3600');
-  res.set('Access-Control-Allow-Origin', 'https://www.rhhsstuco.ca');
+  // res.set('Access-Control-Allow-Origin', 'https://www.rhhsstuco.ca');
   // res.set('Access-Control-Allow-Origin', 'http://192.168.1.28:3000');
   // I'm sure this is fine and safe and definitely secure
-  // res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Credentials', 'true');
 
   // console.log(res);

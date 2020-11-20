@@ -351,7 +351,7 @@ export const Clubs: React.FC = () => {
   const searchBoxWrapperStyle: SxStyleProp = {
     position: 'relative',
     width: ['100%', '40%', '20%'],
-    ml: 0,
+    ml: 'auto', //change to 0 if there's club app button
     mt: ['2em', 'auto'],
     mb: ['1em', 'auto'],
     fontSize: theme.fontSizes.bodySmall.map((n) => n + 5),
@@ -409,9 +409,9 @@ export const Clubs: React.FC = () => {
         extraStyling={headingStyle}
       />
       {/* a rare hard-coded club app cuz i dont feel like making it not hardcoded for now */}
-      <a sx={clubAppButton} href="https://forms.gle/65KmNA17PayScrqH6">
+      {/* <a sx={clubAppButton} href="https://forms.gle/65KmNA17PayScrqH6">
         Club application
-      </a>
+      </a> */}
 
       <div sx={searchBoxWrapperStyle}>
         <input
