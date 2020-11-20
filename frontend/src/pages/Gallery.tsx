@@ -41,9 +41,12 @@ export interface GalleryPhotoProps {
 }
 
 //=====================================================================
-// GalleryPhoto element handles the actual img element.
-// this assumes that each img will be placed in an appropriately sized
-// div or element
+/**
+ * GalleryPhoto element handles the actual img element.
+ * 
+ * This assumes that each img will be placed in an appropriately sized
+ * div or element.
+ */
 export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
   photo,
   initializeDisplay,
@@ -64,8 +67,13 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
     },
   };
 
+  /**
+   * Displays the photo viewer.
+   * 
+   * Locking of the screen and scroll will be done on
+   * mount in PhotoViewer.
+   */
   const displayViewer = () => {
-    disallowScrolling(window.scrollY);
     initializeDisplay(photo.photoNum);
   };
 

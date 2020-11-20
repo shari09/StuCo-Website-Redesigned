@@ -30,9 +30,10 @@ import {
 } from './utils/contexts';
 import { theme } from './utils/theme';
 
-const backendUrl =
-  'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
-// const backendUrl = 'http://localhost:8080';
+// const backendUrl =
+//   'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
+const backendUrl = 'http://localhost:8080';
+// console.log(backendUrl);
 
 const Main: React.FC = React.memo(() => {
   const [info, setInfo] = useState<IInfoContext | undefined>();
@@ -45,7 +46,6 @@ const Main: React.FC = React.memo(() => {
     let data: IInfoContext;
 
     try {
-      
       const res = await fetch(backendUrl, {
         method: 'GET',
         mode: 'cors',
@@ -72,17 +72,19 @@ const Main: React.FC = React.memo(() => {
     }
   }, [info]);
 
+  // Load the awesome loader screen if need be
   if (shouldRenderLoading) {
     return (
       <LoadingScreen
         isMounted={showLoading}
         unmountSpeed={unmountSpeed}
-        loadingText={"Loading content..."}
+        hasLoader={false}
+        loadingImage={"android-chrome-192x192.png"}
       />
     );
   }
 
-  console.log(process.env.PUBLIC_URL);
+  // console.log(process.env.PUBLIC_URL);
 
   return (
       <InfoContext.Provider value={info}>

@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React from 'react';
+import React, {ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 
 import {ThreeDotsLoader} from './ThreeDotsLoader';
@@ -20,8 +20,12 @@ export interface LoadingScreenProps {
   isMounted: boolean;
   /** How fast this component should unmount, in ms. */
   unmountSpeed: number;
+  /** Whether the three dot loader should be shown or not. */
+  hasLoader?: boolean;
   /** The loading text to be displayed. */
   loadingText?: string;
+  /** An image to be displayed while loading. */
+  loadingImage?: string;
 }
 
 /**
@@ -69,7 +73,9 @@ export const LoadingSquare: React.FC<LoadingSquareProps> = ({
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   isMounted,
   unmountSpeed,
-  loadingText = "Loading Site Content...",
+  hasLoader = true,
+  loadingText = undefined,
+  loadingImage = undefined,
 }) => {
   const wrapperStyle: SxStyleProp = {
     width: '100vw',
@@ -86,16 +92,55 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
     color: theme.colors.text.darkSlate,
     margin: 'auto',
   };
-  const topDivStyle: SxStyleProp = {
+  const containerDivStyle: SxStyleProp = {
+    display: 'flex',
+    flexDirection: 'column',
+    mx: 'auto',
+    my: 'auto'
+  }
+  const innerDivStyle: SxStyleProp = {
     display: 'inline-block',
-    mb: 0,
-    mt: 'auto',
+    py: 0,
+  }
+
+  const breathe: SxStyleProp = {
+    '0%': {
+      opacity: 1,
+      width: '100%',
+      height: '100%',
+    },
+    '50%': {
+      opacity: 0.5,
+      width: '95%',
+      height: '98%',
+    },
+    '100%': {
+      opacity: 1,
+      width: '100%',
+      height: '100%',
+    },
   };
-  const bottomDivStyle: SxStyleProp = {
-    display: 'inline-block',
-    mt: 0,
-    mb: 'auto',
-  };
+  const centeredImageStyle: SxStyleProp = {
+    position: 'relative',
+
+    ml: 'auto',
+    mr: 'auto',
+
+    '@keyframes breathe': breathe,
+    'animation': 'breathe ease 3s',
+    'animationIterationCount': 'infinite',
+  }
+
+  /**
+   * Draws the three dots loader.
+   */
+  const drawDotLoader = (): ReactElement => {
+    return (
+      <div sx={innerDivStyle}>
+        <ThreeDotsLoader />
+      </div>
+    )
+  }
 
   return (
     <div
@@ -107,13 +152,19 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         opacity: isMounted ? 1 : 0,
       }}
     >
-      <div sx={topDivStyle}>
-        <h1 sx={titleTextStyle}>{loadingText}</h1>
+      <div sx={containerDivStyle}>
+        <div sx={innerDivStyle}>
+          <img src={loadingImage} sx={centeredImageStyle}/>
+        </div>
+
+        <div sx={innerDivStyle}>
+          <h1 sx={titleTextStyle}>{loadingText}</h1>
+        </div>
+      
+        {/* draw the loader if wanted */}
+        {hasLoader ? drawDotLoader() : undefined}
       </div>
 
-      <div sx={bottomDivStyle}>
-        <ThreeDotsLoader />
-      </div>
     </div>
   );
 };

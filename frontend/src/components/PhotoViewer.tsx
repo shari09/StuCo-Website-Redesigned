@@ -18,6 +18,7 @@ import {
   getImageUrl,
   detectSwipeDirection,
   allowScrolling,
+  disallowScrolling,
 } from '../utils/functions';
 // todo: minor, but make naming consistant i guess
 import {Photo as PhotoInfo} from '../utils/interfaces';
@@ -79,6 +80,23 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
     );
   }, [overlayReferenceDiv]);
 
+  useEffect(() => {
+    disallowScrolling(window.scrollY);
+    /*
+    Allow the user to scroll again if they exit the viewer
+    
+    Very important for mobile users! If they press back without
+    this while viewing a photo, their screens will be locked
+    (unscrollable)!
+
+    TODO: figure out how to return people to gallery if back button
+    is pressed here
+    */
+    return () => {
+      allowScrolling();
+    }
+  }, []);
+
   /**
    * Increases the current image index.
    */
@@ -100,9 +118,16 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
   /**
    * Handles this viewer's cleanup functions, like re-enabling scrolling
    * and closing the viewer.
+   * 
+   * This function should not disable scrolling lock. Let the
+   * final clean-up unmount useEffect hook handle any clean-up of
+   * state that may persist after this component is unmounted.
+   * 
+   * If this function allows scrolling, the clean-up function will
+   * send the viewer straight back up to top instead of back where
+   * they were before.
    */
   const handleClosing = useCallback((): void => {
-    allowScrolling();
     closeHandler();
   }, [closeHandler]);
 
@@ -114,14 +139,14 @@ const PhotoViewer: React.FC<PhotoViewerProps> = ({
    */
   const reactToKeystrokes = useCallback(
     (event: KeyboardEvent) => {
-      switch (event.keyCode) {
-        case 27: // esc key
+      switch (event.code) {
+        case 'Escape':
           handleClosing();
           break;
-        case 39: // right arrow key
+        case 'ArrowRight':
           incrementIdx();
           break;
-        case 37: // left arrow key
+        case 'ArrowLeft':
           decrementIdx();
           break;
       }
