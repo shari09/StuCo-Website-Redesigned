@@ -72,6 +72,7 @@ export interface NavRoutes {
   calendar: string;
   map: string;
   gallery: string;
+  media: string;
   faq: string;
   about: string;
 }
@@ -83,6 +84,7 @@ export const routes = {
   calendar: 'Calendar',
   map: 'Map',
   gallery: 'Gallery',
+  media: 'Media',
   faq: 'FAQ',
   about: 'About Us',
 };
@@ -114,7 +116,7 @@ export const Navigation: React.FC = () => {
     const ro = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const {height} = entry.contentRect;
-        console.log(height);
+        // console.log(height);
         setNavItemsHeight(height);
       });
     });

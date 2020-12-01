@@ -22,7 +22,6 @@ export const Resources: React.FC<ResourcesProps> = ({textStyling}) => {
   const allResources: ResourcesInterface[] = useContext<IInfoContext>(
     InfoContext,
   ).resources;
-  console.log(allResources);
 
   // Styles ---------------------------------------------------------
   // TOOD: this is basically the same as FooterRoutes

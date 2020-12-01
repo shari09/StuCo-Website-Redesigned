@@ -76,3 +76,9 @@ export interface LabelledPhotos {
   photoLabel: string;
   photoId: string;
 }
+
+export interface Media {
+  title: string;
+  mediaLink: string;
+  description: string;
+}

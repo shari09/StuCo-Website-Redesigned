@@ -17,6 +17,7 @@ import {Clubs} from './pages/Clubs';
 import {Calendar} from './pages/Calendar';
 import {Map} from './pages/Map';
 import {Gallery} from './pages/Gallery';
+import {Media} from './pages/Media';
 import {FAQ} from './pages/FAQ';
 import {AboutUs} from './pages/AboutUs';
 
@@ -87,39 +88,42 @@ const Main: React.FC = React.memo(() => {
   // console.log(process.env.PUBLIC_URL);
 
   return (
-      <InfoContext.Provider value={info}>
-        <Router>
-          <ScrollToTop />
-          <Navigation />
-          <Switch>
-            <Route path="/events">
-              <Events />
-            </Route>
-            <Route path="/clubs">
-              <Clubs />
-            </Route>
-            <Route path="/calendar">
-              <Calendar />
-            </Route>
-            <Route path="/map">
-              <Map />
-            </Route>
-            <Route path="/gallery">
-              <Gallery />
-            </Route>
-            <Route path="/faq">
-              <FAQ />
-            </Route>
-            <Route path="/about">
-              <AboutUs />
-            </Route>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
-          <Footer />
-        </Router>
-      </InfoContext.Provider>
+    <InfoContext.Provider value={info}>
+      <Router>
+        <ScrollToTop />
+        <Navigation />
+        <Switch>
+          <Route path="/events">
+            <Events />
+          </Route>
+          <Route path="/clubs">
+            <Clubs />
+          </Route>
+          <Route path="/calendar">
+            <Calendar />
+          </Route>
+          <Route path="/map">
+            <Map />
+          </Route>
+          <Route path="/gallery">
+            <Gallery />
+          </Route>
+          <Route path="/media">
+            <Media />
+          </Route>
+          <Route path="/faq">
+            <FAQ />
+          </Route>
+          <Route path="/about">
+            <AboutUs />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
+        <Footer />
+      </Router>
+    </InfoContext.Provider>
   );
 });
 

@@ -157,7 +157,7 @@ export const Gallery: React.FC = (): ReactElement => {
   const getGalleryPhotos = () => {
     return galleryPhotos.map((photo, curIdx) => {
       const photoData: Photo = {
-        photoUrl: getImageUrl(photo.photoId, imgMinWidth*2, 1000),
+        photoUrl: getImageUrl(photo.photoId, imgMinWidth * 2, 1000),
         photoNum: curIdx,
       };
 
@@ -184,7 +184,7 @@ export const Gallery: React.FC = (): ReactElement => {
         >
           <GalleryPhoto
             photo={photoData}
-            initializeDisplay={initializeDisplay} 
+            initializeDisplay={initializeDisplay}
           />
         </div>
       );
@@ -225,7 +225,6 @@ export const Gallery: React.FC = (): ReactElement => {
     backgroundColor: theme.colors.background.light,
   };
 
-
   const innerWrapperStyle: SxStyleProp = {
     top: '20vh',
     width: '100%',
@@ -235,7 +234,6 @@ export const Gallery: React.FC = (): ReactElement => {
     display: 'flex',
     flexDirection: 'column',
   };
-
 
   const headingWrapperStyle: SxStyleProp = {
     mt: '13vh',
@@ -262,7 +260,9 @@ export const Gallery: React.FC = (): ReactElement => {
           <Heading text="Gallery" alignment="left" />
         </div>
         <div className="row" sx={photoColumnContainerStyle}>
-          {getGalleryPhotos()}
+          {/* Reverse the gallery because I THINK the photos are sorted
+          from oldest to newest, and we want the newest at the top */}
+          {getGalleryPhotos().reverse()}
         </div>
       </div>
     </div>
