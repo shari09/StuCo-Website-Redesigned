@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import React, {useState, useRef, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
-import {CircleSpinner} from './CircleSpinner';
+import {CircleLoader} from './loading-components/CircleLoader';
 import AboutUsSpeechBubble from '../assets/speech bubble.png';
 import AboutUsSpeechBubbleMobile from '../assets/speechBubbleMobile.png';
 import {theme, SECOND_BREAKPOINT} from '../utils/theme';
@@ -99,7 +99,7 @@ const GrayBubble: React.FC<GrayBubbleProps> = ({imageUrl, onClick, size}) => {
     return (
       <div sx={spinnerWrapper}>
         <div sx={{display: 'inline', margin: 'auto'}}>
-          <CircleSpinner
+          <CircleLoader
             height={sizeInNum}
             width={sizeInNum}
             color={theme.colors.text.light}

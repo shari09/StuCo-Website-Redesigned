@@ -3,8 +3,16 @@ import React, {useContext, useState, useRef, useEffect} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 import {Link} from 'react-router-dom';
 import {MdControlPoint} from 'react-icons/md';
-import {GiClick} from 'react-icons/gi';
 import ResizeObserver from 'resize-observer-polyfill';
+
+import {CountDownTimer} from '../components/home-components/CountDownTimer';
+import {Heading} from '../components/Heading';
+import {Collapsable} from '../components/Collapsable';
+import {
+  PhotoSlideDeck,
+  Photo,
+} from '../components/home-components/PhotoSlideDeck';
+
 import {theme, FIRST_BREAKPOINT} from '../utils/theme';
 import {
   InfoContext,
@@ -14,13 +22,11 @@ import {
   ISetTransparentCtx,
   SetTransparentCtx,
 } from '../utils/contexts';
-import {CountDownTimer} from '../components/CountDownTimer';
-import {Heading} from '../components/Heading';
-import {Collapsable} from '../components/Collapsable';
-import {PhotoSlideDeck, Photo} from '../components/PhotoSlideDeck';
 import {getImageUrl, hexToRgbArr} from '../utils/functions';
 import {RandomDot} from '../utils/RandomDot';
 import {useToggleNavColour} from '../utils/hooks';
+
+
 
 /**
  * The home screen, big parallax background plus the timer

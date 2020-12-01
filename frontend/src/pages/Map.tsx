@@ -2,7 +2,7 @@
 import React, {useContext, useState, useEffect, ReactElement} from 'react';
 import {jsx, SxStyleProp} from 'theme-ui';
 
-import {LoadingSquare} from '../components/LoaderComponents';
+import { FilledSquareLoader } from "../components/loading-components/FilledSquareLoader";
 
 import {theme} from '../utils/theme';
 import {LabelledPhotos} from '../utils/interfaces';
@@ -190,7 +190,7 @@ export const Map: React.FC = () => {
 
         <div sx={imageDivStyle}>
           {loadingFirstImage ? (
-            <LoadingSquare isTransparent={true} />
+            <FilledSquareLoader isTransparent={true} />
           ) : undefined}
           <img
             src={firstFloorPhoto}
@@ -204,7 +204,7 @@ export const Map: React.FC = () => {
         {/* mb to push up footer */}
         <div sx={{...imageDivStyle, mb: ['8em', '14em']}}>
           {loadingSecondImage ? (
-            <LoadingSquare isTransparent={true} />
+            <FilledSquareLoader isTransparent={true} />
           ) : undefined}
           <img
             src={secondFloorPhoto}

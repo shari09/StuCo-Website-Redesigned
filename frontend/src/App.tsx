@@ -5,9 +5,9 @@ import {HashRouter as Router, Switch, Route} from 'react-router-dom';
 // import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 import {Navigation} from './components/Navigation';
-import {Footer} from './components/Footer';
+import {Footer} from './components/footer-components/Footer';
 import {ScrollToTop} from './components/ScrollToTop';
-import {LoadingScreen} from './components/LoaderComponents';
+import {LoadingScreen} from './components/loading-components/LoadingScreen';
 
 import {useUnmountingDelay} from './utils/hooks';
 

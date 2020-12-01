@@ -24,7 +24,7 @@ import {Club} from '../utils/interfaces';
 
 import clubBackground from '../assets/clubBackground.png';
 import ResizeObserver from 'resize-observer-polyfill';
-import {ClubPopup} from '../components/ClubPopup';
+import {ClubPopup} from '../components/club-popup/ClubPopup';
 
 //x1, y1 - top middle
 //x2, y2 - bottom left
@@ -284,8 +284,8 @@ export const Clubs: React.FC = () => {
       disallowScrolling(window.scrollY);
       return (
         <ClubPopup
-          closeHandler={() => setIsPopup(false)}
-          clubInfo={popupClub}
+        clubInfo={popupClub}
+        closeHandler={() => setIsPopup(false)}
         />
       );
     }

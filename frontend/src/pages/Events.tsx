@@ -10,7 +10,7 @@ import {jsx, SxStyleProp} from 'theme-ui';
 
 import {Heading} from '../components/Heading';
 import {TranslucentRectangle} from '../components/TranslucentRectangle';
-import {LoadingSquare} from '../components/LoaderComponents';
+import {FilledSquareLoader} from '../components/loading-components/FilledSquareLoader';
 import {ScrollToTopButton} from '../components/ScrollToTopButton';
 
 import {theme} from '../utils/theme';
@@ -196,7 +196,7 @@ const EventPhoto: React.FC<EventPhotoProps> = ({
       animation: loading ? 'none' : 'fade-out 1s linear',
     };
 
-    return <LoadingSquare extraStyling={loadingSquareStyle} />;
+    return <FilledSquareLoader extraStyling={loadingSquareStyle} />;
   };
 
   return (

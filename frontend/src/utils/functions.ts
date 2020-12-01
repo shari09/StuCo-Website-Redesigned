@@ -5,7 +5,6 @@ export interface rgbItem {
   a?: number;
 }
 
-// yes shari i need these jsdocs for the function tooltips
 /**
  * Cpmverts a hex string into an rgb object. Only works with
  * RRGGBB hexadecimals.
@@ -89,7 +88,6 @@ export const randNum = (min: number, max: number) =>
 
 export const randInt = (min: number, max: number) =>
   Math.floor(randNum(min, max));
-
 
 export const hexToRgbArr = (hex) => {
   if (hex[0] === '#') hex = hex.slice(1);

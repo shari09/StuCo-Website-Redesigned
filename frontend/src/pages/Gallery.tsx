@@ -10,8 +10,8 @@ import React, {
 import {jsx, SxStyleProp} from 'theme-ui';
 
 import {Heading} from '../components/Heading';
-import PhotoViewer, {Photo} from '../components/PhotoViewer';
-import {CircleSpinner} from '../components/CircleSpinner';
+import PhotoViewer, {Photo} from '../components/gallery-viewer/PhotoViewer';
+import {CircleLoader} from '../components/loading-components/CircleLoader';
 
 import {theme} from '../utils/theme';
 import {
@@ -80,7 +80,7 @@ export const GalleryPhoto: React.FC<GalleryPhotoProps> = ({
   const getSpinner = (): JSX.Element => {
     return (
       <div sx={{display: 'inline-block', my: '50%'}}>
-        <CircleSpinner  />
+        <CircleLoader />
       </div>
     );
   };
