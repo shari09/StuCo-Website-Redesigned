@@ -12,9 +12,13 @@ import {
   AboutStuco,
   ClubHighlight,
   LabelledPhotos,
-  Media
+  Media,
 } from './interfaces';
 
+/**
+ * The interface for the structure for the giant object containing lists
+ * of data to be parsed at the component level.
+ */
 export interface IInfoContext {
   events: Event[];
   countdown: CountDown[];
@@ -31,6 +35,12 @@ export interface IInfoContext {
   labelledPhotos: LabelledPhotos[];
 }
 
+/**
+ * A React `Context` containing all data as lists to be parsed at the
+ * individual component level.
+ *
+ * @see https://reactjs.org/docs/context.html
+ */
 export const InfoContext = createContext<IInfoContext>({
   events: [],
   countdown: [],
@@ -47,20 +57,40 @@ export const InfoContext = createContext<IInfoContext>({
   labelledPhotos: [],
 });
 
+/**
+ * The interface for the structure of the context handling transparency
+ * for components.
+ */
 export interface ITransparentCtx {
   transparent: boolean;
 }
 
+/**
+ * The interface for the structure of the context handling transparency state
+ * actions.
+ */
 export interface ISetTransparentCtx {
-  setTransparent: React.Dispatch<React.SetStateAction<boolean>>|undefined;
+  // This function is typed the same way that normal React state changing
+  // functions are typed
+  setTransparent: React.Dispatch<React.SetStateAction<boolean>> | undefined;
   // setTransparent: (transparent: boolean) => void | undefined;
 }
 
+/**
+ * The React `context` containing the components' transparency states.
+ *
+ * @see https://reactjs.org/docs/context.html
+ */
 export const TransparentCtx = createContext<ITransparentCtx>({
   transparent: true,
 });
 
+/**
+ * The React `context` containing the functions controlling the
+ * components' transparency states.
+ *
+ * @see https://reactjs.org/docs/context.html
+ */
 export const SetTransparentCtx = createContext<ISetTransparentCtx>({
   setTransparent: undefined,
 });
-
