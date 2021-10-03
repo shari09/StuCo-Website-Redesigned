@@ -1,0 +1,32 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1920"
+  height="755.549"
+  viewBox="0 0 1920 755.549"
+>
+  <g id="Group_77" data-name="Group 77" transform="translate(0 -1087.55)">
+    <path
+      id="Path_8"
+      data-name="Path 8"
+      d="M4,15033.55,1019.857,15789.1H4Z"
+      transform="translate(-4 -13946)"
+      fill="#8ec9b5"
+    />
+    <path
+      id="Path_9"
+      data-name="Path 9"
+      d="M520.608,15794l1412.071-697.055V15794Z"
+      transform="translate(-12.679 -13950.997)"
+      fill="#74a495"
+      opacity="0.95"
+    />
+    <path
+      id="Path_10"
+      data-name="Path 10"
+      d="M1924,15164.622,884.34,15836.405H1924Z"
+      transform="translate(-4 -13993.647)"
+      fill="#fff"
+      opacity="0.95"
+    />
+  </g>
+</svg>
