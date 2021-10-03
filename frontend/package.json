@@ -1,7 +1,6 @@
 {
   "name": "stuco-website-redesigned",
-  "//homepage": "https://shari09.github.io/StuCo-Website-Redesigned",
-  "homepage": "https://www.rhhsstuco.ca",
+  "homepage": "https://shari09.github.io/StuCo-Website-Redesigned",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -31,9 +31,9 @@ import {
 } from './utils/contexts';
 import { theme } from './utils/theme';
 
-// const backendUrl =
-//   'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
-const backendUrl = 'http://localhost:8080';
+const backendUrl =
+  'https://us-central1-stuco-website-1596467212841.cloudfunctions.net/getData';
+// const backendUrl = 'http://localhost:8080';
 // console.log(backendUrl);
 
 const Main: React.FC = React.memo(() => {
